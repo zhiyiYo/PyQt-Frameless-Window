@@ -23,17 +23,18 @@
 ## Notes
 1. `FramelessWindow` provides a custom title bar. If you don't like it, you can rewrite it;
 2. The default style of `FramelessWindow` is borderless window with DWM shadow. If you want other special effects, such as acrylic effect, you can rewrite the `__init__()` function of `FramelessWindow`. Here is an example:
-```python
-def __init__(self, parent=None):
-    super().__init__(parent)
-    self.monitor_info = None
-    self.titleBar = TitleBar(self)
-    self.windowEffect = WindowEffect()
-    # 取消边框
-    self.setWindowFlags(Qt.FramelessWindowHint)
-    self.setStyleSheet('background:transparent')
-    # 添加阴影和窗口动画
-    self.windowEffect.setAcrylicEffect(self.winId())
-    self.resize(500, 500)
-    self.titleBar.raise_()
-```
+    ```python
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.monitor_info = None
+        self.titleBar = TitleBar(self)
+        self.windowEffect = WindowEffect()
+        # 取消边框
+        self.setWindowFlags(Qt.FramelessWindowHint)
+        self.setStyleSheet('background:transparent')
+        # Add window animation and acrylic blur
+        self.windowEffect.addWindowAnimation(self.winId())
+        self.windowEffect.setAcrylicEffect(self.winId())
+        self.resize(500, 500)
+        self.titleBar.raise_()
+    ```
