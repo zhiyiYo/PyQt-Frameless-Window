@@ -1,0 +1,9 @@
+QWidget {
+    background-color: transparent
+}
+
+QToolButton{
+    background-color: transparent;
+    border: none;
+    margin: 0px;
+}

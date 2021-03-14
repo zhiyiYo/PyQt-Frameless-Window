@@ -1,0 +1,7 @@
+{
+    "python.pythonPath": "D:\\Anaconda\\python.exe",
+    "python.terminal.activateEnvironment": false,
+    "code-runner.executorMap": {
+        "python": "D:\\Anaconda\\envs\\Groove\\python.exe -u",
+    }
+}
