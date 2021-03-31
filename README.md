@@ -29,7 +29,7 @@
         self.monitor_info = None
         self.titleBar = TitleBar(self)
         self.windowEffect = WindowEffect()
-        # 取消边框
+        # remove border
         self.setWindowFlags(Qt.FramelessWindowHint)
         self.setStyleSheet('background:transparent')
         # Add window animation and acrylic blur
