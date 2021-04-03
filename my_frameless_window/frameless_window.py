@@ -23,7 +23,8 @@ class FramelessWindow(QWidget):
         self.titleBar = TitleBar(self)
         self.windowEffect = WindowEffect()
         # 取消边框
-        self.setWindowFlags(Qt.FramelessWindowHint)
+        self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowSystemMenuHint |
+                            Qt.WindowMinimizeButtonHint | Qt.WindowMaximizeButtonHint)
         # 添加阴影和窗口动画
         self.windowEffect.addShadowEffect(self.winId())
         self.windowEffect.addWindowAnimation(self.winId())

@@ -30,7 +30,8 @@
         self.titleBar = TitleBar(self)
         self.windowEffect = WindowEffect()
         # remove border
-        self.setWindowFlags(Qt.FramelessWindowHint)
+        self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowSystemMenuHint |
+                            Qt.WindowMinimizeButtonHint | Qt.WindowMaximizeButtonHint)
         self.setStyleSheet('background:transparent')
         # Add window animation and acrylic blur
         self.windowEffect.addWindowAnimation(self.winId())
