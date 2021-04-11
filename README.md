@@ -15,10 +15,10 @@
 ![Acrylic Frameless Window](screenshot/Acrylic_window.gif)
 
 ## Blogs
-* [如何在pyqt中通过调用SetWindowCompositionAttribute实现Win10亚克力效果](https://blog.csdn.net/zhiyiYo/article/details/107891876?spm=1001.2014.3001.5501)
-* [如何在pyqt中给无边框窗口添加DWM环绕阴影](https://blog.csdn.net/zhiyiYo/article/details/114736952?spm=1001.2014.3001.5501)
-* [如何在pyqt中在实现无边框窗口的同时保留Windows窗口动画效果（一）](https://blog.csdn.net/zhiyiYo/article/details/107883478?spm=1001.2014.3001.5501)
-* [如何在pyqt中在实现无边框窗口的同时保留Windows窗口动画效果（二）](https://blog.csdn.net/zhiyiYo/article/details/114752515?spm=1001.2014.3001.5501)
+* [如何在pyqt中通过调用SetWindowCompositionAttribute实现Win10亚克力效果](https://www.cnblogs.com/zhiyiYo/p/14643698.html)
+* [如何在pyqt中给无边框窗口添加DWM环绕阴影](https://www.cnblogs.com/zhiyiYo/p/14644155.html)
+* [如何在pyqt中在实现无边框窗口的同时保留Windows窗口动画效果（一）](https://www.cnblogs.com/zhiyiYo/p/14644099.html)
+* [如何在pyqt中在实现无边框窗口的同时保留Windows窗口动画效果（二）](https://www.cnblogs.com/zhiyiYo/p/14644180.html)
 
 ## Notes
 1. `FramelessWindow` provides a custom title bar. If you don't like it, you can rewrite it;
