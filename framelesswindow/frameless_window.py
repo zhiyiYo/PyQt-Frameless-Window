@@ -1,5 +1,4 @@
 # coding:utf-8
-
 from ctypes import POINTER, cast
 from ctypes.wintypes import MSG
 
@@ -8,9 +7,8 @@ from PyQt5.QtWidgets import QWidget
 from win32 import win32api, win32gui
 from win32.lib import win32con
 
-from my_title_bar import TitleBar
-from my_window_effect.window_effect import WindowEffect
-from my_window_effect.c_structures import MINMAXINFO, NCCALCSIZE_PARAMS
+from titlebar import TitleBar
+from windoweffect import WindowEffect, MINMAXINFO, NCCALCSIZE_PARAMS
 
 
 class FramelessWindow(QWidget):

@@ -1,54 +1,13 @@
 # coding:utf-8
 
-from PyQt5.QtCore import Qt,QSize
+from PyQt5.QtCore import Qt, QSize
 from PyQt5.QtGui import QIcon, QResizeEvent
 from PyQt5.QtWidgets import QToolButton, QWidget
 from win32.lib import win32con
 from win32.win32api import SendMessage
 from win32.win32gui import ReleaseCapture
 
-from .title_bar_buttons import MaximizeButton
-
-
-class ThreeStateToolButton(QToolButton):
-    """ 三种状态对应三种图标的按钮，iconPath_dict提供按钮normal、hover、pressed三种状态下的图标地址 """
-
-    def __init__(self, iconPath_dict: dict, icon_size: tuple = (50, 50), parent=None):
-        super().__init__(parent)
-        # 引用图标地址字典
-        self.iconPath_dict = iconPath_dict
-        self.resize(*icon_size)
-        # 初始化小部件
-        self.initWidget()
-
-    def initWidget(self):
-        """ 初始化小部件 """
-        self.setCursor(Qt.ArrowCursor)
-        self.setIcon(QIcon(self.iconPath_dict['normal']))
-        self.setIconSize(QSize(self.width(), self.height()))
-        self.setStyleSheet('border: none; margin: 0px')
-
-    def enterEvent(self, e):
-        """ hover时更换图标 """
-        self.setIcon(QIcon(self.iconPath_dict['hover']))
-
-    def leaveEvent(self, e):
-        """ leave时更换图标 """
-        self.setIcon(QIcon(self.iconPath_dict['normal']))
-
-    def mousePressEvent(self, e):
-        """ 鼠标左键按下时更换图标 """
-        if e.button() == Qt.RightButton:
-            return
-        self.setIcon(QIcon(self.iconPath_dict['pressed']))
-        super().mousePressEvent(e)
-
-    def mouseReleaseEvent(self, e):
-        """ 鼠标左键按下时更换图标 """
-        if e.button() == Qt.RightButton:
-            return
-        self.setIcon(QIcon(self.iconPath_dict['normal']))
-        super().mouseReleaseEvent(e)
+from .title_bar_buttons import MaximizeButton, ThreeStateToolButton
 
 
 class TitleBar(QWidget):
@@ -68,13 +27,13 @@ class TitleBar(QWidget):
     def __createButtons(self):
         """ 创建各按钮 """
         self.minBt = ThreeStateToolButton(
-            {'normal': r'resource\Image\title_bar\透明黑色最小化按钮_57_40.png',
-             'hover': r'resource\Image\title_bar\绿色最小化按钮_hover_57_40.png',
-             'pressed': r'resource\Image\title_bar\黑色最小化按钮_pressed_57_40.png'}, (57, 40), self)
+            {'normal': r'resource\images\title_bar\最小化按钮_normal_57_40.png',
+             'hover': r'resource\images\title_bar\最小化按钮_hover_57_40.png',
+             'pressed': r'resource\images\title_bar\最小化按钮_pressed_57_40.png'}, (57, 40), self)
         self.closeBt = ThreeStateToolButton(
-            {'normal': r'resource\Image\title_bar\透明黑色关闭按钮_57_40.png',
-             'hover': r'resource\Image\title_bar\关闭按钮_hover_57_40.png',
-             'pressed': r'resource\Image\title_bar\关闭按钮_pressed_57_40.png'}, (57, 40), self)
+            {'normal': r'resource\images\title_bar\关闭按钮_normal_57_40.png',
+             'hover': r'resource\images\title_bar\关闭按钮_hover_57_40.png',
+             'pressed': r'resource\images\title_bar\关闭按钮_pressed_57_40.png'}, (57, 40), self)
         self.maxBt = MaximizeButton(self)
         self.button_list = [self.minBt, self.maxBt, self.closeBt]
 
