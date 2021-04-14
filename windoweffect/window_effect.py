@@ -48,8 +48,6 @@ class WindowEffect:
     def setAcrylicEffect(self, hWnd, gradientColor: str = "F2F2F230", isEnableShadow: bool = True, animationId: int = 0):
         """ 给窗口开启Win10的亚克力效果
 
-        Parameters
-        ----------
         Parameter
         ----------
         hWnd: int or `sip.voidptr`
