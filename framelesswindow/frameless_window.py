@@ -37,9 +37,6 @@ class FramelessWindow(QWidget):
             return False
         return windowPlacement[1] == win32con.SW_MAXIMIZE
 
-    def resizeEvent(self, e):
-        self.titleBar.resize(self.width(), 40)
-
     def nativeEvent(self, eventType, message):
         """ 处理windows消息 """
         msg = MSG.from_address(message.__int__())
@@ -104,8 +101,8 @@ class FramelessWindow(QWidget):
         super().resizeEvent(e)
         self.titleBar.resize(self.width(), 40)
         # 更新最大化按钮图标
-        if self.isWindowMaximized(int(self.winId())):
-            self.titleBar.maxBt.setMaxState(True)
+        self.titleBar.maxBt.setMaxState(
+            self.isWindowMaximized(int(self.winId())))
 
     def monitorNCCALCSIZE(self, msg: MSG):
         """ 调整窗口大小 """
