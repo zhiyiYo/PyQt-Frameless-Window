@@ -15,7 +15,7 @@
 ![Acrylic Frameless Window](screenshot/Acrylic_window.gif)
 
 ## Blog
-* [如何在pyqt中自定义无边框窗口](https://www.cnblogs.com/zhiyiYo/p/14659981.html)
+[《如何在pyqt中自定义无边框窗口》](https://www.cnblogs.com/zhiyiYo/p/14659981.html)
 
 ## Notes
 1. `FramelessWindow` provides a custom title bar. If you don't like it, you can rewrite it;
@@ -37,3 +37,4 @@
         self.resize(500, 500)
         self.titleBar.raise_()
     ```
+3. The window using the acrylic effect may be stuck when dragging. See the blog for solution.
