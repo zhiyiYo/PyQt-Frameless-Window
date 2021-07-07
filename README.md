@@ -39,7 +39,7 @@
     ```
 3. The window using the acrylic effect may be stuck when dragging. See the blog for solution.
 
-## Licence
+## License
 ```
 MIT License
 
