@@ -29,14 +29,6 @@ class FramelessWindow(QWidget):
         self.resize(500, 500)
         self.titleBar.raise_()
 
-    def isWindowMaximized(self, hWnd) -> bool:
-        """ 判断窗口是否最大化 """
-        # 返回指定窗口的显示状态以及被恢复的、最大化的和最小化的窗口位置，返回值为元组
-        windowPlacement = win32gui.GetWindowPlacement(hWnd)
-        if not windowPlacement:
-            return False
-        return windowPlacement[1] == win32con.SW_MAXIMIZE
-
     def nativeEvent(self, eventType, message):
         """ 处理windows消息 """
         msg = MSG.from_address(message.__int__())
@@ -67,11 +59,11 @@ class FramelessWindow(QWidget):
             elif rx:
                 return True, win32con.HTRIGHT
         elif msg.message == win32con.WM_NCCALCSIZE:
-            if self.isWindowMaximized(msg.hWnd):
-                self.monitorNCCALCSIZE(msg)
+            if self.__isWindowMaximized(msg.hWnd):
+                self.__monitorNCCALCSIZE(msg)
             return True, 0
         elif msg.message == win32con.WM_GETMINMAXINFO:
-            if self.isWindowMaximized(msg.hWnd):
+            if self.__isWindowMaximized(msg.hWnd):
                 window_rect = win32gui.GetWindowRect(msg.hWnd)
                 if not window_rect:
                     return False, 0
@@ -102,9 +94,17 @@ class FramelessWindow(QWidget):
         self.titleBar.resize(self.width(), 40)
         # 更新最大化按钮图标
         self.titleBar.maxBt.setMaxState(
-            self.isWindowMaximized(int(self.winId())))
+            self.__isWindowMaximized(int(self.winId())))
 
-    def monitorNCCALCSIZE(self, msg: MSG):
+    def __isWindowMaximized(self, hWnd) -> bool:
+        """ 判断窗口是否最大化 """
+        # 返回指定窗口的显示状态以及被恢复的、最大化的和最小化的窗口位置，返回值为元组
+        windowPlacement = win32gui.GetWindowPlacement(hWnd)
+        if not windowPlacement:
+            return False
+        return windowPlacement[1] == win32con.SW_MAXIMIZE
+
+    def __monitorNCCALCSIZE(self, msg: MSG):
         """ 调整窗口大小 """
         monitor = win32api.MonitorFromWindow(msg.hWnd)
         # 如果没有保存显示器信息就直接返回，否则接着调整窗口大小

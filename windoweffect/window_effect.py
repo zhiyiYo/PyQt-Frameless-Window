@@ -96,7 +96,8 @@ class WindowEffect:
         # 开启Aero
         self.SetWindowCompositionAttribute(hWnd, pointer(self.winCompAttrData))
 
-    def moveWindow(self, hWnd):
+    @staticmethod
+    def moveWindow(hWnd):
         """ 移动窗口
 
         Parameter
@@ -127,7 +128,8 @@ class WindowEffect:
         margins = MARGINS(-1, -1, -1, -1)
         self.DwmExtendFrameIntoClientArea(hWnd, byref(margins))
 
-    def addWindowAnimation(self, hWnd):
+    @staticmethod
+    def addWindowAnimation(hWnd):
         """ 打开窗口动画效果
 
         Parameters
