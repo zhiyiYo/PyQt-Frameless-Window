@@ -96,6 +96,17 @@ class WindowEffect:
         # 开启Aero
         self.SetWindowCompositionAttribute(hWnd, pointer(self.winCompAttrData))
 
+    def removeBackgroundEffect(self, hWnd):
+        """ 移除背景特效效果
+
+        Parameter
+        ----------
+        hWnd: int or `sip.voidptr`
+            窗口句柄
+        """
+        self.accentPolicy.AccentState = ACCENT_STATE.ACCENT_DISABLED.value[0]
+        self.SetWindowCompositionAttribute(hWnd, pointer(self.winCompAttrData))
+
     @staticmethod
     def moveWindow(hWnd):
         """ 移动窗口
