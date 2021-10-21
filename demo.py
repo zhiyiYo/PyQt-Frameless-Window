@@ -8,27 +8,25 @@ from framelesswindow import FramelessWindow
 
 
 class Window(FramelessWindow):
-    """ 测试无边框窗口 """
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
         self.label = QLabel(self)
         self.label.setScaledContents(True)
-        self.label.setPixmap(QPixmap("resource\\images\\硝子.png").scaled(
-            self.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation))
-        # 标题栏置顶
-        self.titleBar.raise_()
-        # 设置层叠样式
-        self.setStyleSheet("background:white")
-        # 设置标题
+        self.label.setPixmap(QPixmap("resource/images/硝子.png"))
         self.setWindowTitle("PyQt Frameless Window")
+        self.setStyleSheet("background:white")
+        self.titleBar.raise_()
 
     def resizeEvent(self, e):
+        # don't forget to call the resizeEvent() of super class
         super().resizeEvent(e)
         length = min(self.width(), self.height())
         self.label.resize(length, length)
-        self.label.move(self.width() // 2 - length // 2,
-                        self.height() // 2 - length // 2)
+        self.label.move(
+            self.width() // 2 - length // 2,
+            self.height() // 2 - length // 2
+        )
 
 
 if __name__ == "__main__":

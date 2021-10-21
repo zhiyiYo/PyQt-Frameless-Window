@@ -18,10 +18,10 @@ from .c_structures import (
 
 
 class WindowEffect:
-    """ 调用windows api实现窗口效果 """
+    """ A class that calls Windows API to realize window effect """
 
     def __init__(self):
-        # 调用api
+        # Declare the function signature of the API
         self.user32 = WinDLL("user32")
         self.dwmapi = WinDLL("dwmapi")
         self.SetWindowCompositionAttribute = self.user32.SetWindowCompositionAttribute
@@ -36,33 +36,31 @@ class WindowEffect:
         ]
         self.DwmSetWindowAttribute.argtypes = [c_int, DWORD, LPCVOID, DWORD]
         self.DwmExtendFrameIntoClientArea.argtypes = [c_int, POINTER(MARGINS)]
-        # 初始化结构体
+        # Initialize structure
         self.accentPolicy = ACCENT_POLICY()
         self.winCompAttrData = WINDOWCOMPOSITIONATTRIBDATA()
-        self.winCompAttrData.Attribute = WINDOWCOMPOSITIONATTRIB.WCA_ACCENT_POLICY.value[
-            0
-        ]
+        self.winCompAttrData.Attribute = WINDOWCOMPOSITIONATTRIB.WCA_ACCENT_POLICY.value[0]
         self.winCompAttrData.SizeOfData = sizeof(self.accentPolicy)
         self.winCompAttrData.Data = pointer(self.accentPolicy)
 
     def setAcrylicEffect(self, hWnd, gradientColor: str = "F2F2F230", isEnableShadow: bool = True, animationId: int = 0):
-        """ 给窗口开启Win10的亚克力效果
+        """ Add the acrylic effect to the window
 
         Parameter
         ----------
         hWnd: int or `sip.voidptr`
-            窗口句柄
+            Window handle
 
         gradientColor: str
-            十六进制亚克力混合色，对应rgba四个分量
+            Hexadecimal acrylic mixed color, corresponding to four RGBA channels
 
         isEnableShadow: bool
-            控制是否启用窗口阴影
+            Enable window shadows
 
         animationId: int
-            控制磨砂动画
+            Turn on matte animation
         """
-        # 亚克力混合色
+        # Acrylic mixed color
         gradientColor = (
             gradientColor[6:]
             + gradientColor[4:6]
@@ -70,51 +68,49 @@ class WindowEffect:
             + gradientColor[:2]
         )
         gradientColor = DWORD(int(gradientColor, base=16))
-        # 磨砂动画
+        # matte animation
         animationId = DWORD(animationId)
-        # 窗口阴影
+        # window shadow
         accentFlags = DWORD(0x20 | 0x40 | 0x80 |
                             0x100) if isEnableShadow else DWORD(0)
-        self.accentPolicy.AccentState = ACCENT_STATE.ACCENT_ENABLE_ACRYLICBLURBEHIND.value[
-            0
-        ]
+        self.accentPolicy.AccentState = ACCENT_STATE.ACCENT_ENABLE_ACRYLICBLURBEHIND.value[0]
         self.accentPolicy.GradientColor = gradientColor
         self.accentPolicy.AccentFlags = accentFlags
         self.accentPolicy.AnimationId = animationId
-        # 开启亚克力
+        # enable acrylic effect
         self.SetWindowCompositionAttribute(hWnd, pointer(self.winCompAttrData))
 
     def setAeroEffect(self, hWnd):
-        """ 给窗口开启Aero效果
+        """ Add the aero effect to the window
 
         Parameter
         ----------
         hWnd: int or `sip.voidptr`
-            窗口句柄
+            Window handle
         """
         self.accentPolicy.AccentState = ACCENT_STATE.ACCENT_ENABLE_BLURBEHIND.value[0]
-        # 开启Aero
+        # enable Aero effect
         self.SetWindowCompositionAttribute(hWnd, pointer(self.winCompAttrData))
 
     def removeBackgroundEffect(self, hWnd):
-        """ 移除背景特效效果
+        """ Remove background effect
 
         Parameter
         ----------
         hWnd: int or `sip.voidptr`
-            窗口句柄
+            Window handle
         """
         self.accentPolicy.AccentState = ACCENT_STATE.ACCENT_DISABLED.value[0]
         self.SetWindowCompositionAttribute(hWnd, pointer(self.winCompAttrData))
 
     @staticmethod
     def moveWindow(hWnd):
-        """ 移动窗口
+        """ Move the window
 
         Parameter
         ----------
         hWnd: int or `sip.voidptr`
-            窗口句柄
+            Window handle
         """
         win32gui.ReleaseCapture()
         win32api.SendMessage(
@@ -122,12 +118,12 @@ class WindowEffect:
         )
 
     def addShadowEffect(self, hWnd):
-        """ 给窗口添加阴影
+        """ Add DWM shadow to the window
 
         Parameter
         ----------
         hWnd: int or `sip.voidptr`
-            窗口句柄
+            Window handle
         """
         hWnd = int(hWnd)
         self.DwmSetWindowAttribute(
@@ -141,12 +137,12 @@ class WindowEffect:
 
     @staticmethod
     def addWindowAnimation(hWnd):
-        """ 打开窗口动画效果
+        """ Enables the maximize and minimize animation of the window
 
         Parameters
         ----------
         hWnd : int or `sip.voidptr`
-            窗口句柄
+            Window handle
         """
         style = win32gui.GetWindowLong(hWnd, win32con.GWL_STYLE)
         win32gui.SetWindowLong(

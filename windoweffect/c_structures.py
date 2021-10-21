@@ -33,17 +33,17 @@ class WINDOWCOMPOSITIONATTRIB(Enum):
 
 
 class ACCENT_STATE(Enum):
-    """ 客户区状态枚举类 """
+    """ Client area status enumeration class """
     ACCENT_DISABLED = 0,
     ACCENT_ENABLE_GRADIENT = 1,
     ACCENT_ENABLE_TRANSPARENTGRADIENT = 2,
-    ACCENT_ENABLE_BLURBEHIND = 3,          # Aero效果
-    ACCENT_ENABLE_ACRYLICBLURBEHIND = 4,   # 亚克力效果
+    ACCENT_ENABLE_BLURBEHIND = 3,          # Aero effect
+    ACCENT_ENABLE_ACRYLICBLURBEHIND = 4,   # Acrylic effect
     ACCENT_INVALID_STATE = 5
 
 
 class ACCENT_POLICY(Structure):
-    """ 设置客户区的具体属性 """
+    """ Specific attributes of client area """
 
     _fields_ = [
         ("AccentState",     DWORD),
@@ -56,7 +56,7 @@ class ACCENT_POLICY(Structure):
 class WINDOWCOMPOSITIONATTRIBDATA(Structure):
     _fields_ = [
         ("Attribute",   DWORD),
-        # POINTER()接收任何ctypes类型，并返回一个指针类型
+        # Pointer() receives any ctypes type and returns a pointer type
         ("Data",        POINTER(ACCENT_POLICY)),
         ("SizeOfData",  ULONG),
     ]
