@@ -12,7 +12,7 @@
 * Normal frameless window
 ![Normal Frameless Window](screenshot/normal_frameless_window.gif)
 * Acrylic frameless window
-![Acrylic Frameless Window](screenshot/acrylic_window.gif)
+![Acrylic Frameless Window](screenshot/Acrylic_window.gif)
 
 ## Blog
 [《如何在pyqt中自定义无边框窗口》](https://www.cnblogs.com/zhiyiYo/p/14659981.html)
