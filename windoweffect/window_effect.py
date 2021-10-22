@@ -43,10 +43,10 @@ class WindowEffect:
         self.winCompAttrData.SizeOfData = sizeof(self.accentPolicy)
         self.winCompAttrData.Data = pointer(self.accentPolicy)
 
-    def setAcrylicEffect(self, hWnd, gradientColor: str = "F2F2F230", isEnableShadow: bool = True, animationId: int = 0):
+    def setAcrylicEffect(self, hWnd, gradientColor: str = "F2F2F299", isEnableShadow: bool = True, animationId: int = 0):
         """ Add the acrylic effect to the window
 
-        Parameter
+        Parameters
         ----------
         hWnd: int or `sip.voidptr`
             Window handle
@@ -83,7 +83,7 @@ class WindowEffect:
     def setAeroEffect(self, hWnd):
         """ Add the aero effect to the window
 
-        Parameter
+        Parameters
         ----------
         hWnd: int or `sip.voidptr`
             Window handle
@@ -95,7 +95,7 @@ class WindowEffect:
     def removeBackgroundEffect(self, hWnd):
         """ Remove background effect
 
-        Parameter
+        Parameters
         ----------
         hWnd: int or `sip.voidptr`
             Window handle
@@ -107,7 +107,7 @@ class WindowEffect:
     def moveWindow(hWnd):
         """ Move the window
 
-        Parameter
+        Parameters
         ----------
         hWnd: int or `sip.voidptr`
             Window handle
@@ -120,7 +120,7 @@ class WindowEffect:
     def addShadowEffect(self, hWnd):
         """ Add DWM shadow to the window
 
-        Parameter
+        Parameters
         ----------
         hWnd: int or `sip.voidptr`
             Window handle
@@ -134,6 +134,35 @@ class WindowEffect:
         )
         margins = MARGINS(-1, -1, -1, -1)
         self.DwmExtendFrameIntoClientArea(hWnd, byref(margins))
+
+    def removeShadowEffect(self, hWnd):
+        """ Remove DWM shadow from the window
+
+        Parameters
+        ----------
+        hWnd: int or `sip.voidptr`
+            Window handle
+        """
+        hWnd = int(hWnd)
+        self.DwmSetWindowAttribute(
+            hWnd,
+            DWMWINDOWATTRIBUTE.DWMWA_NCRENDERING_POLICY.value,
+            byref(c_int(DWMNCRENDERINGPOLICY.DWMNCRP_DISABLED.value)),
+            4,
+        )
+
+    @staticmethod
+    def removeMenuShadowEffect(hWnd):
+        """ Remove shadow from pop-up menu
+
+        Parameters
+        ----------
+        hWnd: int or `sip.voidptr`
+            Window handle
+        """
+        style=win32gui.GetClassLong(hWnd, win32con.GCL_STYLE)
+        style &= ~0x00020000  # CS_DROPSHADOW
+        win32api.SetClassLong(hWnd, win32con.GCL_STYLE, style)
 
     @staticmethod
     def addWindowAnimation(hWnd):

@@ -4,6 +4,7 @@ from ctypes.wintypes import MSG
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QWidget
+from PyQt5.QtWinExtras import QtWin
 from win32 import win32api, win32gui
 from win32.lib import win32con
 
@@ -24,8 +25,8 @@ class FramelessWindow(QWidget):
         self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowSystemMenuHint |
                             Qt.WindowMinimizeButtonHint | Qt.WindowMaximizeButtonHint)
         # add DWM shadow and window animation
-        self.windowEffect.addShadowEffect(self.winId())
         self.windowEffect.addWindowAnimation(self.winId())
+        self.windowEffect.addShadowEffect(self.winId())
         self.resize(500, 500)
         self.titleBar.raise_()
 
@@ -128,3 +129,16 @@ class FramelessWindow(QWidget):
         params.rgrc[0].top = self.__monitorInfo['Work'][1]
         params.rgrc[0].right = self.__monitorInfo['Work'][2]
         params.rgrc[0].bottom = self.__monitorInfo['Work'][3]
+
+
+class AcrylicWindow(FramelessWindow):
+    """ A frameless window with acrylic effect """
+
+    def __init__(self, parent=None):
+        super().__init__(parent=parent)
+        QtWin.enableBlurBehindWindow(self)
+        self.setWindowFlags(Qt.FramelessWindowHint)
+        #self.windowEffect.addShadowEffect(self.winId())
+        self.windowEffect.addWindowAnimation(self.winId())
+        self.windowEffect.setAcrylicEffect(self.winId())
+        self.setStyleSheet("background:transparent")
