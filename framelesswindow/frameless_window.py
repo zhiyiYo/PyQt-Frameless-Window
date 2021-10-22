@@ -137,8 +137,8 @@ class AcrylicWindow(FramelessWindow):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
         QtWin.enableBlurBehindWindow(self)
-        self.setWindowFlags(Qt.FramelessWindowHint)
-        #self.windowEffect.addShadowEffect(self.winId())
+        self.setWindowFlags(Qt.FramelessWindowHint |
+                            Qt.WindowMinMaxButtonsHint)
         self.windowEffect.addWindowAnimation(self.winId())
         self.windowEffect.setAcrylicEffect(self.winId())
         self.setStyleSheet("background:transparent")
