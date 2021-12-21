@@ -1,4 +1,5 @@
 # coding:utf-8
+import sys
 
 from ctypes import POINTER, c_bool, c_int, pointer, sizeof, WinDLL, byref
 from ctypes.wintypes import DWORD, LONG, LPCVOID
@@ -36,10 +37,11 @@ class WindowEffect:
         ]
         self.DwmSetWindowAttribute.argtypes = [c_int, DWORD, LPCVOID, DWORD]
         self.DwmExtendFrameIntoClientArea.argtypes = [c_int, POINTER(MARGINS)]
+
         # Initialize structure
         self.accentPolicy = ACCENT_POLICY()
         self.winCompAttrData = WINDOWCOMPOSITIONATTRIBDATA()
-        self.winCompAttrData.Attribute = WINDOWCOMPOSITIONATTRIB.WCA_ACCENT_POLICY.value[0]
+        self.winCompAttrData.Attribute = WINDOWCOMPOSITIONATTRIB.WCA_ACCENT_POLICY.value
         self.winCompAttrData.SizeOfData = sizeof(self.accentPolicy)
         self.winCompAttrData.Data = pointer(self.accentPolicy)
 
@@ -73,11 +75,29 @@ class WindowEffect:
         # window shadow
         accentFlags = DWORD(0x20 | 0x40 | 0x80 |
                             0x100) if isEnableShadow else DWORD(0)
-        self.accentPolicy.AccentState = ACCENT_STATE.ACCENT_ENABLE_ACRYLICBLURBEHIND.value[0]
+        self.accentPolicy.AccentState = ACCENT_STATE.ACCENT_ENABLE_ACRYLICBLURBEHIND.value
         self.accentPolicy.GradientColor = gradientColor
         self.accentPolicy.AccentFlags = accentFlags
         self.accentPolicy.AnimationId = animationId
         # enable acrylic effect
+        self.SetWindowCompositionAttribute(hWnd, pointer(self.winCompAttrData))
+
+    def setMicaEffect(self, hWnd):
+        """ Add the mica effect to the window (Win11 only)
+
+        Parameters
+        ----------
+        hWnd: int or `sip.voidptr`
+            Window handle
+        """
+        if sys.getwindowsversion().build < 22000:
+            raise Exception("The mica effect is only available on Win11")
+
+        hWnd = int(hWnd)
+        margins = MARGINS(-1, -1, -1, -1)
+        self.DwmExtendFrameIntoClientArea(hWnd, byref(margins))
+        self.DwmSetWindowAttribute(hWnd, 1029, byref(c_int(1)), 4)
+        self.accentPolicy.AccentState = ACCENT_STATE.ACCENT_ENABLE_HOSTBACKDROP.value
         self.SetWindowCompositionAttribute(hWnd, pointer(self.winCompAttrData))
 
     def setAeroEffect(self, hWnd):
@@ -88,7 +108,7 @@ class WindowEffect:
         hWnd: int or `sip.voidptr`
             Window handle
         """
-        self.accentPolicy.AccentState = ACCENT_STATE.ACCENT_ENABLE_BLURBEHIND.value[0]
+        self.accentPolicy.AccentState = ACCENT_STATE.ACCENT_ENABLE_BLURBEHIND.value
         # enable Aero effect
         self.SetWindowCompositionAttribute(hWnd, pointer(self.winCompAttrData))
 
@@ -100,7 +120,7 @@ class WindowEffect:
         hWnd: int or `sip.voidptr`
             Window handle
         """
-        self.accentPolicy.AccentState = ACCENT_STATE.ACCENT_DISABLED.value[0]
+        self.accentPolicy.AccentState = ACCENT_STATE.ACCENT_DISABLED.value
         self.SetWindowCompositionAttribute(hWnd, pointer(self.winCompAttrData))
 
     @staticmethod
@@ -160,7 +180,7 @@ class WindowEffect:
         hWnd: int or `sip.voidptr`
             Window handle
         """
-        style=win32gui.GetClassLong(hWnd, win32con.GCL_STYLE)
+        style = win32gui.GetClassLong(hWnd, win32con.GCL_STYLE)
         style &= ~0x00020000  # CS_DROPSHADOW
         win32api.SetClassLong(hWnd, win32con.GCL_STYLE, style)
 

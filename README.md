@@ -6,6 +6,7 @@
 * Window animation
 * Window DWM shadow
 * Win10 acrylic blur
+* Win11 mica blur
 * Win7 Aero blur
 
 ## Examples
