@@ -6,7 +6,7 @@ from enum import Enum
 
 
 class WINDOWCOMPOSITIONATTRIB(Enum):
-    WCA_UNDEFINED = 0,
+    WCA_UNDEFINED = 0
     WCA_NCRENDERING_ENABLED = 1
     WCA_NCRENDERING_POLICY = 2
     WCA_TRANSITIONS_FORCEDISABLED = 3
@@ -34,10 +34,10 @@ class WINDOWCOMPOSITIONATTRIB(Enum):
 
 class ACCENT_STATE(Enum):
     """ Client area status enumeration class """
-    ACCENT_DISABLED = 0,
+    ACCENT_DISABLED = 0
     ACCENT_ENABLE_GRADIENT = 1
     ACCENT_ENABLE_TRANSPARENTGRADIENT = 2
-    ACCENT_ENABLE_BLURBEHIND = 3,          # Aero effect
+    ACCENT_ENABLE_BLURBEHIND = 3           # Aero effect
     ACCENT_ENABLE_ACRYLICBLURBEHIND = 4    # Acrylic effect
     ACCENT_ENABLE_HOSTBACKDROP = 5         # Mica effect
     ACCENT_INVALID_STATE = 6
