@@ -62,6 +62,7 @@ class WindowEffect:
         animationId: int
             Turn on matte animation
         """
+        hWnd = int(hWnd)
         # Acrylic mixed color
         gradientColor = (
             gradientColor[6:]
@@ -108,8 +109,8 @@ class WindowEffect:
         hWnd: int or `sip.voidptr`
             Window handle
         """
+        hWnd = int(hWnd)
         self.accentPolicy.AccentState = ACCENT_STATE.ACCENT_ENABLE_BLURBEHIND.value
-        # enable Aero effect
         self.SetWindowCompositionAttribute(hWnd, pointer(self.winCompAttrData))
 
     def removeBackgroundEffect(self, hWnd):
@@ -120,6 +121,7 @@ class WindowEffect:
         hWnd: int or `sip.voidptr`
             Window handle
         """
+        hWnd = int(hWnd)
         self.accentPolicy.AccentState = ACCENT_STATE.ACCENT_DISABLED.value
         self.SetWindowCompositionAttribute(hWnd, pointer(self.winCompAttrData))
 
@@ -132,6 +134,7 @@ class WindowEffect:
         hWnd: int or `sip.voidptr`
             Window handle
         """
+        hWnd = int(hWnd)
         win32gui.ReleaseCapture()
         win32api.SendMessage(
             hWnd, win32con.WM_SYSCOMMAND, win32con.SC_MOVE + win32con.HTCAPTION, 0
@@ -180,6 +183,7 @@ class WindowEffect:
         hWnd: int or `sip.voidptr`
             Window handle
         """
+        hWnd = int(hWnd)
         style = win32gui.GetClassLong(hWnd, win32con.GCL_STYLE)
         style &= ~0x00020000  # CS_DROPSHADOW
         win32api.SetClassLong(hWnd, win32con.GCL_STYLE, style)
@@ -193,6 +197,7 @@ class WindowEffect:
         hWnd : int or `sip.voidptr`
             Window handle
         """
+        hWnd = int(hWnd)
         style = win32gui.GetWindowLong(hWnd, win32con.GWL_STYLE)
         win32gui.SetWindowLong(
             hWnd,
