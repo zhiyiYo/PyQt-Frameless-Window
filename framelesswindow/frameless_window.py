@@ -21,12 +21,18 @@ class FramelessWindow(QWidget):
         self.__monitorInfo = None
         self.titleBar = TitleBar(self)
         self.windowEffect = WindowEffect()
+
         # remove window border
         self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowSystemMenuHint |
                             Qt.WindowMinimizeButtonHint | Qt.WindowMaximizeButtonHint)
+
         # add DWM shadow and window animation
         self.windowEffect.addWindowAnimation(self.winId())
         self.windowEffect.addShadowEffect(self.winId())
+
+        # solve issue #5
+        self.windowHandle().screenChanged.connect(self.__onScreenChanged)
+
         self.resize(500, 500)
         self.titleBar.raise_()
 
@@ -129,6 +135,11 @@ class FramelessWindow(QWidget):
         params.rgrc[0].top = self.__monitorInfo['Work'][1]
         params.rgrc[0].right = self.__monitorInfo['Work'][2]
         params.rgrc[0].bottom = self.__monitorInfo['Work'][3]
+
+    def __onScreenChanged(self):
+        hWnd = int(self.windowHandle().winId())
+        win32gui.SetWindowPos(hWnd, None, 0, 0, 0, 0, win32con.SWP_NOMOVE |
+                              win32con.SWP_NOSIZE | win32con.SWP_FRAMECHANGED)
 
 
 class AcrylicWindow(FramelessWindow):
