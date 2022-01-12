@@ -141,7 +141,19 @@ class WindowEffect:
         )
 
     def addShadowEffect(self, hWnd):
-        """ Add DWM shadow to the window
+        """ Add DWM shadow to window
+
+        Parameters
+        ----------
+        hWnd: int or `sip.voidptr`
+            Window handle
+        """
+        hWnd = int(hWnd)
+        margins = MARGINS(-1, -1, -1, -1)
+        self.DwmExtendFrameIntoClientArea(hWnd, byref(margins))
+
+    def addMenuShadowEffect(self, hWnd):
+        """ Add DWM shadow to menu
 
         Parameters
         ----------
