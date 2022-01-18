@@ -1,7 +1,6 @@
 # coding:utf-8
 import sys
 
-from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QApplication, QLabel
 from framelesswindow import FramelessWindow

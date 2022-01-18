@@ -40,11 +40,12 @@ class FramelessWindow(QWidget):
         """ Handle the Windows message """
         msg = MSG.from_address(message.__int__())
         if msg.message == win32con.WM_NCHITTEST:
-            # solve issue #2: the cursor is always in dragging state under multiple screens
+            # solve issue #2 and issue #7
+            r = self.devicePixelRatioF()
             xPos = (win32api.LOWORD(msg.lParam) -
-                    self.frameGeometry().x()) % 65536
-            yPos = win32api.HIWORD(msg.lParam) - self.frameGeometry().y()
-            w, h = self.width(), self.height()
+                    self.frameGeometry().x()*r) % 65536
+            yPos = win32api.HIWORD(msg.lParam) - self.frameGeometry().y()*r
+            w, h = self.width()*r, self.height()*r
             lx = xPos < self.BORDER_WIDTH
             rx = xPos + 9 > w - self.BORDER_WIDTH
             ty = yPos < self.BORDER_WIDTH
