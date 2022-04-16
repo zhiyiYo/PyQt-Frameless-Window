@@ -17,11 +17,11 @@ class TitleBar(QWidget):
         self.minBtn = ThreeStateToolButton(
             {'normal': 'resource/images/title_bar/最小化按钮_normal_57_40.png',
              'hover': 'resource/images/title_bar/最小化按钮_hover_57_40.png',
-             'pressed': 'resource/images/title_bar/最小化按钮_pressed_57_40.png'}, (57, 40), self)
+             'pressed': 'resource/images/title_bar/最小化按钮_pressed_57_40.png'}, parent=self)
         self.closeBtn = ThreeStateToolButton(
             {'normal': 'resource/images/title_bar/关闭按钮_normal_57_40.png',
              'hover': 'resource/images/title_bar/关闭按钮_hover_57_40.png',
-             'pressed': 'resource/images/title_bar/关闭按钮_pressed_57_40.png'}, (57, 40), self)
+             'pressed': 'resource/images/title_bar/关闭按钮_pressed_57_40.png'}, parent=self)
         self.maxBtn = MaximizeButton(self)
         self.__initWidget()
 

@@ -10,7 +10,7 @@ class MaximizeButton(QToolButton):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.iconPathDict_list = [
+        self.iconPaths = [
             {'normal': 'resource/images/title_bar/最大化按钮_normal_57_40.png',
              'hover': 'resource/images/title_bar/最大化按钮_hover_57_40.png',
              'pressed': 'resource/images/title_bar/最大化按钮_pressed_57_40.png'},
@@ -28,7 +28,7 @@ class MaximizeButton(QToolButton):
     def __updateIcon(self, iconState: str):
         """ change the icon based on the iconState """
         self.setIcon(
-            QIcon(self.iconPathDict_list[self.isMax][iconState]))
+            QIcon(self.iconPaths[self.isMax][iconState]))
 
     def enterEvent(self, e):
         self.__updateIcon('hover')
@@ -60,33 +60,33 @@ class MaximizeButton(QToolButton):
 class ThreeStateToolButton(QToolButton):
     """ A ToolButton with different icons in normal, hover and pressed states """
 
-    def __init__(self, iconPath_dict: dict, icon_size: tuple = (50, 50), parent=None):
+    def __init__(self, iconPaths: dict, icon_size: tuple = (57, 40), parent=None):
         super().__init__(parent)
-        self.iconPath_dict = iconPath_dict
+        self.iconPaths = iconPaths
         self.resize(*icon_size)
         self.setCursor(Qt.ArrowCursor)
         self.setIconSize(self.size())
-        self.setIcon(QIcon(self.iconPath_dict['normal']))
+        self.setIcon(QIcon(self.iconPaths['normal']))
         self.setStyleSheet('border: none; margin: 0px')
 
     def enterEvent(self, e):
         """ hover时更换图标 """
-        self.setIcon(QIcon(self.iconPath_dict['hover']))
+        self.setIcon(QIcon(self.iconPaths['hover']))
 
     def leaveEvent(self, e):
         """ leave时更换图标 """
-        self.setIcon(QIcon(self.iconPath_dict['normal']))
+        self.setIcon(QIcon(self.iconPaths['normal']))
 
     def mousePressEvent(self, e):
         """ 鼠标左键按下时更换图标 """
         if e.button() == Qt.RightButton:
             return
-        self.setIcon(QIcon(self.iconPath_dict['pressed']))
+        self.setIcon(QIcon(self.iconPaths['pressed']))
         super().mousePressEvent(e)
 
     def mouseReleaseEvent(self, e):
         """ 鼠标左键按下时更换图标 """
         if e.button() == Qt.RightButton:
             return
-        self.setIcon(QIcon(self.iconPath_dict['normal']))
+        self.setIcon(QIcon(self.iconPaths['normal']))
         super().mouseReleaseEvent(e)
