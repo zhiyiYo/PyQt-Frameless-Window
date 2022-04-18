@@ -1,4 +1,5 @@
 # PyQt Frameless Window
+A frameless window based on pyqt5.
 
 ## Features
 * Move
@@ -21,6 +22,12 @@
 ## Notes
 1. `FramelessWindow` provides a custom title bar. If you don't like it, you can rewrite it;
 2. The window using the acrylic effect may be stuck when dragging for some Win10 versions. See the blog for solution.
+
+## See also
+Here are some projects that use PyQt-Frameless-Window:
+* [**zhiyiYo/Groove**: A music player based on PyQt5 and LAV Filters.](https://github.com/zhiyiYo/Groove)
+* [**zhiyiYo/Alpha-Gobang-Zero**: A gobang robot based on reinforcement learning.](https://github.com/zhiyiYo/Alpha-Gobang-Zero)
+* [**tonquer/picacg-qt**: 哔咔漫画PC客户端.](https://github.com/tonquer/picacg-qt)
 
 ## License
 ```

@@ -1,5 +1,4 @@
 # coding:utf-8
-
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QResizeEvent
 from PyQt5.QtWidgets import QWidget
@@ -7,28 +6,22 @@ from win32.lib import win32con
 from win32.win32api import SendMessage
 from win32.win32gui import ReleaseCapture
 
-from .title_bar_buttons import MaximizeButton, ThreeStateToolButton
+from .title_bar_buttons import MinimizeButton, MaximizeButton, CloseButton
 
 
 class TitleBar(QWidget):
 
     def __init__(self, parent):
         super().__init__(parent)
-        self.minBtn = ThreeStateToolButton(
-            {'normal': 'resource/images/title_bar/最小化按钮_normal_57_40.png',
-             'hover': 'resource/images/title_bar/最小化按钮_hover_57_40.png',
-             'pressed': 'resource/images/title_bar/最小化按钮_pressed_57_40.png'}, parent=self)
-        self.closeBtn = ThreeStateToolButton(
-            {'normal': 'resource/images/title_bar/关闭按钮_normal_57_40.png',
-             'hover': 'resource/images/title_bar/关闭按钮_hover_57_40.png',
-             'pressed': 'resource/images/title_bar/关闭按钮_pressed_57_40.png'}, parent=self)
-        self.maxBtn = MaximizeButton(self)
+        self.minBtn = MinimizeButton(parent=self)
+        self.closeBtn = CloseButton(parent=self)
+        self.maxBtn = MaximizeButton(parent=self)
         self.__initWidget()
 
     def __initWidget(self):
         """ initialize all widgets """
-        self.resize(1360, 40)
-        self.setFixedHeight(40)
+        self.resize(1360, 32)
+        self.setFixedHeight(32)
         self.setAttribute(Qt.WA_StyledBackground)
         self.__setQss()
 
@@ -39,9 +32,9 @@ class TitleBar(QWidget):
 
     def resizeEvent(self, e: QResizeEvent):
         """ Move the buttons """
-        self.closeBtn.move(self.width() - 57, 0)
-        self.maxBtn.move(self.width() - 2 * 57, 0)
-        self.minBtn.move(self.width() - 3 * 57, 0)
+        self.closeBtn.move(self.width() - 46, 0)
+        self.maxBtn.move(self.width() - 2 * 46, 0)
+        self.minBtn.move(self.width() - 3 * 46, 0)
 
     def mouseDoubleClickEvent(self, event):
         """ Toggles the maximization state of the window """
@@ -69,7 +62,7 @@ class TitleBar(QWidget):
 
     def __isPointInDragRegion(self, pos) -> bool:
         """ Check whether the pressed point belongs to the area where dragging is allowed """
-        right = self.width() - 57 * 3 if self.minBtn.isVisible() else self.width() - 57
+        right = self.width() - 46 * 3 if self.minBtn.isVisible() else self.width() - 46
         return (0 < pos.x() < right)
 
     def __setQss(self):
