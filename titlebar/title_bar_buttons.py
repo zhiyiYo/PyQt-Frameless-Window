@@ -21,7 +21,6 @@ class TitleBarButton(QToolButton):
         super().__init__(parent=parent)
         self.setCursor(Qt.ArrowCursor)
         self.setFixedSize(46, 32)
-        self.installEventFilter(self)
         self._state = 'normal'
         self._style = {
             "normal": {
