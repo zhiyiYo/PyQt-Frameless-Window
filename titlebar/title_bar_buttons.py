@@ -131,15 +131,15 @@ class CloseButton(TitleBarButton):
         }
         defaultStyle.update(style or {})
         super().__init__(defaultStyle, parent)
-        self.setIconSize(QSize(19, 19))
-        self.setIcon(QIcon('resource/images/title_bar/close.svg'))
+        self.setIconSize(QSize(46, 32))
+        self.setIcon(QIcon('resource/images/title_bar/button_close_black.svg'))
 
     def enterEvent(self, e):
-        self.setIcon(QIcon('resource/images/title_bar/close_white.svg'))
+        self.setIcon(QIcon('resource/images/title_bar/button_close_white.svg'))
         super().enterEvent(e)
 
     def leaveEvent(self, e):
-        self.setIcon(QIcon('resource/images/title_bar/close.svg'))
+        self.setIcon(QIcon('resource/images/title_bar/button_close_black.svg'))
         super().leaveEvent(e)
 
     def paintEvent(self, e):
