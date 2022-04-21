@@ -1,21 +1,17 @@
 # coding:utf-8
+import os
 import sys
-
-from ctypes import POINTER, c_bool, c_int, pointer, sizeof, WinDLL, byref
+from ctypes import POINTER, byref, c_bool, c_int, cdll, pointer, sizeof
 from ctypes.wintypes import DWORD, LONG, LPCVOID
 
-from win32 import win32api, win32gui
-from win32.lib import win32con
+if os.name == "nt":
+    from win32 import win32api, win32gui
+    from win32.lib import win32con
 
-from .c_structures import (
-    ACCENT_POLICY,
-    ACCENT_STATE,
-    MARGINS,
-    DWMNCRENDERINGPOLICY,
-    DWMWINDOWATTRIBUTE,
-    WINDOWCOMPOSITIONATTRIB,
-    WINDOWCOMPOSITIONATTRIBDATA,
-)
+from .c_structures import (ACCENT_POLICY, ACCENT_STATE, DWMNCRENDERINGPOLICY,
+                           DWMWINDOWATTRIBUTE, MARGINS,
+                           WINDOWCOMPOSITIONATTRIB,
+                           WINDOWCOMPOSITIONATTRIBDATA)
 
 
 class WindowEffect:
@@ -23,8 +19,8 @@ class WindowEffect:
 
     def __init__(self):
         # Declare the function signature of the API
-        self.user32 = WinDLL("user32")
-        self.dwmapi = WinDLL("dwmapi")
+        self.user32 = cdll.LoadLibrary("user32")
+        self.dwmapi = cdll.LoadLibrary("dwmapi")
         self.SetWindowCompositionAttribute = self.user32.SetWindowCompositionAttribute
         self.DwmExtendFrameIntoClientArea = self.dwmapi.DwmExtendFrameIntoClientArea
         self.DwmSetWindowAttribute = self.dwmapi.DwmSetWindowAttribute
@@ -45,7 +41,7 @@ class WindowEffect:
         self.winCompAttrData.SizeOfData = sizeof(self.accentPolicy)
         self.winCompAttrData.Data = pointer(self.accentPolicy)
 
-    def setAcrylicEffect(self, hWnd, gradientColor: str = "F2F2F299", isEnableShadow: bool = True, animationId: int = 0):
+    def setAcrylicEffect(self, hWnd, gradientColor="F2F2F299", isEnableShadow=True, animationId=0):
         """ Add the acrylic effect to the window
 
         Parameters

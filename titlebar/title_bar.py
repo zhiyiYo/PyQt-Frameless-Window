@@ -1,54 +1,54 @@
 # coding:utf-8
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QResizeEvent
-from PyQt5.QtWidgets import QWidget
-from win32.lib import win32con
-from win32.win32api import SendMessage
-from win32.win32gui import ReleaseCapture
+import os
 
-from .title_bar_buttons import MinimizeButton, MaximizeButton, CloseButton
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QHBoxLayout, QWidget
+
+if os.name == 'nt':
+    from win32.lib import win32con
+    from win32.win32api import SendMessage
+    from win32.win32gui import ReleaseCapture
+
+from utils import LinuxMoveResize
+
+from .title_bar_buttons import CloseButton, MaximizeButton, MinimizeButton
 
 
 class TitleBar(QWidget):
+
+    def __new__(cls, *args, **kwargs):
+        cls = WindowsTitleBar if os.name == 'nt' else UnixTitleBar
+        return super().__new__(cls, *args, **kwargs)
 
     def __init__(self, parent):
         super().__init__(parent)
         self.minBtn = MinimizeButton(parent=self)
         self.closeBtn = CloseButton(parent=self)
         self.maxBtn = MaximizeButton(parent=self)
-        self.__initWidget()
+        self.hBoxLayout = QHBoxLayout(self)
 
-    def __initWidget(self):
-        """ initialize all widgets """
-        self.resize(1360, 32)
+        self.resize(200, 32)
         self.setFixedHeight(32)
-        self.setAttribute(Qt.WA_StyledBackground)
-        self.__setQss()
+        self.setAttribute(Qt.WA_TranslucentBackground)
+
+        # add buttons to layout
+        self.hBoxLayout.setContentsMargins(0, 0, 0, 0)
+        self.hBoxLayout.addWidget(self.minBtn, 0, Qt.AlignRight)
+        self.hBoxLayout.addWidget(self.maxBtn, 0, Qt.AlignRight)
+        self.hBoxLayout.addWidget(self.closeBtn, 0, Qt.AlignRight)
+        self.hBoxLayout.setAlignment(Qt.AlignRight)
 
         # connect signal to slot
         self.minBtn.clicked.connect(self.window().showMinimized)
         self.maxBtn.clicked.connect(self.__toggleMaxState)
         self.closeBtn.clicked.connect(self.window().close)
 
-    def resizeEvent(self, e: QResizeEvent):
-        """ Move the buttons """
-        self.closeBtn.move(self.width() - 46, 0)
-        self.maxBtn.move(self.width() - 2 * 46, 0)
-        self.minBtn.move(self.width() - 3 * 46, 0)
-
     def mouseDoubleClickEvent(self, event):
         """ Toggles the maximization state of the window """
-        self.__toggleMaxState()
-
-    def mousePressEvent(self, event):
-        """ Move the window """
-        if not self.__isPointInDragRegion(event.pos()):
+        if event.button() != Qt.LeftButton:
             return
 
-        ReleaseCapture()
-        SendMessage(self.window().winId(), win32con.WM_SYSCOMMAND,
-                    win32con.SC_MOVE + win32con.HTCAPTION, 0)
-        event.ignore()
+        self.__toggleMaxState()
 
     def __toggleMaxState(self):
         """ Toggles the maximization state of the window and change icon """
@@ -60,12 +60,32 @@ class TitleBar(QWidget):
             self.window().showMaximized()
             self.maxBtn.setMaxState(True)
 
-    def __isPointInDragRegion(self, pos) -> bool:
+    def _isDragRegion(self, pos) -> bool:
         """ Check whether the pressed point belongs to the area where dragging is allowed """
         right = self.width() - 46 * 3 if self.minBtn.isVisible() else self.width() - 46
-        return (0 < pos.x() < right)
+        return 0 < pos.x() < right
 
-    def __setQss(self):
-        """ 设置层叠样式 """
-        with open('resource/qss/title_bar.qss', encoding='utf-8') as f:
-            self.setStyleSheet(f.read())
+
+class WindowsTitleBar(TitleBar):
+    """ Title bar for Windows system """
+
+    def mousePressEvent(self, event):
+        """ Move the window """
+        if not self._isDragRegion(event.pos()):
+            return
+
+        ReleaseCapture()
+        SendMessage(self.window().winId(), win32con.WM_SYSCOMMAND,
+                    win32con.SC_MOVE + win32con.HTCAPTION, 0)
+        event.ignore()
+
+
+class UnixTitleBar(TitleBar):
+    """ Title bar for Unix system """
+
+    def mousePressEvent(self, event):
+        if event.button() != Qt.LeftButton or not self._isDragRegion(event.pos()):
+            return
+
+        pos = event.globalPos()
+        LinuxMoveResize.startSystemMove(self.window(), pos)

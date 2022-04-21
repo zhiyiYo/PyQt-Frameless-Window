@@ -37,6 +37,13 @@ class TitleBarButton(QToolButton):
             },
         }
         self._style.update(style or {})
+        self.setStyleSheet("""
+            QToolButton{
+                background-color: transparent;
+                border: none;
+                margin: 0px;
+            }
+        """)
 
     def enterEvent(self, e):
         self._state = 'hover'

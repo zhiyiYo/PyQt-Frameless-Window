@@ -9,3 +9,5 @@
 */__pycache__
 *.py[cod]
 
+# 忽略测试文件
+test.py

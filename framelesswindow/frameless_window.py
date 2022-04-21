@@ -1,26 +1,51 @@
 # coding:utf-8
+import os
 from ctypes import POINTER, cast
 from ctypes.wintypes import MSG
 
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QCursor
+from PyQt5.QtCore import QCoreApplication, QEvent, Qt
+from PyQt5.QtGui import QCursor, QMouseEvent
 from PyQt5.QtWidgets import QWidget
-from PyQt5.QtWinExtras import QtWin
-from win32 import win32api, win32gui
-from win32.lib import win32con
+
+if os.name == 'nt':
+    from PyQt5.QtWinExtras import QtWin
+    from win32 import win32api, win32gui
+    from win32.lib import win32con
 
 from titlebar import TitleBar
-from windoweffect import WindowEffect, MINMAXINFO, NCCALCSIZE_PARAMS
+from utils.linux_utils import LinuxMoveResize
+from windoweffect import MINMAXINFO, NCCALCSIZE_PARAMS, WindowEffect
 
 
-class FramelessWindow(QWidget):
+class FramelessWindowBase(QWidget):
+    """ Frameless window """
 
     BORDER_WIDTH = 5
 
     def __init__(self, parent=None):
+        super().__init__(parent=parent)
+        self.titleBar = TitleBar(self)
+        self.titleBar.raise_()
+        self.resize(500, 500)
+
+    def resizeEvent(self, e):
+        """ Adjust the width and icon of title bar """
+        super().resizeEvent(e)
+        self.titleBar.resize(self.width(), self.titleBar.height())
+        self.titleBar.maxBtn.setMaxState(
+            self._isWindowMaximized(int(self.winId())))
+
+    def _isWindowMaximized(self, hWnd):
+        """ Determine whether the window is maximized """
+        return self.isMaximized()
+
+
+class WindowsFramelessWindow(FramelessWindowBase):
+    """ Frameless window for Windows system """
+
+    def __init__(self, parent=None):
         super().__init__(parent)
         self.__monitorInfo = None
-        self.titleBar = TitleBar(self)
         self.windowEffect = WindowEffect()
 
         # remove window border
@@ -33,9 +58,6 @@ class FramelessWindow(QWidget):
 
         # solve issue #5
         self.windowHandle().screenChanged.connect(self.__onScreenChanged)
-
-        self.resize(500, 500)
-        self.titleBar.raise_()
 
     def nativeEvent(self, eventType, message):
         """ Handle the Windows message """
@@ -66,11 +88,11 @@ class FramelessWindow(QWidget):
             elif rx:
                 return True, win32con.HTRIGHT
         elif msg.message == win32con.WM_NCCALCSIZE:
-            if self.__isWindowMaximized(msg.hWnd):
+            if self._isWindowMaximized(msg.hWnd):
                 self.__monitorNCCALCSIZE(msg)
             return True, 0
         elif msg.message == win32con.WM_GETMINMAXINFO:
-            if self.__isWindowMaximized(msg.hWnd):
+            if self._isWindowMaximized(msg.hWnd):
                 window_rect = win32gui.GetWindowRect(msg.hWnd)
                 if not window_rect:
                     return False, 0
@@ -101,16 +123,7 @@ class FramelessWindow(QWidget):
 
         return QWidget.nativeEvent(self, eventType, message)
 
-    def resizeEvent(self, e):
-        """ Adjust the width and icon of title bar """
-        super().resizeEvent(e)
-        self.titleBar.resize(self.width(), 40)
-        # update the maximized icon
-        self.titleBar.maxBtn.setMaxState(
-            self.__isWindowMaximized(int(self.winId())))
-
-    def __isWindowMaximized(self, hWnd) -> bool:
-        """ Determine whether the window is maximized """
+    def _isWindowMaximized(self, hWnd) -> bool:
         # GetWindowPlacement() returns the display state of the window and the restored,
         # maximized and minimized window position. The return value is tuple
         windowPlacement = win32gui.GetWindowPlacement(hWnd)
@@ -119,7 +132,7 @@ class FramelessWindow(QWidget):
 
         return windowPlacement[1] == win32con.SW_MAXIMIZE
 
-    def __monitorNCCALCSIZE(self, msg: MSG):
+    def __monitorNCCALCSIZE(self, msg):
         """ Adjust the size of window """
         monitor = win32api.MonitorFromWindow(msg.hWnd)
 
@@ -142,7 +155,7 @@ class FramelessWindow(QWidget):
                               win32con.SWP_NOSIZE | win32con.SWP_FRAMECHANGED)
 
 
-class AcrylicWindow(FramelessWindow):
+class AcrylicWindow(WindowsFramelessWindow):
     """ A frameless window with acrylic effect """
 
     def __init__(self, parent=None):
@@ -153,3 +166,49 @@ class AcrylicWindow(FramelessWindow):
         self.windowEffect.addWindowAnimation(self.winId())
         self.windowEffect.setAcrylicEffect(self.winId())
         self.setStyleSheet("background:transparent")
+
+
+class UnixFramelessWindow(FramelessWindowBase):
+    """ Frameless window for Unix system """
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setWindowFlags(self.windowFlags() | Qt.FramelessWindowHint)
+        QCoreApplication.instance().installEventFilter(self)
+
+    def eventFilter(self, obj, event):
+        et = event.type()
+        if et != QEvent.MouseButtonPress and et != QEvent.MouseMove:
+            return False
+
+        edges = Qt.Edges()
+        pos = QMouseEvent(event).windowPos().toPoint()
+        if pos.x() < self.BORDER_WIDTH:
+            edges |= Qt.LeftEdge
+        if pos.x() >= self.width()-self.BORDER_WIDTH:
+            edges |= Qt.RightEdge
+        if pos.y() < self.BORDER_WIDTH:
+            edges |= Qt.TopEdge
+        if pos.y() >= self.height()-self.BORDER_WIDTH:
+            edges |= Qt.BottomEdge
+
+        # change cursor
+        if et == QEvent.MouseMove and self.windowState() == Qt.WindowNoState:
+            if edges in (Qt.LeftEdge | Qt.TopEdge, Qt.RightEdge | Qt.BottomEdge):
+                self.setCursor(Qt.SizeFDiagCursor)
+            elif edges in (Qt.RightEdge | Qt.TopEdge, Qt.LeftEdge | Qt.BottomEdge):
+                self.setCursor(Qt.SizeBDiagCursor)
+            elif edges in (Qt.TopEdge, Qt.BottomEdge):
+                self.setCursor(Qt.SizeVerCursor)
+            elif edges in (Qt.LeftEdge, Qt.RightEdge):
+                self.setCursor(Qt.SizeHorCursor)
+            else:
+                self.setCursor(Qt.ArrowCursor)
+
+        elif et == QEvent.MouseButtonPress and edges:
+            LinuxMoveResize.starSystemResize(self, event.globalPos(), edges)
+
+        return super().eventFilter(obj, event)
+
+
+FramelessWindow = WindowsFramelessWindow if os.name == "nt" else UnixFramelessWindow
