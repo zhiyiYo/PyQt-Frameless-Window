@@ -8,8 +8,8 @@ if os.name == 'nt':
     from win32.lib import win32con
     from win32.win32api import SendMessage
     from win32.win32gui import ReleaseCapture
-
-from utils import LinuxMoveResize
+else:
+    from utils.linux_utils import LinuxMoveResize
 
 from .title_bar_buttons import CloseButton, MaximizeButton, MinimizeButton
 

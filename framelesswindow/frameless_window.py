@@ -1,20 +1,22 @@
 # coding:utf-8
 import os
 from ctypes import POINTER, cast
-from ctypes.wintypes import MSG
 
 from PyQt5.QtCore import QCoreApplication, QEvent, Qt
 from PyQt5.QtGui import QCursor, QMouseEvent
 from PyQt5.QtWidgets import QWidget
 
 if os.name == 'nt':
+    from ctypes.wintypes import MSG
+
     from PyQt5.QtWinExtras import QtWin
     from win32 import win32api, win32gui
     from win32.lib import win32con
+    from windoweffect import MINMAXINFO, NCCALCSIZE_PARAMS, WindowEffect
+else:
+    from utils.linux_utils import LinuxMoveResize
 
 from titlebar import TitleBar
-from utils.linux_utils import LinuxMoveResize
-from windoweffect import MINMAXINFO, NCCALCSIZE_PARAMS, WindowEffect
 
 
 class FramelessWindowBase(QWidget):

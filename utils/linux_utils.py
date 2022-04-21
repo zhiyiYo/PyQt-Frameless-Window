@@ -1,16 +1,13 @@
 # coding: utf-8
-import os
 from enum import Enum
 
+import xcffib as xcb
 from PyQt5 import sip
 from PyQt5.QtCore import QPointF, Qt
-
-if os.name == 'posix':
-    import xcffib as xcb
-    from PyQt5.QtX11Extras import QX11Info
-    from xcffib.xproto import (ButtonIndex, ButtonMask, ButtonReleaseEvent,
-                               ClientMessageData, ClientMessageEvent,
-                               EventMask, xprotoExtension)
+from PyQt5.QtX11Extras import QX11Info
+from xcffib.xproto import (ButtonIndex, ButtonMask, ButtonReleaseEvent,
+                           ClientMessageData, ClientMessageEvent, EventMask,
+                           xprotoExtension)
 
 
 class WindowMessage(Enum):
