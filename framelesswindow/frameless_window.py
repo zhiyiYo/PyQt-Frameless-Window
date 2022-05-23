@@ -1,6 +1,8 @@
 # coding:utf-8
 import os
+import sys
 from ctypes import POINTER, cast
+from platform import platform
 
 from PyQt5.QtCore import QCoreApplication, QEvent, Qt
 from PyQt5.QtGui import QCursor, QMouseEvent
@@ -56,7 +58,8 @@ class WindowsFramelessWindow(FramelessWindowBase):
 
         # add DWM shadow and window animation
         self.windowEffect.addWindowAnimation(self.winId())
-        self.windowEffect.addShadowEffect(self.winId())
+        if not isinstance(self, AcrylicWindow):
+            self.windowEffect.addShadowEffect(self.winId())
 
         # solve issue #5
         self.windowHandle().screenChanged.connect(self.__onScreenChanged)
@@ -166,7 +169,15 @@ class AcrylicWindow(WindowsFramelessWindow):
         self.setWindowFlags(Qt.FramelessWindowHint |
                             Qt.WindowMinMaxButtonsHint)
         self.windowEffect.addWindowAnimation(self.winId())
-        self.windowEffect.setAcrylicEffect(self.winId())
+
+        if "Windows-7" in platform():
+            self.windowEffect.addShadowEffect(self.winId())
+            self.windowEffect.setAeroEffect(self.winId())
+        else:
+            self.windowEffect.setAcrylicEffect(self.winId())
+            if sys.getwindowsversion().build >= 22000:
+                self.windowEffect.addShadowEffect(self.winId())
+
         self.setStyleSheet("background:transparent")
 
 
