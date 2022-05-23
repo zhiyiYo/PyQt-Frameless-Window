@@ -1,6 +1,6 @@
 # coding:utf-8
-from PyQt5.QtCore import QSize, Qt, QSize
-from PyQt5.QtGui import QColor, QIcon, QPainter, QPen
+from PyQt5.QtCore import QPointF, QSize, Qt
+from PyQt5.QtGui import QColor, QIcon, QPainter, QPainterPath, QPen
 from PyQt5.QtWidgets import QToolButton
 
 
@@ -61,6 +61,7 @@ class TitleBarButton(QToolButton):
         self.update()
         super().mousePressEvent(e)
 
+
 class MinimizeButton(TitleBarButton):
     """ Minimize button """
 
@@ -94,6 +95,7 @@ class MaximizeButton(TitleBarButton):
             return
 
         self.__isMax = isMax
+        self._state = "normal"
         self.update()
 
     def paintEvent(self, e):
@@ -111,14 +113,21 @@ class MaximizeButton(TitleBarButton):
         pen.setCosmetic(True)
         painter.setPen(pen)
 
+        r = self.devicePixelRatioF()
+        painter.scale(1/r, 1/r)
         if not self.__isMax:
-            painter.drawRect(18, 11, 10, 10)
+            painter.drawRect(18*r, 11*r, 10*r, 10*r)
         else:
-            painter.drawRect(18, 13, 8, 8)
-            painter.drawLine(20, 11, 20, 12)
-            painter.drawLine(21, 11, 28, 11)
-            painter.drawLine(28, 11, 28, 18)
-            painter.drawLine(27, 18, 28, 18)
+            painter.drawRect(18*r, 13*r, 8*r, 8*r)
+            x0 = int(18*r)+int(2*r)
+            y0 = 13*r
+            dw = int(2*r)
+            path = QPainterPath(QPointF(x0, y0))
+            path.lineTo(x0, y0-dw)
+            path.lineTo(x0+8*r, y0-dw)
+            path.lineTo(x0+8*r, y0-dw+8*r)
+            path.lineTo(x0+8*r-dw, y0-dw+8*r)
+            painter.drawPath(path)
 
 
 class CloseButton(TitleBarButton):
