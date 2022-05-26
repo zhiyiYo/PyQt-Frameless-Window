@@ -116,9 +116,9 @@ class MaximizeButton(TitleBarButton):
         r = self.devicePixelRatioF()
         painter.scale(1/r, 1/r)
         if not self.__isMax:
-            painter.drawRect(18*r, 11*r, 10*r, 10*r)
+            painter.drawRect(int(18*r), int(11*r), int(10*r), int(10*r))
         else:
-            painter.drawRect(18*r, 13*r, 8*r, 8*r)
+            painter.drawRect(int(18*r), int(13*r), int(8*r), int(8*r))
             x0 = int(18*r)+int(2*r)
             y0 = 13*r
             dw = int(2*r)
