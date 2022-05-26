@@ -30,7 +30,7 @@ A cross platform frameless window based on pyqt5, support Win32, X11, Wayland an
 
 ## See Also
 Here are some projects that use PyQt-Frameless-Window:
-* [**zhiyiYo/Groove**: A music player based on PyQt5 and LAV Filters](https://github.com/zhiyiYo/Groove)
+* [**zhiyiYo/Groove**: A cross-platform music player based on PyQt5](https://github.com/zhiyiYo/Groove)
 * [**zhiyiYo/Alpha-Gobang-Zero**: A gobang robot based on reinforcement learning](https://github.com/zhiyiYo/Alpha-Gobang-Zero)
 * [**tonquer/picacg-qt**: PicACG PC Client ](https://github.com/tonquer/picacg-qt)
 
