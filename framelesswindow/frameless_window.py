@@ -218,7 +218,7 @@ class UnixFramelessWindow(FramelessWindowBase):
             else:
                 self.setCursor(Qt.ArrowCursor)
 
-        elif et == QEvent.MouseButtonPress and edges:
+        elif obj is self and et == QEvent.MouseButtonPress and edges:
             LinuxMoveResize.starSystemResize(self, event.globalPos(), edges)
 
         return super().eventFilter(obj, event)
