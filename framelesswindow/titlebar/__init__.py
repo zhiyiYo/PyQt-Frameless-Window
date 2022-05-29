@@ -1,15 +1,15 @@
 # coding:utf-8
-import os
+import sys
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QHBoxLayout, QWidget
 
-if os.name == 'nt':
+if sys.platform == "win32":
     from win32.lib import win32con
     from win32.win32api import SendMessage
     from win32.win32gui import ReleaseCapture
 else:
-    from utils.linux_utils import LinuxMoveResize
+    from ..utils.linux_utils import LinuxMoveResize
 
 from .title_bar_buttons import CloseButton, MaximizeButton, MinimizeButton
 
@@ -17,7 +17,7 @@ from .title_bar_buttons import CloseButton, MaximizeButton, MinimizeButton
 class TitleBar(QWidget):
 
     def __new__(cls, *args, **kwargs):
-        cls = WindowsTitleBar if os.name == 'nt' else UnixTitleBar
+        cls = WindowsTitleBar if sys.platform == "win32" else UnixTitleBar
         return super().__new__(cls, *args, **kwargs)
 
     def __init__(self, parent):

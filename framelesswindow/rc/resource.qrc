@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/framelesswindow">
+        <file alias="close_black.svg">title_bar/close_black.svg</file>
+        <file alias="close_white.svg">title_bar/close_white.svg</file>
+    </qresource>
+</RCC>

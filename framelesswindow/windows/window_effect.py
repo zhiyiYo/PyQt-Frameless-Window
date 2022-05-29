@@ -12,8 +12,8 @@ from .c_structures import (ACCENT_POLICY, ACCENT_STATE, DWMNCRENDERINGPOLICY,
                            WINDOWCOMPOSITIONATTRIBDATA)
 
 
-class WindowEffect:
-    """ A class that calls Windows API to realize window effect """
+class WindowsWindowEffect:
+    """ Windows window effect """
 
     def __init__(self):
         # Declare the function signature of the API

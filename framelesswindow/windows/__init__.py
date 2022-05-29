@@ -1,60 +1,34 @@
 # coding:utf-8
-import os
 import sys
 from ctypes import POINTER, cast
+from ctypes.wintypes import MSG
 from platform import platform
 
-from PyQt5.QtCore import QCoreApplication, QEvent, Qt
-from PyQt5.QtGui import QCursor, QMouseEvent
-from PyQt5.QtWidgets import QWidget
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QCloseEvent, QCursor
+from PyQt5.QtWidgets import QApplication, QWidget
+from PyQt5.QtWinExtras import QtWin
+from win32 import win32api, win32gui
+from win32.lib import win32con
 
-if os.name == 'nt':
-    from ctypes.wintypes import MSG
-
-    from PyQt5.QtWinExtras import QtWin
-    from win32 import win32api, win32gui
-    from win32.lib import win32con
-    from windoweffect import MINMAXINFO, NCCALCSIZE_PARAMS, WindowEffect
-else:
-    from utils.linux_utils import LinuxMoveResize
-
-from titlebar import TitleBar
+from ..titlebar import TitleBar
+from .c_structures import MINMAXINFO, NCCALCSIZE_PARAMS
+from .window_effect import WindowsWindowEffect
 
 
-class FramelessWindowBase(QWidget):
-    """ Frameless window """
+class WindowsFramelessWindow(QWidget):
+    """  Frameless window for Windows system """
 
     BORDER_WIDTH = 5
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
-        self.titleBar = TitleBar(self)
-        self.titleBar.raise_()
-        self.resize(500, 500)
-
-    def resizeEvent(self, e):
-        """ Adjust the width and icon of title bar """
-        super().resizeEvent(e)
-        self.titleBar.resize(self.width(), self.titleBar.height())
-        self.titleBar.maxBtn.setMaxState(
-            self._isWindowMaximized(int(self.winId())))
-
-    def _isWindowMaximized(self, hWnd):
-        """ Determine whether the window is maximized """
-        return self.isMaximized()
-
-
-class WindowsFramelessWindow(FramelessWindowBase):
-    """ Frameless window for Windows system """
-
-    def __init__(self, parent=None):
-        super().__init__(parent)
         self.__monitorInfo = None
-        self.windowEffect = WindowEffect()
+        self.windowEffect = WindowsWindowEffect()
+        self.titleBar = TitleBar(self)
 
         # remove window border
-        self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowSystemMenuHint |
-                            Qt.WindowMinimizeButtonHint | Qt.WindowMaximizeButtonHint)
+        self.setWindowFlags(self.windowFlags() | Qt.FramelessWindowHint)
 
         # add DWM shadow and window animation
         self.windowEffect.addWindowAnimation(self.winId())
@@ -63,6 +37,16 @@ class WindowsFramelessWindow(FramelessWindowBase):
 
         # solve issue #5
         self.windowHandle().screenChanged.connect(self.__onScreenChanged)
+
+        self.resize(500, 500)
+        self.titleBar.raise_()
+
+    def resizeEvent(self, e):
+        """ Adjust the width and icon of title bar """
+        super().resizeEvent(e)
+        self.titleBar.resize(self.width(), self.titleBar.height())
+        self.titleBar.maxBtn.setMaxState(
+            self._isWindowMaximized(int(self.winId())))
 
     def nativeEvent(self, eventType, message):
         """ Handle the Windows message """
@@ -165,6 +149,8 @@ class AcrylicWindow(WindowsFramelessWindow):
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
+        self.__closedByKey = False
+
         QtWin.enableBlurBehindWindow(self)
         self.setWindowFlags(Qt.FramelessWindowHint |
                             Qt.WindowMinMaxButtonsHint)
@@ -180,48 +166,24 @@ class AcrylicWindow(WindowsFramelessWindow):
 
         self.setStyleSheet("background:transparent")
 
+    def nativeEvent(self, eventType, message):
+        """ Handle the Windows message """
+        msg = MSG.from_address(message.__int__())
 
-class UnixFramelessWindow(FramelessWindowBase):
-    """ Frameless window for Unix system """
+        # handle Alt+F4
+        if msg.message == win32con.WM_SYSKEYDOWN:
+            if msg.wParam == win32con.VK_F4:
+                self.__closedByKey = True
+                QApplication.sendEvent(self, QCloseEvent())
+                return False, 0
 
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self.setWindowFlags(self.windowFlags() | Qt.FramelessWindowHint)
-        QCoreApplication.instance().installEventFilter(self)
+        return super().nativeEvent(eventType, message)
 
-    def eventFilter(self, obj, event):
-        et = event.type()
-        if et != QEvent.MouseButtonPress and et != QEvent.MouseMove:
-            return False
+    def closeEvent(self, e):
+        if not self.__closedByKey or QApplication.quitOnLastWindowClosed():
+            self.__closedByKey = False
+            return super().closeEvent(e)
 
-        edges = Qt.Edges()
-        pos = QMouseEvent(event).windowPos().toPoint()
-        if pos.x() < self.BORDER_WIDTH:
-            edges |= Qt.LeftEdge
-        if pos.x() >= self.width()-self.BORDER_WIDTH:
-            edges |= Qt.RightEdge
-        if pos.y() < self.BORDER_WIDTH:
-            edges |= Qt.TopEdge
-        if pos.y() >= self.height()-self.BORDER_WIDTH:
-            edges |= Qt.BottomEdge
-
-        # change cursor
-        if et == QEvent.MouseMove and self.windowState() == Qt.WindowNoState:
-            if edges in (Qt.LeftEdge | Qt.TopEdge, Qt.RightEdge | Qt.BottomEdge):
-                self.setCursor(Qt.SizeFDiagCursor)
-            elif edges in (Qt.RightEdge | Qt.TopEdge, Qt.LeftEdge | Qt.BottomEdge):
-                self.setCursor(Qt.SizeBDiagCursor)
-            elif edges in (Qt.TopEdge, Qt.BottomEdge):
-                self.setCursor(Qt.SizeVerCursor)
-            elif edges in (Qt.LeftEdge, Qt.RightEdge):
-                self.setCursor(Qt.SizeHorCursor)
-            else:
-                self.setCursor(Qt.ArrowCursor)
-
-        elif obj is self and et == QEvent.MouseButtonPress and edges:
-            LinuxMoveResize.starSystemResize(self, event.globalPos(), edges)
-
-        return super().eventFilter(obj, event)
-
-
-FramelessWindow = WindowsFramelessWindow if os.name == "nt" else UnixFramelessWindow
+        # system tray icon
+        self.__closedByKey = False
+        self.hide()

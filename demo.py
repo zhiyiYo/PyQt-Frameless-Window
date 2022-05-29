@@ -13,10 +13,18 @@ class Window(FramelessWindow):
         super().__init__(parent=parent)
         self.label = QLabel(self)
         self.label.setScaledContents(True)
-        self.label.setPixmap(QPixmap("resource/images/shoko.png"))
+        self.label.setPixmap(QPixmap("screenshot/shoko.png"))
         self.setWindowTitle("PyQt Frameless Window")
         self.setStyleSheet("background:white")
         self.titleBar.raise_()
+
+        # you can customize the style of title bar button
+        self.titleBar.minBtn.updateStyle({
+            "hover": {
+                "color": (0, 0, 0),
+                'background': (0, 0, 0, 26)
+            }
+        })
 
     def resizeEvent(self, e):
         # don't forget to call the resizeEvent() of super class

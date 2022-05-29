@@ -3,6 +3,8 @@ from PyQt5.QtCore import QPointF, QSize, Qt
 from PyQt5.QtGui import QColor, QIcon, QPainter, QPainterPath, QPen
 from PyQt5.QtWidgets import QToolButton
 
+from ..rc import resource
+
 
 class TitleBarButton(QToolButton):
     """ Title bar button """
@@ -13,7 +15,7 @@ class TitleBarButton(QToolButton):
         ----------
         style: dict
             button style of `normal`,`hover`, and `pressed`. Each state has
-            `color` and `background` attributes.
+            `color`, `background` and `icon`(close button only) attributes.
 
         parent:
             parent widget
@@ -36,7 +38,7 @@ class TitleBarButton(QToolButton):
                 'background': (54, 57, 65)
             },
         }
-        self._style.update(style or {})
+        self.updateStyle(style)
         self.setStyleSheet("""
             QToolButton{
                 background-color: transparent;
@@ -44,6 +46,21 @@ class TitleBarButton(QToolButton):
                 margin: 0px;
             }
         """)
+
+    def updateStyle(self, style: dict):
+        """ update the style of button
+
+        Parameters
+        ----------
+        style: dict
+            button style of `normal`,`hover`, and `pressed`. Each state has
+            `color`, `background` and `icon`(close button only) attributes.
+        """
+        style = style or {}
+        for k, v in style.items():
+            self._style[k].update(v)
+
+        self.update()
 
     def enterEvent(self, e):
         self._state = 'hover'
@@ -136,27 +153,42 @@ class CloseButton(TitleBarButton):
     def __init__(self, style: dict = None, parent=None):
         defaultStyle = {
             "normal": {
-                'background': (0, 0, 0, 0)
+                'background': (0, 0, 0, 0),
+                "icon": ":/framelesswindow/close_black.svg"
             },
             "hover": {
-                'background': (232, 17, 35)
+                'background': (232, 17, 35),
+                "icon": ":/framelesswindow/close_white.svg"
             },
             "pressed": {
-                'background': (241, 112, 122)
+                'background': (241, 112, 122),
+                "icon": ":/framelesswindow/close_white.svg"
             },
         }
-        defaultStyle.update(style or {})
         super().__init__(defaultStyle, parent)
+        self.updateStyle(style)
         self.setIconSize(QSize(46, 32))
-        self.setIcon(QIcon('resource/images/title_bar/button_close_black.svg'))
+        self.setIcon(QIcon(self._style['normal']['icon']))
+
+    def updateStyle(self, style: dict):
+        super().updateStyle(style)
+        self.setIcon(QIcon(self._style[self._state]['icon']))
 
     def enterEvent(self, e):
-        self.setIcon(QIcon('resource/images/title_bar/button_close_white.svg'))
+        self.setIcon(QIcon(self._style['hover']['icon']))
         super().enterEvent(e)
 
     def leaveEvent(self, e):
-        self.setIcon(QIcon('resource/images/title_bar/button_close_black.svg'))
+        self.setIcon(QIcon(self._style['normal']['icon']))
         super().leaveEvent(e)
+
+    def mousePressEvent(self, e):
+        self.setIcon(QIcon(self._style['pressed']['icon']))
+        super().mousePressEvent(e)
+
+    def mouseReleaseEvent(self, e):
+        self.setIcon(QIcon(self._style['normal']['icon']))
+        super().mouseReleaseEvent(e)
 
     def paintEvent(self, e):
         painter = QPainter(self)
