@@ -11,3 +11,7 @@
 
 # 忽略测试文件
 test.py
+
+dist
+build
+PyQt5_Frameless_Window.egg-info

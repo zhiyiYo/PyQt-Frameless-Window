@@ -2,7 +2,7 @@
 import sys
 
 from PyQt5.QtWidgets import QApplication
-from framelesswindow import AcrylicWindow
+from qframelesswindow import AcrylicWindow
 
 
 class Window(AcrylicWindow):

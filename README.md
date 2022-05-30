@@ -1,5 +1,5 @@
 # PyQt-Frameless-Window
-A cross platform frameless window based on pyqt5, support Win32, X11, Wayland and macOS.
+A cross-platform frameless window based on pyqt5, support Win32, X11, Wayland and macOS.
 
 ## Features
 * Move
@@ -10,6 +10,17 @@ A cross platform frameless window based on pyqt5, support Win32, X11, Wayland an
 * Win11 mica blur
 * Win7 Aero blur
 
+## Install
+To install use pip:
+```shell
+pip install PyQt5-Frameless-Window
+```
+Or clone the repo:
+```shell
+git clone https://github.com/zhiyiYo/PyQt-Frameless-Window.git
+python setup.py install
+```
+
 ## Examples
 * Normal frameless window
 ![Normal Frameless Window](screenshot/normal_frameless_window.gif)
@@ -17,15 +28,9 @@ A cross platform frameless window based on pyqt5, support Win32, X11, Wayland an
 ![Acrylic Frameless Window](screenshot/Acrylic_window.gif)
 
 
-## Requirements
-| Platform | Requirement | Package Version in examples |
-| :------: | :---------: | :-------------------------: |
-|  Win32   |   pywin32   |             227             |
-|   Unix   |   xcffib    |           0.11.1            |
-
 
 ## Notes
-1. `FramelessWindow` provides a default custom title bar. If you don't like it, just rewrite it;
+1. `FramelessWindow` provides a default custom title bar. If you don't like it, just rewrite it as `demo.py` does.
 2. The window using the acrylic effect may be stuck when dragging for some Win10 versions. See the [blog](https://www.cnblogs.com/zhiyiYo/p/14659981.html) for solution.
 
 ## See Also
