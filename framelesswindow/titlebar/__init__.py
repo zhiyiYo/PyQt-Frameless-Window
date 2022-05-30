@@ -1,7 +1,7 @@
 # coding:utf-8
 import sys
 
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QEvent
 from PyQt5.QtWidgets import QHBoxLayout, QWidget
 
 if sys.platform == "win32":
@@ -14,11 +14,8 @@ else:
 from .title_bar_buttons import CloseButton, MaximizeButton, MinimizeButton
 
 
-class TitleBar(QWidget):
-
-    def __new__(cls, *args, **kwargs):
-        cls = WindowsTitleBar if sys.platform == "win32" else UnixTitleBar
-        return super().__new__(cls, *args, **kwargs)
+class TitleBarBase(QWidget):
+    """ Title bar base class """
 
     def __init__(self, parent):
         super().__init__(parent)
@@ -43,6 +40,16 @@ class TitleBar(QWidget):
         self.maxBtn.clicked.connect(self.__toggleMaxState)
         self.closeBtn.clicked.connect(self.window().close)
 
+        self.window().installEventFilter(self)
+
+    def eventFilter(self, obj, e):
+        if obj is self.window():
+            if e.type() == QEvent.WindowStateChange:
+                self.maxBtn.setMaxState(self.window().isMaximized())
+                return False
+
+        return super().eventFilter(obj, e)
+
     def mouseDoubleClickEvent(self, event):
         """ Toggles the maximization state of the window """
         if event.button() != Qt.LeftButton:
@@ -54,11 +61,8 @@ class TitleBar(QWidget):
         """ Toggles the maximization state of the window and change icon """
         if self.window().isMaximized():
             self.window().showNormal()
-            # change the icon of maxBtn
-            self.maxBtn.setMaxState(False)
         else:
             self.window().showMaximized()
-            self.maxBtn.setMaxState(True)
 
     def _isDragRegion(self, pos) -> bool:
         """ Check whether the pressed point belongs to the area where dragging is allowed """
@@ -66,7 +70,7 @@ class TitleBar(QWidget):
         return 0 < pos.x() < right
 
 
-class WindowsTitleBar(TitleBar):
+class WindowsTitleBar(TitleBarBase):
     """ Title bar for Windows system """
 
     def mousePressEvent(self, event):
@@ -80,7 +84,7 @@ class WindowsTitleBar(TitleBar):
         event.ignore()
 
 
-class UnixTitleBar(TitleBar):
+class UnixTitleBar(TitleBarBase):
     """ Title bar for Unix system """
 
     def mousePressEvent(self, event):
@@ -89,3 +93,6 @@ class UnixTitleBar(TitleBar):
 
         pos = event.globalPos()
         LinuxMoveResize.startSystemMove(self.window(), pos)
+
+
+TitleBar = WindowsTitleBar if sys.platform == "win32" else UnixTitleBar

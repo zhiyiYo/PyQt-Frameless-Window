@@ -25,7 +25,7 @@ A cross platform frameless window based on pyqt5, support Win32, X11, Wayland an
 
 
 ## Notes
-1. `FramelessWindow` provides a custom title bar. If you don't like it, you can rewrite it;
+1. `FramelessWindow` provides a default custom title bar. If you don't like it, just rewrite it;
 2. The window using the acrylic effect may be stuck when dragging for some Win10 versions. See the [blog](https://www.cnblogs.com/zhiyiYo/p/14659981.html) for solution.
 
 ## See Also

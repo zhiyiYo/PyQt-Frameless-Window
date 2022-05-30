@@ -25,10 +25,21 @@ class UnixFramelessWindow(QWidget):
         self.resize(500, 500)
 
     def resizeEvent(self, e):
-        """ Adjust the width and icon of title bar """
         super().resizeEvent(e)
         self.titleBar.resize(self.width(), self.titleBar.height())
-        self.titleBar.maxBtn.setMaxState(self.isMaximized())
+
+    def setTitleBar(self, titleBar):
+        """ set custom title bar
+
+        Parameters
+        ----------
+        titleBar: TitleBar
+            title bar
+        """
+        self.titleBar.deleteLater()
+        self.titleBar = titleBar
+        self.titleBar.setParent(self)
+        self.titleBar.raise_()
 
     def eventFilter(self, obj, event):
         et = event.type()

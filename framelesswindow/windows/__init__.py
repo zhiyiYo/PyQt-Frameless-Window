@@ -41,12 +41,22 @@ class WindowsFramelessWindow(QWidget):
         self.resize(500, 500)
         self.titleBar.raise_()
 
+    def setTitleBar(self, titleBar):
+        """ set custom title bar
+
+        Parameters
+        ----------
+        titleBar: TitleBar
+            title bar
+        """
+        self.titleBar.deleteLater()
+        self.titleBar = titleBar
+        self.titleBar.setParent(self)
+        self.titleBar.raise_()
+
     def resizeEvent(self, e):
-        """ Adjust the width and icon of title bar """
         super().resizeEvent(e)
         self.titleBar.resize(self.width(), self.titleBar.height())
-        self.titleBar.maxBtn.setMaxState(
-            self._isWindowMaximized(int(self.winId())))
 
     def nativeEvent(self, eventType, message):
         """ Handle the Windows message """

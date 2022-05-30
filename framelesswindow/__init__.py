@@ -1,5 +1,7 @@
 import sys
 
+from .titlebar import TitleBar
+
 if sys.platform == "win32":
     from .windows import AcrylicWindow, WindowsFramelessWindow, WindowsWindowEffect
 
