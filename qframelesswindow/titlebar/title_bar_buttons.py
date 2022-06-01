@@ -62,20 +62,28 @@ class TitleBarButton(QToolButton):
 
         self.update()
 
-    def enterEvent(self, e):
-        self._state = 'hover'
+    def setState(self, state: str):
+        """ set the state of button
+
+        Parameters
+        ----------
+        state: str
+            the state of button, can be `normal`,`hover`, or `pressed`
+        """
+        self._state = state
         self.update()
 
+    def enterEvent(self, e):
+        self.setState("hover")
+
     def leaveEvent(self, e):
-        self._state = 'normal'
-        self.update()
+        self.setState("normal")
 
     def mousePressEvent(self, e):
         if e.button() != Qt.LeftButton:
             return
 
-        self._state = 'pressed'
-        self.update()
+        self.setState("pressed")
         super().mousePressEvent(e)
 
 
@@ -112,8 +120,7 @@ class MaximizeButton(TitleBarButton):
             return
 
         self.__isMax = isMax
-        self._state = "normal"
-        self.update()
+        self.setState("normal")
 
     def paintEvent(self, e):
         painter = QPainter(self)

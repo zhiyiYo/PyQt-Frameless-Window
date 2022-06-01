@@ -29,6 +29,7 @@ class TitleBarBase(QWidget):
         self.setAttribute(Qt.WA_TranslucentBackground)
 
         # add buttons to layout
+        self.hBoxLayout.setSpacing(0)
         self.hBoxLayout.setContentsMargins(0, 0, 0, 0)
         self.hBoxLayout.addWidget(self.minBtn, 0, Qt.AlignRight)
         self.hBoxLayout.addWidget(self.maxBtn, 0, Qt.AlignRight)
