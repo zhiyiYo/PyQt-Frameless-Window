@@ -122,7 +122,7 @@ class WindowsFramelessWindow(QWidget):
 
         return QWidget.nativeEvent(self, eventType, message)
 
-    def _isWindowMaximized(self, hWnd) -> bool:
+    def _isWindowMaximized(self, hWnd):
         # GetWindowPlacement() returns the display state of the window and the restored,
         # maximized and minimized window position. The return value is tuple
         windowPlacement = win32gui.GetWindowPlacement(hWnd)

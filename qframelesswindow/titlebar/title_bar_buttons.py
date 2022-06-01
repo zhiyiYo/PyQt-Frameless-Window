@@ -9,7 +9,7 @@ from ..rc import resource
 class TitleBarButton(QToolButton):
     """ Title bar button """
 
-    def __init__(self, style: dict = None, parent=None):
+    def __init__(self, style=None, parent=None):
         """
         Parameters
         ----------
@@ -47,7 +47,7 @@ class TitleBarButton(QToolButton):
             }
         """)
 
-    def updateStyle(self, style: dict):
+    def updateStyle(self, style):
         """ update the style of button
 
         Parameters
@@ -62,7 +62,7 @@ class TitleBarButton(QToolButton):
 
         self.update()
 
-    def setState(self, state: str):
+    def setState(self, state):
         """ set the state of button
 
         Parameters
@@ -70,6 +70,10 @@ class TitleBarButton(QToolButton):
         state: str
             the state of button, can be `normal`,`hover`, or `pressed`
         """
+        if state not in ('normal', 'hover', 'pressed'):
+            raise ValueError(
+                'The state can only be `normal`,`hover`, or `pressed`')
+
         self._state = state
         self.update()
 
@@ -110,11 +114,11 @@ class MinimizeButton(TitleBarButton):
 class MaximizeButton(TitleBarButton):
     """ Maximize button """
 
-    def __init__(self, style: dict = None, parent=None):
+    def __init__(self, style=None, parent=None):
         super().__init__(style, parent)
         self.__isMax = False
 
-    def setMaxState(self, isMax: bool):
+    def setMaxState(self, isMax):
         """ update the maximized state and icon """
         if self.__isMax == isMax:
             return
@@ -157,7 +161,7 @@ class MaximizeButton(TitleBarButton):
 class CloseButton(TitleBarButton):
     """ Close button """
 
-    def __init__(self, style: dict = None, parent=None):
+    def __init__(self, style=None, parent=None):
         defaultStyle = {
             "normal": {
                 'background': (0, 0, 0, 0),
@@ -177,7 +181,7 @@ class CloseButton(TitleBarButton):
         self.setIconSize(QSize(46, 32))
         self.setIcon(QIcon(self._style['normal']['icon']))
 
-    def updateStyle(self, style: dict):
+    def updateStyle(self, style):
         super().updateStyle(style)
         self.setIcon(QIcon(self._style[self._state]['icon']))
 

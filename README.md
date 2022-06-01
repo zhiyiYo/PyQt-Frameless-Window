@@ -21,6 +21,31 @@ git clone https://github.com/zhiyiYo/PyQt-Frameless-Window.git
 python setup.py install
 ```
 
+## Usage
+To use the frameless window, you only need to inherit `FramelessWindow`. Here is a minimal example:
+```python
+import sys
+
+from PyQt5.QtWidgets import QApplication
+from qframelesswindow import FramelessWindow
+
+
+class Window(FramelessWindow):
+
+    def __init__(self, parent=None):
+        super().__init__(parent=parent)
+        self.setWindowTitle("PyQt-Frameless-Window")
+        self.titleBar.raise_()
+
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    demo = Window()
+    demo.show()
+    sys.exit(app.exec_())
+```
+For more complex requirements, you can refer to the [demo.py](https://github.com/zhiyiYo/PyQt-Frameless-Window/blob/master/demo.py).
+
 ## Examples
 * Normal frameless window
 ![Normal Frameless Window](screenshot/normal_frameless_window.gif)
@@ -30,7 +55,7 @@ python setup.py install
 
 
 ## Notes
-1. `FramelessWindow` provides a default custom title bar. If you don't like it, just rewrite it as `demo.py` does.
+1. `FramelessWindow` provides a default custom title bar. If you don't like it, just rewrite it as [demo.py](https://github.com/zhiyiYo/PyQt-Frameless-Window/blob/master/demo.py) does.
 2. The window using the acrylic effect may be stuck when dragging for some Win10 versions. See the [blog](https://www.cnblogs.com/zhiyiYo/p/14659981.html) for solution.
 
 ## See Also
