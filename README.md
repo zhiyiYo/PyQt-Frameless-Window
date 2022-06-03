@@ -70,7 +70,7 @@ For more complex requirements, you can refer to the [demo.py](https://github.com
 3. If you encounter this problem on Windows:
    > "ImportError: DLL load failed while importing win32api"
 
-   then you should go to go into the folder `{python folder path}/Lib/site-packages/pywin32_system32` and copy `pythoncomXX.dll` and `pywintypesXX.dll` to the folder `C:/Windows/System32`.
+   then you should go into the folder `{python folder path}/Lib/site-packages/pywin32_system32` and copy `pythoncomXX.dll` and `pywintypesXX.dll` to the folder `C:/Windows/System32`.
 
    If you are using a virtual environment, then `{python folder path}` is the python folder used by the virtual environment, otherwise it is the folder where the global python is located. For example, I use conda to create a virtual environment called `Frameless-Window`, and install the package `PyQt5-Frameless-Window` in this virtual environment (pywin32 will be installed together), then the `{python folder path}` on my computer should be `D:/Anaconda/envs/Frameless-Window`.
 
