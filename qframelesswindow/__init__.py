@@ -1,15 +1,13 @@
 import sys
 
-from .titlebar import TitleBar
-
 if sys.platform == "win32":
-    from .windows import AcrylicWindow, WindowsFramelessWindow, WindowsWindowEffect
-
-    FramelessWindow = WindowsFramelessWindow
-    WindowEffect = WindowsWindowEffect
+    from .titlebar import WindowsTitleBar as TitleBar
+    from .windows import AcrylicWindow
+    from .windows import WindowsFramelessWindow as FramelessWindow
+    from .windows import WindowsWindowEffect as WindowEffect
 else:
-    from .unix import UnixFramelessWindow, UnixWindowEffect
+    from .titlebar import UnixTitleBar as TitleBar
+    from .unix import UnixFramelessWindow as FramelessWindow
+    from .unix import UnixWindowEffect as WindowEffect
 
-    FramelessWindow = UnixFramelessWindow
-    AcrylicWindow = UnixFramelessWindow
-    WindowEffect = UnixWindowEffect
+    AcrylicWindow = FramelessWindow
