@@ -47,7 +47,7 @@ class UnixFramelessWindow(QWidget):
             return False
 
         edges = Qt.Edges()
-        pos = QMouseEvent(event).windowPos().toPoint()
+        pos = QMouseEvent(event).globalPos() - self.pos()
         if pos.x() < self.BORDER_WIDTH:
             edges |= Qt.LeftEdge
         if pos.x() >= self.width()-self.BORDER_WIDTH:
@@ -70,7 +70,7 @@ class UnixFramelessWindow(QWidget):
             else:
                 self.setCursor(Qt.ArrowCursor)
 
-        elif obj is self and et == QEvent.MouseButtonPress and edges:
+        elif obj in (self, self.titleBar) and et == QEvent.MouseButtonPress and edges:
             LinuxMoveResize.starSystemResize(self, event.globalPos(), edges)
 
         return super().eventFilter(obj, event)

@@ -67,8 +67,7 @@ class TitleBarBase(QWidget):
 
     def _isDragRegion(self, pos):
         """ Check whether the pressed point belongs to the area where dragging is allowed """
-        right = self.width() - 46 * 3 if self.minBtn.isVisible() else self.width() - 46
-        return 0 < pos.x() < right
+        return 0 < pos.x() < self.width() - 46 * 3
 
 
 class WindowsTitleBar(TitleBarBase):

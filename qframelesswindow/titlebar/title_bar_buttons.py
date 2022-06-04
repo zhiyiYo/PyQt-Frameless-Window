@@ -79,9 +79,11 @@ class TitleBarButton(QToolButton):
 
     def enterEvent(self, e):
         self.setState("hover")
+        super().enterEvent(e)
 
     def leaveEvent(self, e):
         self.setState("normal")
+        super().leaveEvent(e)
 
     def mousePressEvent(self, e):
         if e.button() != Qt.LeftButton:
