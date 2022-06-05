@@ -71,8 +71,7 @@ class TitleBarButton(QToolButton):
             the state of button, can be `normal`,`hover`, or `pressed`
         """
         if state not in ('normal', 'hover', 'pressed'):
-            raise ValueError(
-                'The state can only be `normal`,`hover`, or `pressed`')
+            raise ValueError('The state can only be `normal`,`hover`, or `pressed`')
 
         self._state = state
         self.update()

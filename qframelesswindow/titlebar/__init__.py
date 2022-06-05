@@ -5,9 +5,9 @@ from PyQt5.QtCore import Qt, QEvent
 from PyQt5.QtWidgets import QHBoxLayout, QWidget
 
 if sys.platform == "win32":
-    from win32.lib import win32con
-    from win32.win32api import SendMessage
-    from win32.win32gui import ReleaseCapture
+    import win32con
+    from win32api import SendMessage
+    from win32gui import ReleaseCapture
 else:
     from ..utils.linux_utils import LinuxMoveResize
 
@@ -80,7 +80,7 @@ class WindowsTitleBar(TitleBarBase):
 
         ReleaseCapture()
         SendMessage(self.window().winId(), win32con.WM_SYSCOMMAND,
-                    win32con.SC_MOVE + win32con.HTCAPTION, 0)
+                    win32con.SC_MOVE | win32con.HTCAPTION, 0)
         event.ignore()
 
 

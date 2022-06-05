@@ -1,10 +1,13 @@
 # coding:utf-8
 import sys
+import warnings
 from ctypes import POINTER, byref, c_bool, c_int, cdll, pointer, sizeof
 from ctypes.wintypes import DWORD, LONG, LPCVOID
+from platform import platform
 
-from win32 import win32api, win32gui
-from win32.lib import win32con
+import win32api
+import win32con
+import win32gui
 
 from .c_structures import (ACCENT_POLICY, ACCENT_STATE, DWMNCRENDERINGPOLICY,
                            DWMWINDOWATTRIBUTE, MARGINS,
@@ -39,7 +42,7 @@ class WindowsWindowEffect:
         self.winCompAttrData.SizeOfData = sizeof(self.accentPolicy)
         self.winCompAttrData.Data = pointer(self.accentPolicy)
 
-    def setAcrylicEffect(self, hWnd, gradientColor="F2F2F299", isEnableShadow=True, animationId=0):
+    def setAcrylicEffect(self, hWnd, gradientColor="F2F2F299", enableShadow=True, animationId=0):
         """ Add the acrylic effect to the window
 
         Parameters
@@ -56,44 +59,53 @@ class WindowsWindowEffect:
         animationId: int
             Turn on matte animation
         """
+        if "Windows-7" in platform():
+            warnings.warn("The acrylic effect is only available on Win10+")
+            return
+
         hWnd = int(hWnd)
-        # Acrylic mixed color
-        gradientColor = (
-            gradientColor[6:]
-            + gradientColor[4:6]
-            + gradientColor[2:4]
-            + gradientColor[:2]
-        )
+        gradientColor = ''.join(gradientColor[i:i+2] for i in range(6, -1, -2))
         gradientColor = DWORD(int(gradientColor, base=16))
-        # matte animation
         animationId = DWORD(animationId)
-        # window shadow
-        accentFlags = DWORD(0x20 | 0x40 | 0x80 |
-                            0x100) if isEnableShadow else DWORD(0)
+        accentFlags = DWORD(0x20 | 0x40 | 0x80 | 0x100) if enableShadow else DWORD(0)
         self.accentPolicy.AccentState = ACCENT_STATE.ACCENT_ENABLE_ACRYLICBLURBEHIND.value
         self.accentPolicy.GradientColor = gradientColor
         self.accentPolicy.AccentFlags = accentFlags
         self.accentPolicy.AnimationId = animationId
-        # enable acrylic effect
+        self.winCompAttrData.Attribute = WINDOWCOMPOSITIONATTRIB.WCA_ACCENT_POLICY.value
         self.SetWindowCompositionAttribute(hWnd, pointer(self.winCompAttrData))
 
-    def setMicaEffect(self, hWnd):
+    def setMicaEffect(self, hWnd, isDarkMode=False):
         """ Add the mica effect to the window (Win11 only)
 
         Parameters
         ----------
         hWnd: int or `sip.voidptr`
             Window handle
+
+        isDarkMode: bool
+            whether to use dark mode mica effect
         """
         if sys.getwindowsversion().build < 22000:
-            raise Exception("The mica effect is only available on Win11")
+            warnings.warn("The mica effect is only available on Win11")
+            return
 
         hWnd = int(hWnd)
         margins = MARGINS(-1, -1, -1, -1)
         self.DwmExtendFrameIntoClientArea(hWnd, byref(margins))
-        self.DwmSetWindowAttribute(hWnd, 1029, byref(c_int(1)), 4)
+
+        self.winCompAttrData.Attribute = WINDOWCOMPOSITIONATTRIB.WCA_ACCENT_POLICY.value
         self.accentPolicy.AccentState = ACCENT_STATE.ACCENT_ENABLE_HOSTBACKDROP.value
         self.SetWindowCompositionAttribute(hWnd, pointer(self.winCompAttrData))
+
+        if isDarkMode:
+            self.winCompAttrData.Attribute = WINDOWCOMPOSITIONATTRIB.WCA_USEDARKMODECOLORS.value
+            self.SetWindowCompositionAttribute(hWnd, pointer(self.winCompAttrData))
+
+        if sys.getwindowsversion().build < 22523:
+            self.DwmSetWindowAttribute(hWnd, 1029, byref(c_int(1)), 4)
+        else:
+            self.DwmSetWindowAttribute(hWnd, 38, byref(c_int(2)), 4)
 
     def setAeroEffect(self, hWnd):
         """ Add the aero effect to the window
@@ -104,6 +116,7 @@ class WindowsWindowEffect:
             Window handle
         """
         hWnd = int(hWnd)
+        self.winCompAttrData.Attribute = WINDOWCOMPOSITIONATTRIB.WCA_ACCENT_POLICY.value
         self.accentPolicy.AccentState = ACCENT_STATE.ACCENT_ENABLE_BLURBEHIND.value
         self.SetWindowCompositionAttribute(hWnd, pointer(self.winCompAttrData))
 

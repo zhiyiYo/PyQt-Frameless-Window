@@ -52,7 +52,7 @@ if __name__ == '__main__':
     demo.show()
     sys.exit(app.exec_())
 ```
-For more complex requirements, you can refer to the [demo.py](https://github.com/zhiyiYo/PyQt-Frameless-Window/blob/master/demo.py).
+For more complex requirements, you can refer to the [demo.py](./demo.py).
 
 ## Examples
 * Normal frameless window
@@ -63,12 +63,12 @@ For more complex requirements, you can refer to the [demo.py](https://github.com
 
 
 ## Notes
-1. `FramelessWindow` provides a default custom title bar. If you don't like it, just rewrite it as [demo.py](https://github.com/zhiyiYo/PyQt-Frameless-Window/blob/master/demo.py) does.
+1. `FramelessWindow` provides a default custom title bar. If you don't like it, just rewrite it as [demo.py](./demo.py) does.
 
 2. Moving the acrylic window on Win10 may get stuck. At present, there is no good solution. Maybe you can disable the acrylic effect when moving the window, but I haven't done this in the source code.
 
 3. If you encounter this problem on Windows:
-   > "ImportError: DLL load failed while importing win32api"
+   > ImportError: DLL load failed while importing win32api
 
    see my answer on [stackoverflow](https://stackoverflow.com/questions/58612306/how-to-fix-importerror-dll-load-failed-while-importing-win32api/72488468#72488468) or my [blog](https://www.cnblogs.com/zhiyiYo/p/16340429.html) for the solution.
 

@@ -12,6 +12,12 @@ class Window(AcrylicWindow):
         self.setWindowTitle("Acrylic Window")
         self.titleBar.raise_()
 
+        # customize acrylic effect
+        # self.windowEffect.setAcrylicEffect(self.winId(), "106EBE99")
+
+        # you can also enable mica effect on Win11
+        # self.windowEffect.setMicaEffect(self.winId(), False)
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

@@ -4,12 +4,13 @@ from ctypes import POINTER, cast
 from ctypes.wintypes import MSG
 from platform import platform
 
+import win32api
+import win32con
+import win32gui
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QCloseEvent, QCursor
 from PyQt5.QtWidgets import QApplication, QWidget
 from PyQt5.QtWinExtras import QtWin
-from win32 import win32api, win32gui
-from win32.lib import win32con
 
 from ..titlebar import TitleBar
 from .c_structures import MINMAXINFO, NCCALCSIZE_PARAMS
