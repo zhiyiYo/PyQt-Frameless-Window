@@ -73,8 +73,7 @@ class TitleBarBase(QWidget):
 class WindowsTitleBar(TitleBarBase):
     """ Title bar for Windows system """
 
-    def mousePressEvent(self, event):
-        """ Move the window """
+    def mouseMoveEvent(self, event):
         if not self._isDragRegion(event.pos()):
             return
 
