@@ -12,7 +12,7 @@ import win32gui
 from .c_structures import (ACCENT_POLICY, ACCENT_STATE, DWMNCRENDERINGPOLICY,
                            DWMWINDOWATTRIBUTE, MARGINS,
                            WINDOWCOMPOSITIONATTRIB,
-                           WINDOWCOMPOSITIONATTRIBDATA)
+                           WINDOWCOMPOSITIONATTRIBDATA, DWM_BLURBEHIND)
 
 
 class WindowsWindowEffect:
@@ -24,9 +24,12 @@ class WindowsWindowEffect:
         self.dwmapi = cdll.LoadLibrary("dwmapi")
         self.SetWindowCompositionAttribute = self.user32.SetWindowCompositionAttribute
         self.DwmExtendFrameIntoClientArea = self.dwmapi.DwmExtendFrameIntoClientArea
+        self.DwmEnableBlurBehindWindow = self.dwmapi.DwmEnableBlurBehindWindow
         self.DwmSetWindowAttribute = self.dwmapi.DwmSetWindowAttribute
+
         self.SetWindowCompositionAttribute.restype = c_bool
         self.DwmExtendFrameIntoClientArea.restype = LONG
+        self.DwmEnableBlurBehindWindow.restype = LONG
         self.DwmSetWindowAttribute.restype = LONG
         self.SetWindowCompositionAttribute.argtypes = [
             c_int,
@@ -34,6 +37,7 @@ class WindowsWindowEffect:
         ]
         self.DwmSetWindowAttribute.argtypes = [c_int, DWORD, LPCVOID, DWORD]
         self.DwmExtendFrameIntoClientArea.argtypes = [c_int, POINTER(MARGINS)]
+        self.DwmEnableBlurBehindWindow.argtypes = [c_int, POINTER(DWM_BLURBEHIND)]
 
         # Initialize structure
         self.accentPolicy = ACCENT_POLICY()
@@ -67,7 +71,8 @@ class WindowsWindowEffect:
         gradientColor = ''.join(gradientColor[i:i+2] for i in range(6, -1, -2))
         gradientColor = DWORD(int(gradientColor, base=16))
         animationId = DWORD(animationId)
-        accentFlags = DWORD(0x20 | 0x40 | 0x80 | 0x100) if enableShadow else DWORD(0)
+        accentFlags = DWORD(0x20 | 0x40 | 0x80 |
+                            0x100) if enableShadow else DWORD(0)
         self.accentPolicy.AccentState = ACCENT_STATE.ACCENT_ENABLE_ACRYLICBLURBEHIND.value
         self.accentPolicy.GradientColor = gradientColor
         self.accentPolicy.AccentFlags = accentFlags
@@ -100,7 +105,8 @@ class WindowsWindowEffect:
 
         if isDarkMode:
             self.winCompAttrData.Attribute = WINDOWCOMPOSITIONATTRIB.WCA_USEDARKMODECOLORS.value
-            self.SetWindowCompositionAttribute(hWnd, pointer(self.winCompAttrData))
+            self.SetWindowCompositionAttribute(
+                hWnd, pointer(self.winCompAttrData))
 
         if sys.getwindowsversion().build < 22523:
             self.DwmSetWindowAttribute(hWnd, 1029, byref(c_int(1)), 4)
@@ -213,7 +219,7 @@ class WindowsWindowEffect:
 
         Parameters
         ----------
-        hWnd : int or `sip.voidptr`
+        hWnd: int or `sip.voidptr`
             Window handle
         """
         hWnd = int(hWnd)
@@ -227,3 +233,14 @@ class WindowsWindowEffect:
             | win32con.CS_DBLCLKS
             | win32con.WS_THICKFRAME,
         )
+
+    def enableBlurBehindWindow(self, hWnd):
+        """ enable the blur effect behind the whole client
+
+        Parameters
+        ----------
+        hWnd: int or `sip.voidptr`
+            Window handle
+        """
+        blurBehind = DWM_BLURBEHIND(1, True, 0, False)
+        self.DwmEnableBlurBehindWindow(int(hWnd), byref(blurBehind))

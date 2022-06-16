@@ -1,7 +1,7 @@
 # coding:utf-8
-from PyQt5.QtCore import QCoreApplication, QEvent, Qt
-from PyQt5.QtGui import QMouseEvent
-from PyQt5.QtWidgets import QWidget
+from PyQt6.QtCore import QCoreApplication, QEvent, Qt
+from PyQt6.QtGui import QMouseEvent
+from PyQt6.QtWidgets import QWidget
 
 from ..titlebar import TitleBar
 from ..utils.linux_utils import LinuxMoveResize
@@ -18,7 +18,8 @@ class UnixFramelessWindow(QWidget):
         self.windowEffect = UnixWindowEffect()
         self.titleBar = TitleBar(self)
 
-        self.setWindowFlags(self.windowFlags() | Qt.FramelessWindowHint)
+        self.setWindowFlags(self.windowFlags() |
+                            Qt.WindowType.FramelessWindowHint)
         QCoreApplication.instance().installEventFilter(self)
 
         self.titleBar.raise_()
@@ -43,34 +44,34 @@ class UnixFramelessWindow(QWidget):
 
     def eventFilter(self, obj, event):
         et = event.type()
-        if et != QEvent.MouseButtonPress and et != QEvent.MouseMove:
+        if et != QEvent.Type.MouseButtonPress and et != QEvent.Type.MouseMove:
             return False
 
-        edges = Qt.Edges()
+        edges = 0
         pos = QMouseEvent(event).globalPos() - self.pos()
         if pos.x() < self.BORDER_WIDTH:
-            edges |= Qt.LeftEdge
+            edges |= Qt.Edge.LeftEdge
         if pos.x() >= self.width()-self.BORDER_WIDTH:
-            edges |= Qt.RightEdge
+            edges |= Qt.Edge.RightEdge
         if pos.y() < self.BORDER_WIDTH:
-            edges |= Qt.TopEdge
+            edges |= Qt.Edge.TopEdge
         if pos.y() >= self.height()-self.BORDER_WIDTH:
-            edges |= Qt.BottomEdge
+            edges |= Qt.Edge.BottomEdge
 
         # change cursor
-        if et == QEvent.MouseMove and self.windowState() == Qt.WindowNoState:
-            if edges in (Qt.LeftEdge | Qt.TopEdge, Qt.RightEdge | Qt.BottomEdge):
-                self.setCursor(Qt.SizeFDiagCursor)
-            elif edges in (Qt.RightEdge | Qt.TopEdge, Qt.LeftEdge | Qt.BottomEdge):
-                self.setCursor(Qt.SizeBDiagCursor)
-            elif edges in (Qt.TopEdge, Qt.BottomEdge):
-                self.setCursor(Qt.SizeVerCursor)
-            elif edges in (Qt.LeftEdge, Qt.RightEdge):
-                self.setCursor(Qt.SizeHorCursor)
+        if et == QEvent.Type.MouseMove and self.windowState() == Qt.WindowState.WindowNoState:
+            if edges in (Qt.Edge.LeftEdge | Qt.Edge.TopEdge, Qt.Edge.RightEdge | Qt.Edge.BottomEdge):
+                self.setCursor(Qt.CursorShape.SizeFDiagCursor)
+            elif edges in (Qt.Edge.RightEdge | Qt.Edge.TopEdge, Qt.Edge.LeftEdge | Qt.Edge.BottomEdge):
+                self.setCursor(Qt.CursorShape.SizeBDiagCursor)
+            elif edges in (Qt.Edge.TopEdge, Qt.Edge.BottomEdge):
+                self.setCursor(Qt.CursorShape.SizeVerCursor)
+            elif edges in (Qt.Edge.LeftEdge, Qt.Edge.RightEdge):
+                self.setCursor(Qt.CursorShape.SizeHorCursor)
             else:
-                self.setCursor(Qt.ArrowCursor)
+                self.setCursor(Qt.CursorShape.ArrowCursor)
 
-        elif obj in (self, self.titleBar) and et == QEvent.MouseButtonPress and edges:
+        elif obj in (self, self.titleBar) and et == QEvent.Type.MouseButtonPress and edges:
             LinuxMoveResize.starSystemResize(self, event.globalPos(), edges)
 
         return super().eventFilter(obj, event)

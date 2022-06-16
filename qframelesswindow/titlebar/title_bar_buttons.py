@@ -1,9 +1,12 @@
 # coding:utf-8
-from PyQt5.QtCore import QPointF, QSize, Qt
-from PyQt5.QtGui import QColor, QIcon, QPainter, QPainterPath, QPen
-from PyQt5.QtWidgets import QToolButton
+from pathlib import Path
 
-from ..rc import resource
+from PyQt6.QtCore import QDir, QPointF, QSize, Qt
+from PyQt6.QtGui import QColor, QIcon, QPainter, QPainterPath, QPen
+from PyQt6.QtWidgets import QToolButton
+
+path = Path(__file__).resolve().parent.parent/"rc/title_bar"
+QDir.addSearchPath('framelesswindow', str(path))
 
 
 class TitleBarButton(QToolButton):
@@ -21,7 +24,7 @@ class TitleBarButton(QToolButton):
             parent widget
         """
         super().__init__(parent=parent)
-        self.setCursor(Qt.ArrowCursor)
+        self.setCursor(Qt.CursorShape.ArrowCursor)
         self.setFixedSize(46, 32)
         self._state = 'normal'
         self._style = {
@@ -71,7 +74,8 @@ class TitleBarButton(QToolButton):
             the state of button, can be `normal`,`hover`, or `pressed`
         """
         if state not in ('normal', 'hover', 'pressed'):
-            raise ValueError('The state can only be `normal`,`hover`, or `pressed`')
+            raise ValueError(
+                'The state can only be `normal`,`hover`, or `pressed`')
 
         self._state = state
         self.update()
@@ -85,7 +89,7 @@ class TitleBarButton(QToolButton):
         super().leaveEvent(e)
 
     def mousePressEvent(self, e):
-        if e.button() != Qt.LeftButton:
+        if e.button() != Qt.MouseButton.LeftButton:
             return
 
         self.setState("pressed")
@@ -101,11 +105,11 @@ class MinimizeButton(TitleBarButton):
         # draw background
         style = self._style[self._state]
         painter.setBrush(QColor(*style['background']))
-        painter.setPen(Qt.NoPen)
+        painter.setPen(Qt.PenStyle.NoPen)
         painter.drawRect(self.rect())
 
         # draw icon
-        painter.setBrush(Qt.NoBrush)
+        painter.setBrush(Qt.BrushStyle.NoBrush)
         pen = QPen(QColor(*style['color']), 1)
         pen.setCosmetic(True)
         painter.setPen(pen)
@@ -133,11 +137,11 @@ class MaximizeButton(TitleBarButton):
         # draw background
         style = self._style[self._state]
         painter.setBrush(QColor(*style['background']))
-        painter.setPen(Qt.NoPen)
+        painter.setPen(Qt.PenStyle.NoPen)
         painter.drawRect(self.rect())
 
         # draw icon
-        painter.setBrush(Qt.NoBrush)
+        painter.setBrush(Qt.BrushStyle.NoBrush)
         pen = QPen(QColor(*style['color']), 1)
         pen.setCosmetic(True)
         painter.setPen(pen)
@@ -166,15 +170,15 @@ class CloseButton(TitleBarButton):
         defaultStyle = {
             "normal": {
                 'background': (0, 0, 0, 0),
-                "icon": ":/framelesswindow/close_black.svg"
+                "icon": "framelesswindow:close_black.svg"
             },
             "hover": {
                 'background': (232, 17, 35),
-                "icon": ":/framelesswindow/close_white.svg"
+                "icon": "framelesswindow:close_white.svg"
             },
             "pressed": {
                 'background': (241, 112, 122),
-                "icon": ":/framelesswindow/close_white.svg"
+                "icon": "framelesswindow:close_white.svg"
             },
         }
         super().__init__(defaultStyle, parent)
@@ -204,12 +208,12 @@ class CloseButton(TitleBarButton):
 
     def paintEvent(self, e):
         painter = QPainter(self)
-        painter.setRenderHint(QPainter.Antialiasing)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
 
         # draw background
         style = self._style[self._state]
         painter.setBrush(QColor(*style['background']))
-        painter.setPen(Qt.NoPen)
+        painter.setPen(Qt.PenStyle.NoPen)
         painter.drawRect(self.rect())
 
         # draw icon

@@ -1,10 +1,9 @@
 # coding: utf-8
 from enum import Enum
 
+import os
 import xcffib as xcb
-from PyQt5 import sip
-from PyQt5.QtCore import QPointF, Qt
-from PyQt5.QtX11Extras import QX11Info
+from PyQt6.QtCore import QPointF, Qt
 from xcffib.xproto import (ButtonIndex, ButtonMask, ButtonReleaseEvent,
                            ClientMessageData, ClientMessageEvent, EventMask,
                            xprotoExtension)
@@ -49,7 +48,7 @@ class LinuxMoveResize:
         pos = window.mapFromGlobal(globalPos)
 
         # open the connection to X server
-        conn = xcb.wrap(sip.unwrapinstance(QX11Info.connection()))
+        conn = xcb.connect(os.environ.get('DISPLAY'))
         windowId = int(window.winId())
         xproto = xprotoExtension(conn)
 
@@ -57,7 +56,7 @@ class LinuxMoveResize:
         event = ButtonReleaseEvent.synthetic(
             detail=ButtonIndex._1,
             time=xcb.CurrentTime,
-            root=QX11Info.appRootWindow(QX11Info.appScreen()),
+            root=conn.get_setup().roots[0].root,
             event=windowId,
             child=xcb.NONE,
             root_x=globalPos.x(),
@@ -91,7 +90,7 @@ class LinuxMoveResize:
                             window.devicePixelRatio()).toPoint()
 
         # open the connection to X server
-        conn = xcb.wrap(sip.unwrapinstance(QX11Info.connection()))
+        conn = xcb.connect(os.environ.get('DISPLAY'))
         xproto = xprotoExtension(conn)
 
         if not cls.moveResizeAtom:
@@ -114,7 +113,7 @@ class LinuxMoveResize:
         xproto.UngrabPointer(xcb.CurrentTime)
         xproto.SendEvent(
             False,
-            QX11Info.appRootWindow(QX11Info.appScreen()),
+            conn.get_setup().roots[0].root,
             EventMask.SubstructureRedirect | EventMask.SubstructureNotify,
             event.pack()
         )
@@ -145,13 +144,13 @@ class LinuxMoveResize:
             return
 
         messageMap = {
-            Qt.TopEdge: WindowMessage._NET_WM_MOVERESIZE_SIZE_TOP,
-            Qt.TopEdge | Qt.LeftEdge: WindowMessage._NET_WM_MOVERESIZE_SIZE_TOPLEFT,
-            Qt.TopEdge | Qt.RightEdge: WindowMessage._NET_WM_MOVERESIZE_SIZE_TOPRIGHT,
-            Qt.BottomEdge: WindowMessage._NET_WM_MOVERESIZE_SIZE_BOTTOM,
-            Qt.BottomEdge | Qt.LeftEdge: WindowMessage._NET_WM_MOVERESIZE_SIZE_BOTTOMLEFT,
-            Qt.BottomEdge | Qt.RightEdge: WindowMessage._NET_WM_MOVERESIZE_SIZE_BOTTOMRIGHT,
-            Qt.LeftEdge: WindowMessage._NET_WM_MOVERESIZE_SIZE_LEFT,
-            Qt.RightEdge: WindowMessage._NET_WM_MOVERESIZE_SIZE_RIGHT,
+            Qt.Edge.TopEdge: WindowMessage._NET_WM_MOVERESIZE_SIZE_TOP,
+            Qt.Edge.TopEdge | Qt.Edge.LeftEdge: WindowMessage._NET_WM_MOVERESIZE_SIZE_TOPLEFT,
+            Qt.Edge.TopEdge | Qt.Edge.RightEdge: WindowMessage._NET_WM_MOVERESIZE_SIZE_TOPRIGHT,
+            Qt.Edge.BottomEdge: WindowMessage._NET_WM_MOVERESIZE_SIZE_BOTTOM,
+            Qt.Edge.BottomEdge | Qt.Edge.LeftEdge: WindowMessage._NET_WM_MOVERESIZE_SIZE_BOTTOMLEFT,
+            Qt.Edge.BottomEdge | Qt.Edge.RightEdge: WindowMessage._NET_WM_MOVERESIZE_SIZE_BOTTOMRIGHT,
+            Qt.Edge.LeftEdge: WindowMessage._NET_WM_MOVERESIZE_SIZE_LEFT,
+            Qt.Edge.RightEdge: WindowMessage._NET_WM_MOVERESIZE_SIZE_RIGHT,
         }
         cls.startSystemMoveResize(window, globalPos, messageMap[edges].value)

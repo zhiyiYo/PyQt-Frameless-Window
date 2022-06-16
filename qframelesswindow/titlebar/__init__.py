@@ -1,8 +1,8 @@
 # coding:utf-8
 import sys
 
-from PyQt5.QtCore import Qt, QEvent
-from PyQt5.QtWidgets import QHBoxLayout, QWidget
+from PyQt6.QtCore import Qt, QEvent
+from PyQt6.QtWidgets import QHBoxLayout, QWidget
 
 if sys.platform == "win32":
     import win32con
@@ -26,15 +26,15 @@ class TitleBarBase(QWidget):
 
         self.resize(200, 32)
         self.setFixedHeight(32)
-        self.setAttribute(Qt.WA_TranslucentBackground)
+        self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
 
         # add buttons to layout
         self.hBoxLayout.setSpacing(0)
         self.hBoxLayout.setContentsMargins(0, 0, 0, 0)
-        self.hBoxLayout.addWidget(self.minBtn, 0, Qt.AlignRight)
-        self.hBoxLayout.addWidget(self.maxBtn, 0, Qt.AlignRight)
-        self.hBoxLayout.addWidget(self.closeBtn, 0, Qt.AlignRight)
-        self.hBoxLayout.setAlignment(Qt.AlignRight)
+        self.hBoxLayout.addWidget(self.minBtn, 0, Qt.AlignmentFlag.AlignRight)
+        self.hBoxLayout.addWidget(self.maxBtn, 0, Qt.AlignmentFlag.AlignRight)
+        self.hBoxLayout.addWidget(self.closeBtn, 0, Qt.AlignmentFlag.AlignRight)
+        self.hBoxLayout.setAlignment(Qt.AlignmentFlag.AlignRight)
 
         # connect signal to slot
         self.minBtn.clicked.connect(self.window().showMinimized)
@@ -45,7 +45,7 @@ class TitleBarBase(QWidget):
 
     def eventFilter(self, obj, e):
         if obj is self.window():
-            if e.type() == QEvent.WindowStateChange:
+            if e.type() == QEvent.Type.WindowStateChange:
                 self.maxBtn.setMaxState(self.window().isMaximized())
                 return False
 
@@ -53,7 +53,7 @@ class TitleBarBase(QWidget):
 
     def mouseDoubleClickEvent(self, event):
         """ Toggles the maximization state of the window """
-        if event.button() != Qt.LeftButton:
+        if event.button() != Qt.MouseButton.LeftButton:
             return
 
         self.__toggleMaxState()
@@ -87,10 +87,10 @@ class UnixTitleBar(TitleBarBase):
     """ Title bar for Unix system """
 
     def mousePressEvent(self, event):
-        if event.button() != Qt.LeftButton or not self._isDragRegion(event.pos()):
+        if event.button() != Qt.MouseButton.LeftButton or not self._isDragRegion(event.pos()):
             return
 
-        pos = event.globalPos()
+        pos = event.globalPosition().toPoint()
         LinuxMoveResize.startSystemMove(self.window(), pos)
 
 

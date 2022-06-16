@@ -7,10 +7,10 @@ from platform import platform
 import win32api
 import win32con
 import win32gui
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QCloseEvent, QCursor
-from PyQt5.QtWidgets import QApplication, QWidget
-from PyQt5.QtWinExtras import QtWin
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QCloseEvent, QCursor
+from PyQt6.QtWidgets import QApplication, QWidget
+# from PyQt6.QtWinExtras import QtWin
 
 from ..titlebar import TitleBar
 from .c_structures import MINMAXINFO, NCCALCSIZE_PARAMS
@@ -29,7 +29,8 @@ class WindowsFramelessWindow(QWidget):
         self.titleBar = TitleBar(self)
 
         # remove window border
-        self.setWindowFlags(self.windowFlags() | Qt.FramelessWindowHint)
+        self.setWindowFlags(self.windowFlags() |
+                            Qt.WindowType.FramelessWindowHint)
 
         # add DWM shadow and window animation
         self.windowEffect.addWindowAnimation(self.winId())
@@ -39,6 +40,7 @@ class WindowsFramelessWindow(QWidget):
         # solve issue #5
         self.windowHandle().screenChanged.connect(self.__onScreenChanged)
 
+        #self.resize(500, 500)
         self.resize(500, 500)
         self.titleBar.raise_()
 
@@ -121,7 +123,7 @@ class WindowsFramelessWindow(QWidget):
                 info.ptMaxPosition.y = abs(window_rect[1] - monitor_rect[1])
                 return True, 1
 
-        return QWidget.nativeEvent(self, eventType, message)
+        return False, 0
 
     def _isWindowMaximized(self, hWnd):
         # GetWindowPlacement() returns the display state of the window and the restored,
@@ -162,9 +164,8 @@ class AcrylicWindow(WindowsFramelessWindow):
         super().__init__(parent=parent)
         self.__closedByKey = False
 
-        QtWin.enableBlurBehindWindow(self)
-        self.setWindowFlags(Qt.FramelessWindowHint |
-                            Qt.WindowMinMaxButtonsHint)
+        self.setWindowFlags(self.windowFlags() | Qt.WindowType.FramelessWindowHint)
+        self.windowEffect.enableBlurBehindWindow(self.winId())
         self.windowEffect.addWindowAnimation(self.winId())
 
         if "Windows-7" in platform():
