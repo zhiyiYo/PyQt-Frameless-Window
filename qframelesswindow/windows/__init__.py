@@ -7,10 +7,9 @@ from platform import platform
 import win32api
 import win32con
 import win32gui
-from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QCloseEvent, QCursor
+from PyQt6.QtCore import Qt, QAbstractNativeEventFilter
+from PyQt6.QtGui import QCloseEvent, QCursor, QGuiApplication
 from PyQt6.QtWidgets import QApplication, QWidget
-# from PyQt6.QtWinExtras import QtWin
 
 from ..titlebar import TitleBar
 from .c_structures import MINMAXINFO, NCCALCSIZE_PARAMS
@@ -40,7 +39,6 @@ class WindowsFramelessWindow(QWidget):
         # solve issue #5
         self.windowHandle().screenChanged.connect(self.__onScreenChanged)
 
-        #self.resize(500, 500)
         self.resize(500, 500)
         self.titleBar.raise_()
 
@@ -157,6 +155,7 @@ class WindowsFramelessWindow(QWidget):
                               win32con.SWP_NOSIZE | win32con.SWP_FRAMECHANGED)
 
 
+
 class AcrylicWindow(WindowsFramelessWindow):
     """ A frameless window with acrylic effect """
 
@@ -164,7 +163,7 @@ class AcrylicWindow(WindowsFramelessWindow):
         super().__init__(parent=parent)
         self.__closedByKey = False
 
-        self.setWindowFlags(self.windowFlags() | Qt.WindowType.FramelessWindowHint)
+        self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
         self.windowEffect.enableBlurBehindWindow(self.winId())
         self.windowEffect.addWindowAnimation(self.winId())
 
