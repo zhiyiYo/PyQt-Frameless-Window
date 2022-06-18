@@ -140,6 +140,8 @@ class NCCALCSIZE_PARAMS(Structure):
         ('lppos', POINTER(PWINDOWPOS))
     ]
 
+LPNCCALCSIZE_PARAMS = POINTER(NCCALCSIZE_PARAMS)
+
 
 class DWM_BLURBEHIND(Structure):
     _fields_ = [

@@ -2,7 +2,7 @@
 import sys
 
 from PyQt6.QtGui import QPixmap
-from PyQt6.QtWidgets import QApplication, QLabel, QWidget
+from PyQt6.QtWidgets import QApplication, QLabel
 
 from qframelesswindow import FramelessWindow, TitleBar
 
