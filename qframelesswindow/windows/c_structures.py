@@ -139,3 +139,6 @@ class NCCALCSIZE_PARAMS(Structure):
         ('rgrc', RECT*3),
         ('lppos', POINTER(PWINDOWPOS))
     ]
+
+
+LPNCCALCSIZE_PARAMS = POINTER(NCCALCSIZE_PARAMS)
