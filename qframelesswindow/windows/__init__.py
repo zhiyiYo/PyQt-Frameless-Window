@@ -6,10 +6,10 @@ from platform import platform
 
 import win32con
 import win32gui
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QCloseEvent, QCursor
-from PyQt5.QtWidgets import QApplication, QWidget
-from PyQt5.QtWinExtras import QtWin
+from PySide2.QtCore import Qt
+from PySide2.QtGui import QCloseEvent, QCursor
+from PySide2.QtWidgets import QApplication, QWidget
+from PySide2.QtWinExtras import QtWin
 
 from ..titlebar import TitleBar
 from ..utils import win32_utils as win_utils

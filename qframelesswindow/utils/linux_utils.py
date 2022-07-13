@@ -1,10 +1,10 @@
 # coding: utf-8
+import os
 from enum import Enum
 
 import xcffib as xcb
-from PyQt5 import sip
-from PyQt5.QtCore import QPointF, Qt
-from PyQt5.QtX11Extras import QX11Info
+from PySide2.QtCore import QPointF, Qt
+from PySide2.QtX11Extras import QX11Info
 from xcffib.xproto import (ButtonIndex, ButtonMask, ButtonReleaseEvent,
                            ClientMessageData, ClientMessageEvent, EventMask,
                            xprotoExtension)
@@ -49,7 +49,7 @@ class LinuxMoveResize:
         pos = window.mapFromGlobal(globalPos)
 
         # open the connection to X server
-        conn = xcb.wrap(sip.unwrapinstance(QX11Info.connection()))
+        conn = xcb.Connection(os.environ.get('DISPLAY'))
         windowId = int(window.winId())
         xproto = xprotoExtension(conn)
 
@@ -91,7 +91,7 @@ class LinuxMoveResize:
                             window.devicePixelRatio()).toPoint()
 
         # open the connection to X server
-        conn = xcb.wrap(sip.unwrapinstance(QX11Info.connection()))
+        conn = xcb.Connection(os.environ.get('DISPLAY'))
         xproto = xprotoExtension(conn)
 
         if not cls.moveResizeAtom:

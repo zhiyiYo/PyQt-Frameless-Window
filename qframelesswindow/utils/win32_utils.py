@@ -5,9 +5,9 @@ from ctypes.wintypes import DWORD, HWND, LPARAM, RECT, UINT
 import win32api
 import win32con
 import win32gui
-from PyQt5.QtCore import QOperatingSystemVersion
-from PyQt5.QtGui import QGuiApplication
-from PyQt5.QtWinExtras import QtWin
+from PySide2.QtCore import QOperatingSystemVersion, QVersionNumber
+from PySide2.QtGui import QGuiApplication
+from PySide2.QtWinExtras import QtWin
 from win32comext.shell import shellcon
 
 
@@ -114,20 +114,11 @@ def findWindow(hWnd):
             return window
 
 
-def isGreaterEqualVersion(version):
-    """ determine if the windows version ≥ the specifics version
-
-    Parameters
-    ----------
-    version: QOperatingSystemVersion
-        windows version
-    """
-    return QOperatingSystemVersion.current() >= version
-
-
 def isGreaterEqualWin8_1():
     """ determine if the windows version ≥ Win8.1 """
-    return isGreaterEqualVersion(QOperatingSystemVersion.Windows8_1)
+    cv = QOperatingSystemVersion.current()
+    cv = QVersionNumber(cv.majorVersion(), cv.minorVersion(), cv.microVersion())
+    return cv >= QVersionNumber(8, 1, 0)
 
 
 class APPBARDATA(Structure):
