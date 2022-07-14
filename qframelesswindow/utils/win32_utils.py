@@ -20,10 +20,7 @@ def isMaximized(hWnd):
         window handle
     """
     windowPlacement = win32gui.GetWindowPlacement(hWnd)
-    if not windowPlacement:
-        return False
-
-    return windowPlacement[1] == win32con.SW_MAXIMIZE
+    return windowPlacement[1] == win32con.SW_MAXIMIZE if windowPlacement else False
 
 
 def isFullScreen(hWnd):
@@ -61,11 +58,10 @@ def getMonitorInfo(hWnd, dwFlags):
     dwFlags: int
         Determines the return value if the window does not intersect any display monitor
     """
-    monitor = win32api.MonitorFromWindow(hWnd, dwFlags)
-    if not monitor:
+    if monitor := win32api.MonitorFromWindow(hWnd, dwFlags):
+        return win32api.GetMonitorInfo(monitor)
+    else:
         return
-
-    return win32api.GetMonitorInfo(monitor)
 
 
 def getResizeBorderThickness(hWnd):

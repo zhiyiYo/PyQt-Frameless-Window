@@ -43,7 +43,7 @@ class UnixFramelessWindow(QWidget):
 
     def eventFilter(self, obj, event):
         et = event.type()
-        if et != QEvent.MouseButtonPress and et != QEvent.MouseMove:
+        if et not in [QEvent.MouseButtonPress, QEvent.MouseMove]:
             return False
 
         edges = Qt.Edges()

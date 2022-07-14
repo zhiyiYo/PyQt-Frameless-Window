@@ -114,12 +114,10 @@ class WindowsFramelessWindow(QWidget):
                     rect.top += Taskbar.AUTO_HIDE_THICKNESS
                 elif position == Taskbar.BOTTOM:
                     rect.bottom -= Taskbar.AUTO_HIDE_THICKNESS
-                elif position == Taskbar.LEFT:
-                    rect.left += Taskbar.AUTO_HIDE_THICKNESS
                 elif position == Taskbar.RIGHT:
                     rect.right -= Taskbar.AUTO_HIDE_THICKNESS
 
-            result = 0 if not msg.wParam else win32con.WVR_REDRAW
+            result = win32con.WVR_REDRAW if msg.wParam else 0
             return True, result
 
         return super().nativeEvent(eventType, message)
@@ -157,11 +155,10 @@ class AcrylicWindow(WindowsFramelessWindow):
         msg = MSG.from_address(message.__int__())
 
         # handle Alt+F4
-        if msg.message == win32con.WM_SYSKEYDOWN:
-            if msg.wParam == win32con.VK_F4:
-                self.__closedByKey = True
-                QApplication.sendEvent(self, QCloseEvent())
-                return False, 0
+        if msg.message == win32con.WM_SYSKEYDOWN and msg.wParam == win32con.VK_F4:
+            self.__closedByKey = True
+            QApplication.sendEvent(self, QCloseEvent())
+            return False, 0
 
         return super().nativeEvent(eventType, message)
 
