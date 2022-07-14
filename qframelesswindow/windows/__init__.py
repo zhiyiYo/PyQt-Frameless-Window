@@ -8,7 +8,7 @@ import win32con
 import win32gui
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QCloseEvent, QCursor
-from PyQt5.QtWidgets import QApplication, QWidget
+from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5.QtWinExtras import QtWin
 
 from ..titlebar import TitleBar
@@ -18,7 +18,7 @@ from .c_structures import LPNCCALCSIZE_PARAMS
 from .window_effect import WindowsWindowEffect
 
 
-class WindowsFramelessWindow(QWidget):
+class WindowsFramelessWindow(QMainWindow):
     """  Frameless window for Windows system """
 
     BORDER_WIDTH = 5
