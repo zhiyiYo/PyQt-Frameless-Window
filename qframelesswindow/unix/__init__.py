@@ -23,6 +23,7 @@ class UnixFramelessWindow(QMainWindow):
 
         self.titleBar.raise_()
         self.resize(500, 500)
+        self.setContentsMargins(0, self.titleBar.height(), 0, 0)
 
     def resizeEvent(self, e):
         super().resizeEvent(e)
