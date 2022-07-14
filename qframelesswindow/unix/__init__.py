@@ -1,14 +1,14 @@
 # coding:utf-8
 from PyQt5.QtCore import QCoreApplication, QEvent, Qt
 from PyQt5.QtGui import QMouseEvent
-from PyQt5.QtWidgets import QWidget
+from PyQt5.QtWidgets import QMainWindow
 
 from ..titlebar import TitleBar
 from ..utils.linux_utils import LinuxMoveResize
 from .window_effect import UnixWindowEffect
 
 
-class UnixFramelessWindow(QWidget):
+class UnixFramelessWindow(QMainWindow):
     """ Frameless window for Unix system """
 
     BORDER_WIDTH = 5
