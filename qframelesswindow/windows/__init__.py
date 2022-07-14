@@ -41,6 +41,7 @@ class WindowsFramelessWindow(QMainWindow):
 
         self.resize(500, 500)
         self.titleBar.raise_()
+        self.setContentsMargins(0, self.titleBar.height(), 0, 0)
 
     def setTitleBar(self, titleBar):
         """ set custom title bar
