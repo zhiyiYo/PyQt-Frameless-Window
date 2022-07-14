@@ -58,10 +58,12 @@ def getMonitorInfo(hWnd, dwFlags):
     dwFlags: int
         Determines the return value if the window does not intersect any display monitor
     """
-    if monitor := win32api.MonitorFromWindow(hWnd, dwFlags):
-        return win32api.GetMonitorInfo(monitor)
-    else:
+    monitor = win32api.MonitorFromWindow(hWnd, dwFlags)
+    if not monitor:
         return
+
+    return win32api.GetMonitorInfo(monitor)
+
 
 
 def getResizeBorderThickness(hWnd):
