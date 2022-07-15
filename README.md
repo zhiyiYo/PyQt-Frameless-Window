@@ -1,5 +1,5 @@
 # PyQt-Frameless-Window
-A cross-platform frameless window based on pyqt5, support Win32, X11, Wayland and macOS.
+A cross-platform frameless window based on pyqt5, support Win32, X11, and Wayland.
 
 ## Features
 * Move
