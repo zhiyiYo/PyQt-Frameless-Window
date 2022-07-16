@@ -6,7 +6,7 @@ with open('README.md', encoding='utf-8') as f:
 
 setuptools.setup(
     name="PyQt5-Frameless-Window",
-    version="0.0.10",
+    version="0.1.0",
     keywords="pyqt frameless",
     author="Huang Zhengzhi",
     author_email="1319158137@qq.com",
@@ -18,7 +18,9 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     install_requires=[
         "pywin32;platform_system=='Windows'",
-        "xcffib;platform_system!='Windows'",
+        "xcffib;platform_system=='Linux'",
+        "pyobjc;platform_system=='Darwin'",
+        "PyCocoa;platform_system=='Darwin'",
     ],
     classifiers=[
         'Programming Language :: Python :: 3',

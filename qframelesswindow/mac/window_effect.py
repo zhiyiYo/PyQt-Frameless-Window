@@ -1,7 +1,14 @@
 # coding:utf-8
+import objc
+import Cocoa
+from PyQt5.QtWidgets import QMacCocoaViewContainer
+from ..utils.mac_utils import getNSWindow
 
-class UnixWindowEffect:
-    """ Unix window effect """
+class MacWindowEffect:
+    """ Mac OS window effect """
+
+    def __init__(self, window):
+        self.window = window
 
     def setAcrylicEffect(self, hWnd, gradientColor="F2F2F230", isEnableShadow=True, animationId=0):
         """ set acrylic effect for window
@@ -20,7 +27,24 @@ class UnixWindowEffect:
         animationId: int
             turn on blur animation or not
         """
-        pass
+        frame = Cocoa.NSMakeRect(
+            0, 0, self.window.width(), self.window.height())
+        visualEffectView = Cocoa.NSVisualEffectView.new()
+        visualEffectView.setAutoresizingMask_(
+            Cocoa.NSViewWidthSizable | Cocoa.NSViewHeightSizable)  # window resizable
+        visualEffectView.setFrame_(frame)
+        visualEffectView.setState_(Cocoa.NSVisualEffectStateActive)
+
+        # https://developer.apple.com/documentation/appkit/nsvisualeffectmaterial
+        visualEffectView.setMaterial_(Cocoa.NSVisualEffectMaterialPopover)
+        visualEffectView.setBlendingMode_(
+            Cocoa.NSVisualEffectBlendingModeBehindWindow)
+
+        nsWindow = getNSWindow(self.window.winId())
+        content = nsWindow.contentView()
+        container = QMacCocoaViewContainer(0, self.window)
+        content.addSubview_positioned_relativeTo_(
+            visualEffectView, Cocoa.NSWindowBelow, container)
 
     def setMicaEffect(self, hWnd):
         """ Add mica effect to the window (Win11 only)
@@ -30,7 +54,7 @@ class UnixWindowEffect:
         hWnd: int or `sip.voidptr`
             Window handle
         """
-        pass
+        self.setAcrylicEffect(hWnd)
 
     def setAeroEffect(self, hWnd):
         """ add Aero effect to the window
@@ -40,7 +64,7 @@ class UnixWindowEffect:
         hWnd: int or `sip.voidptr`
             Window handle
         """
-        pass
+        self.setAcrylicEffect(hWnd)
 
     def setTransparentEffect(self, hWnd):
         """ set transparent effect for window
@@ -70,7 +94,7 @@ class UnixWindowEffect:
         hWnd: int or `sip.voidptr`
             Window handle
         """
-        pass
+        getNSWindow(hWnd).setHasShadow_(True)
 
     def addMenuShadowEffect(self, hWnd):
         """ add shadow to menu
@@ -80,7 +104,7 @@ class UnixWindowEffect:
         hWnd: int or `sip.voidptr`
             Window handle
         """
-        pass
+        self.addShadowEffect(hWnd)
 
     @staticmethod
     def removeMenuShadowEffect(hWnd):
@@ -91,7 +115,7 @@ class UnixWindowEffect:
         hWnd: int or `sip.voidptr`
             Window handle
         """
-        pass
+        getNSWindow(hWnd).setHasShadow_(False)
 
     def removeShadowEffect(self, hWnd):
         """ Remove shadow from the window
@@ -101,7 +125,7 @@ class UnixWindowEffect:
         hWnd: int or `sip.voidptr`
             Window handle
         """
-        pass
+        getNSWindow(hWnd).setHasShadow_(False)
 
     @staticmethod
     def addWindowAnimation(hWnd):
@@ -110,16 +134,6 @@ class UnixWindowEffect:
         Parameters
         ----------
         hWnd : int or `sip.voidptr`
-            Window handle
-        """
-        pass
-
-    def enableBlurBehindWindow(self, hWnd):
-        """ enable the blur effect behind the whole client
-
-        Parameters
-        ----------
-        hWnd: int or `sip.voidptr`
             Window handle
         """
         pass

@@ -8,6 +8,8 @@ if sys.platform == "win32":
     import win32con
     from win32api import SendMessage
     from win32gui import ReleaseCapture
+elif sys.platform == "darwin":
+    from ..utils.mac_utils import MacMoveResize
 else:
     from ..utils.linux_utils import LinuxMoveResize
 
@@ -83,7 +85,7 @@ class WindowsTitleBar(TitleBarBase):
         event.ignore()
 
 
-class UnixTitleBar(TitleBarBase):
+class LinuxTitleBar(TitleBarBase):
     """ Title bar for Unix system """
 
     def mousePressEvent(self, event):
@@ -94,4 +96,19 @@ class UnixTitleBar(TitleBarBase):
         LinuxMoveResize.startSystemMove(self.window(), pos)
 
 
-TitleBar = WindowsTitleBar if sys.platform == "win32" else UnixTitleBar
+class MacTitleBar(TitleBarBase):
+    """ Title bar for Mac OS """
+
+    def mousePressEvent(self, event):
+        if event.button() != Qt.LeftButton or not self._isDragRegion(event.pos()):
+            return
+
+        MacMoveResize.startSystemMove(self.window(), event.globalPos())
+
+
+if sys.platform == "win32":
+    TitleBar = WindowsTitleBar
+elif sys.platform == "darwin":
+    TitleBar = MacTitleBar
+else:
+    TitleBar = LinuxTitleBar
