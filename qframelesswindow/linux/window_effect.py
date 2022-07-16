@@ -1,7 +1,10 @@
 # coding:utf-8
 
-class UnixWindowEffect:
-    """ Unix window effect """
+class LinuxWindowEffect:
+    """ Linux window effect """
+
+    def __init__(self, window):
+        self.window = window
 
     def setAcrylicEffect(self, hWnd, gradientColor="F2F2F230", isEnableShadow=True, animationId=0):
         """ set acrylic effect for window

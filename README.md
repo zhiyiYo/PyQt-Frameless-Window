@@ -1,5 +1,5 @@
 # PyQt-Frameless-Window
-A cross-platform frameless window based on pyqt5, support Win32, X11, and Wayland.
+A cross-platform frameless window based on pyqt5, support Win32, X11, Wayland and macOS.
 
 ## Features
 * Move
@@ -9,6 +9,7 @@ A cross-platform frameless window based on pyqt5, support Win32, X11, and Waylan
 * Win10 acrylic blur
 * Win11 mica blur
 * Win7 Aero blur
+* MacOS blur
 
 ## Install
 To install use pip:
@@ -81,7 +82,7 @@ Here are some projects that use PyQt-Frameless-Window:
 * [**tonquer/picacg-qt**: PicACG PC Client ](https://github.com/tonquer/picacg-qt)
 
 ## Reference
-* [**wangwenx190/framelesshelper**: Frameless windows for Qt Widgets and Qt Quick applications. Support Win32, X11, Wayland and macOS](https://github.com/wangwenx190/framelesshelper) (I think this repo's code is very messy and not suitable for human beings to read 😕)
+* [**wangwenx190/framelesshelper**: Frameless windows for Qt Widgets and Qt Quick applications. Support Win32, X11, Wayland and macOS](https://github.com/wangwenx190/framelesshelper)
 * [**libxcb**: Basic Graphics Programming With The XCB Library](https://github.com/zhaiyuhan/HAODA)
 
 ## License

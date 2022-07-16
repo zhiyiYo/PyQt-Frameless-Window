@@ -25,7 +25,7 @@ class WindowsFramelessWindow(QWidget):
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
-        self.windowEffect = WindowsWindowEffect()
+        self.windowEffect = WindowsWindowEffect(self)
         self.titleBar = TitleBar(self)
 
         # remove window border
