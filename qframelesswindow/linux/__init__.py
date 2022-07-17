@@ -48,7 +48,7 @@ class LinuxFramelessWindow(QWidget):
             return False
 
         edges = 0
-        pos = QMouseEvent(event).globalPos() - self.pos()
+        pos = event.globalPosition().toPoint() - self.pos()
         if pos.x() < self.BORDER_WIDTH:
             edges |= Qt.Edge.LeftEdge
         if pos.x() >= self.width()-self.BORDER_WIDTH:

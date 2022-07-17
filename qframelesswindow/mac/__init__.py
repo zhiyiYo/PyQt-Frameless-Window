@@ -1,8 +1,8 @@
 # coding:utf-8
 import Cocoa
 import objc
-from PyQt5.QtCore import QEvent, Qt
-from PyQt5.QtWidgets import QWidget
+from PyQt6.QtCore import QEvent, Qt
+from PyQt6.QtWidgets import QWidget
 
 from ..titlebar import TitleBar
 from .window_effect import MacWindowEffect
@@ -52,7 +52,7 @@ class MacFramelessWindow(QWidget):
 
     def changeEvent(self, event):
         super().changeEvent(event)
-        if event.type() == QEvent.WindowStateChange:
+        if event.type() == QEvent.Type.WindowStateChange:
             self.__hideSystemTitleBar()
 
     def __hideSystemTitleBar(self):
@@ -78,6 +78,6 @@ class AcrylicWindow(MacFramelessWindow):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setAttribute(Qt.WA_TranslucentBackground)
+        self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
         self.windowEffect.setAcrylicEffect(self.winId())
         self.setStyleSheet("background: transparent")

@@ -27,7 +27,8 @@ python setup.py install
 | Platform | Requirement |
 | :------: | :---------: |
 |  Win32   |   pywin32   |
-|   Unix   |   xcffib    |
+|  Linux   |   xcffib    |
+|  MacOS   |   pyobjc    |
 
 
 ## Usage
