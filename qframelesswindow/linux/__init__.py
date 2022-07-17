@@ -5,17 +5,17 @@ from PySide2.QtWidgets import QWidget
 
 from ..titlebar import TitleBar
 from ..utils.linux_utils import LinuxMoveResize
-from .window_effect import UnixWindowEffect
+from .window_effect import LinuxWindowEffect
 
 
-class UnixFramelessWindow(QWidget):
-    """ Frameless window for Unix system """
+class LinuxFramelessWindow(QWidget):
+    """ Frameless window for Linux system """
 
     BORDER_WIDTH = 5
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
-        self.windowEffect = UnixWindowEffect()
+        self.windowEffect = LinuxWindowEffect(self)
         self.titleBar = TitleBar(self)
 
         self.setWindowFlags(self.windowFlags() | Qt.FramelessWindowHint)

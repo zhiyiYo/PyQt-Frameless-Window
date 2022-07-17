@@ -18,7 +18,9 @@ from .c_structures import (ACCENT_POLICY, ACCENT_STATE, DWMNCRENDERINGPOLICY,
 class WindowsWindowEffect:
     """ Windows window effect """
 
-    def __init__(self):
+    def __init__(self, window):
+        self.window = window
+
         # Declare the function signature of the API
         self.user32 = cdll.LoadLibrary("user32")
         self.dwmapi = cdll.LoadLibrary("dwmapi")
