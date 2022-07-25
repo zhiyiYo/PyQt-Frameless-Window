@@ -205,3 +205,44 @@ class Taskbar:
                 return appbarData.uEdge
 
         return cls.NO_POSITION
+
+
+class WindowsMoveResize:
+    """ Tool class for moving and resizing Mac OS window """
+
+    @staticmethod
+    def startSystemMove(window, globalPos):
+        """ resize window
+
+        Parameters
+        ----------
+        window: QWidget
+            window
+
+        globalPos: QPoint
+            the global point of mouse release event
+        """
+        win32gui.ReleaseCapture()
+        win32api.SendMessage(
+            int(window.winId()),
+            win32con.WM_SYSCOMMAND,
+            win32con.SC_MOVE | win32con.HTCAPTION,
+            0
+        )
+
+    @classmethod
+    def starSystemResize(cls, window, globalPos, edges):
+        """ resize window
+
+        Parameters
+        ----------
+        window: QWidget
+            window
+
+        globalPos: QPoint
+            the global point of mouse release event
+
+        edges: `Qt.Edges`
+            window edges
+        """
+        pass
