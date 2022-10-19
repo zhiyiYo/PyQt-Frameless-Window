@@ -20,7 +20,6 @@ class TitleBar(QWidget):
 
         self.resize(200, 32)
         self.setFixedHeight(32)
-        self.setAttribute(Qt.WA_TranslucentBackground)
 
         # add buttons to layout
         self.hBoxLayout.setSpacing(0)
