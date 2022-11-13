@@ -3,7 +3,6 @@ import sys
 import warnings
 from ctypes import POINTER, byref, c_bool, c_int, cdll, pointer, sizeof
 from ctypes.wintypes import DWORD, LONG, LPCVOID
-from platform import platform
 
 import win32api
 import win32con
@@ -13,6 +12,7 @@ from .c_structures import (ACCENT_POLICY, ACCENT_STATE, DWMNCRENDERINGPOLICY,
                            DWMWINDOWATTRIBUTE, MARGINS,
                            WINDOWCOMPOSITIONATTRIB,
                            WINDOWCOMPOSITIONATTRIBDATA, DWM_BLURBEHIND)
+from ..utils.win32_utils import isGreaterEqualWin10, isGreaterEqualWin11, IsCompositionEnabled
 
 
 class WindowsWindowEffect:
@@ -65,7 +65,7 @@ class WindowsWindowEffect:
         animationId: int
             Turn on matte animation
         """
-        if "Windows-7" in platform():
+        if not isGreaterEqualWin10():
             warnings.warn("The acrylic effect is only available on Win10+")
             return
 
@@ -93,7 +93,7 @@ class WindowsWindowEffect:
         isDarkMode: bool
             whether to use dark mode mica effect
         """
-        if sys.getwindowsversion().build < 22000:
+        if not isGreaterEqualWin11():
             warnings.warn("The mica effect is only available on Win11")
             return
 
@@ -163,6 +163,9 @@ class WindowsWindowEffect:
         hWnd: int or `sip.voidptr`
             Window handle
         """
+        if not IsCompositionEnabled():
+            return
+
         hWnd = int(hWnd)
         margins = MARGINS(-1, -1, -1, -1)
         self.DwmExtendFrameIntoClientArea(hWnd, byref(margins))
@@ -175,6 +178,9 @@ class WindowsWindowEffect:
         hWnd: int or `sip.voidptr`
             Window handle
         """
+        if not IsCompositionEnabled():
+            return
+
         hWnd = int(hWnd)
         self.DwmSetWindowAttribute(
             hWnd,
