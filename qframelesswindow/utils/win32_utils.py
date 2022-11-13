@@ -1,6 +1,8 @@
 # coding:utf-8
 from ctypes import Structure, byref, sizeof, windll
 from ctypes.wintypes import DWORD, HWND, LPARAM, RECT, UINT
+from platform import platform
+import sys
 
 import win32api
 import win32con
@@ -128,6 +130,21 @@ def isGreaterEqualVersion(version):
 def isGreaterEqualWin8_1():
     """ determine if the windows version ≥ Win8.1 """
     return isGreaterEqualVersion(QOperatingSystemVersion.Windows8_1)
+
+
+def isGreaterEqualWin10():
+    """ determine if the windows version ≥ Win10 """
+    return isGreaterEqualVersion(QOperatingSystemVersion.Windows10)
+
+
+def isGreaterEqualWin11():
+    """ determine if the windows version ≥ Win10 """
+    return isGreaterEqualVersion(QOperatingSystemVersion.Windows10) and sys.getwindowsversion().build >= 22000
+
+
+def isWin7():
+    """ determine if the windows version is Win7 """
+    return "Windows-7" in platform()
 
 
 class APPBARDATA(Structure):
