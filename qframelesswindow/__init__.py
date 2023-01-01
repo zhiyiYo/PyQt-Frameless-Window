@@ -1,5 +1,7 @@
 import sys
 
+from PyQt5.QtWidgets import QDialog, QMainWindow
+
 from .titlebar import TitleBar
 
 if sys.platform == "win32":
@@ -15,3 +17,20 @@ else:
     from .linux import LinuxWindowEffect as WindowEffect
 
     AcrylicWindow = FramelessWindow
+
+
+class FramelessDialog(QDialog, FramelessWindow):
+    """ Frameless dialog """
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.titleBar.minBtn.hide()
+        self.titleBar.maxBtn.hide()
+        self.titleBar.setDoubleClickEnabled(False)
+
+
+class FramelessMainWindow(QMainWindow, FramelessWindow):
+    """ Frameless main window """
+
+    def __init__(self, parent=None):
+        super().__init__(parent)

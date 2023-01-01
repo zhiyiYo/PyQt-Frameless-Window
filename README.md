@@ -32,7 +32,7 @@ python setup.py install
 
 
 ## Usage
-To use the frameless window, you only need to inherit `FramelessWindow`. Here is a minimal example:
+To use the frameless window, you only need to inherit `FramelessWindow` or `FramelessMainWindow`. Here is a minimal example:
 ```python
 import sys
 
@@ -54,7 +54,7 @@ if __name__ == '__main__':
     demo.show()
     sys.exit(app.exec_())
 ```
-For more complex requirements, you can refer to the [demo.py](./demo.py).
+For more complex requirements, see [demo.py](./examples/demo.py) and [main_window.py](./examples/main_window.py).
 
 ## Examples
 * Normal frameless window
