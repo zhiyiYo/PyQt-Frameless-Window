@@ -17,6 +17,7 @@ class TitleBar(QWidget):
         self.closeBtn = CloseButton(parent=self)
         self.maxBtn = MaximizeButton(parent=self)
         self.hBoxLayout = QHBoxLayout(self)
+        self.__isDoubleClickEnabled = True
 
         self.resize(200, 32)
         self.setFixedHeight(32)
@@ -46,7 +47,7 @@ class TitleBar(QWidget):
 
     def mouseDoubleClickEvent(self, event):
         """ Toggles the maximization state of the window """
-        if event.button() != Qt.LeftButton:
+        if event.button() != Qt.LeftButton or not self.__isDoubleClickEnabled:
             return
 
         self.__toggleMaxState()
@@ -73,3 +74,13 @@ class TitleBar(QWidget):
     def _isDragRegion(self, pos):
         """ Check whether the pressed point belongs to the area where dragging is allowed """
         return 0 < pos.x() < self.width() - 46 * 3
+
+    def setDoubleClickEnabled(self, isEnabled):
+        """ whether to switch window maximization status when double clicked
+
+        Parameters
+        ----------
+        isEnabled: bool
+            whether to enable double click
+        """
+        self.__isDoubleClickEnabled = isEnabled
