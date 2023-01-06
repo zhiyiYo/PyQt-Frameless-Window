@@ -5,7 +5,7 @@ from PyQt5.QtCore import QEvent, Qt
 from PyQt5.QtWidgets import QHBoxLayout, QWidget
 
 from ..utils import startSystemMove
-from .title_bar_buttons import CloseButton, MaximizeButton, MinimizeButton
+from .title_bar_buttons import CloseButton, MaximizeButton, MinimizeButton, SvgTitleBarButton
 
 
 class TitleBar(QWidget):
@@ -17,7 +17,7 @@ class TitleBar(QWidget):
         self.closeBtn = CloseButton(parent=self)
         self.maxBtn = MaximizeButton(parent=self)
         self.hBoxLayout = QHBoxLayout(self)
-        self.__isDoubleClickEnabled = True
+        self._isDoubleClickEnabled = True
 
         self.resize(200, 32)
         self.setFixedHeight(32)
@@ -47,7 +47,7 @@ class TitleBar(QWidget):
 
     def mouseDoubleClickEvent(self, event):
         """ Toggles the maximization state of the window """
-        if event.button() != Qt.LeftButton or not self.__isDoubleClickEnabled:
+        if event.button() != Qt.LeftButton or not self._isDoubleClickEnabled:
             return
 
         self.__toggleMaxState()
@@ -83,4 +83,4 @@ class TitleBar(QWidget):
         isEnabled: bool
             whether to enable double click
         """
-        self.__isDoubleClickEnabled = isEnabled
+        self._isDoubleClickEnabled = isEnabled
