@@ -5,7 +5,7 @@ from PySide2.QtCore import Qt, QEvent
 from PySide2.QtWidgets import QHBoxLayout, QWidget
 
 from ..utils import startSystemMove
-from .title_bar_buttons import CloseButton, MaximizeButton, MinimizeButton
+from .title_bar_buttons import CloseButton, MaximizeButton, MinimizeButton, SvgTitleBarButton
 
 
 class TitleBar(QWidget):
