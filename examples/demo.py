@@ -1,7 +1,8 @@
 # coding:utf-8
 import sys
 
-from PyQt6.QtGui import QPixmap
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QColor, QPixmap
 from PyQt6.QtWidgets import QApplication, QLabel
 
 from qframelesswindow import FramelessWindow, TitleBar
@@ -12,17 +13,30 @@ class CustomTitleBar(TitleBar):
 
     def __init__(self, parent):
         super().__init__(parent)
-        self.label = QLabel('PyQt-Frameless-Window', self)
-        self.label.setStyleSheet("QLabel{font: 13px 'Segoe UI'; margin: 10px}")
-        self.label.adjustSize()
+        # add title label
+        self.titleLabel = QLabel(self)
+        self.titleLabel.setStyleSheet("QLabel{font: 13px 'Segoe UI'; margin: 9px}")
+        self.window().windowTitleChanged.connect(self.setTitle)
 
         # customize the style of title bar button
-        self.minBtn.updateStyle({
-            "hover": {
-                "color": (0, 0, 0),
-                'background': (0, 0, 0, 26)
+        self.minBtn.setHoverColor(Qt.GlobalColor.white)
+        self.minBtn.setHoverBackgroundColor(QColor(0, 100, 182))
+        self.minBtn.setPressedColor(Qt.GlobalColor.white)
+        self.minBtn.setPressedBackgroundColor(QColor(54, 57, 65))
+
+        # use qss to customize title bar button
+        self.maxBtn.setStyleSheet("""
+            TitleBarButton {
+                qproperty-hoverColor: white;
+                qproperty-hoverBackgroundColor: rgb(0, 100, 182);
+                qproperty-pressedColor: white;
+                qproperty-pressedBackgroundColor: rgb(54, 57, 65);
             }
-        })
+        """)
+
+    def setTitle(self, title):
+        self.titleLabel.setText(title)
+        self.titleLabel.adjustSize()
 
 
 class Window(FramelessWindow):
@@ -30,7 +44,7 @@ class Window(FramelessWindow):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
         # change the default title bar if you like
-        # self.setTitleBar(CustomTitleBar(self))
+        self.setTitleBar(CustomTitleBar(self))
 
         self.label = QLabel(self)
         self.label.setScaledContents(True)
