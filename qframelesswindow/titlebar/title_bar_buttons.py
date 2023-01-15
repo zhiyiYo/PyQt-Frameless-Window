@@ -48,6 +48,10 @@ class TitleBarButton(QAbstractButton):
         self._state = state
         self.update()
 
+    def isPressed(self):
+        """ whether the button is pressed """
+        return self._state == TitleBarButtonState.PRESSED
+
     @deprecated
     def updateStyle(self, style):
         """ update the style of button """

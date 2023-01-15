@@ -5,7 +5,8 @@ from PySide2.QtCore import Qt, QEvent
 from PySide2.QtWidgets import QHBoxLayout, QWidget
 
 from ..utils import startSystemMove
-from .title_bar_buttons import CloseButton, MaximizeButton, MinimizeButton, SvgTitleBarButton
+from .title_bar_buttons import (CloseButton, MaximizeButton, MinimizeButton,
+                                SvgTitleBarButton, TitleBarButton)
 
 
 class TitleBar(QWidget):
@@ -24,10 +25,11 @@ class TitleBar(QWidget):
         # add buttons to layout
         self.hBoxLayout.setSpacing(0)
         self.hBoxLayout.setContentsMargins(0, 0, 0, 0)
+        self.hBoxLayout.setAlignment(Qt.AlignVCenter | Qt.AlignLeft)
+        self.hBoxLayout.addStretch(1)
         self.hBoxLayout.addWidget(self.minBtn, 0, Qt.AlignRight)
         self.hBoxLayout.addWidget(self.maxBtn, 0, Qt.AlignRight)
         self.hBoxLayout.addWidget(self.closeBtn, 0, Qt.AlignRight)
-        self.hBoxLayout.setAlignment(Qt.AlignRight)
 
         # connect signal to slot
         self.minBtn.clicked.connect(self.window().showMinimized)
@@ -52,13 +54,13 @@ class TitleBar(QWidget):
         self.__toggleMaxState()
 
     def mouseMoveEvent(self, e):
-        if sys.platform != "win32" or not self._isDragRegion(e.pos()):
+        if sys.platform != "win32" or not self.canDrag(e.pos()):
             return
 
         startSystemMove(self.window(), e.globalPos())
 
     def mousePressEvent(self, e):
-        if sys.platform == "win32" or e.button() != Qt.LeftButton or not self._isDragRegion(e.pos()):
+        if sys.platform == "win32" or not self.canDrag(e.pos()):
             return
 
         startSystemMove(self.window(), e.globalPos())
@@ -71,5 +73,18 @@ class TitleBar(QWidget):
             self.window().showMaximized()
 
     def _isDragRegion(self, pos):
-        """ Check whether the pressed point belongs to the area where dragging is allowed """
-        return 0 < pos.x() < self.width() - 46 * 3
+        """ Check whether the position belongs to the area where dragging is allowed """
+        width = 0
+        for button in self.findChildren(TitleBarButton):
+            if button.isVisible():
+                width += button.width()
+
+        return 0 < pos.x() < self.width() - width
+
+    def _hasButtonPressed(self):
+        """ whether any button is pressed """
+        return any(btn.isPressed() for btn in self.findChildren(TitleBarButton))
+
+    def canDrag(self, pos):
+        """ whether the position is draggable """
+        return self._isDragRegion(pos) and not self._hasButtonPressed()
