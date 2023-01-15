@@ -6,10 +6,10 @@ with open('README.md', encoding='utf-8') as f:
 
 setuptools.setup(
     name="PyQt5-Frameless-Window",
-    version="0.1.5",
+    version="0.1.6",
     keywords="pyqt frameless",
-    author="Huang Zhengzhi",
-    author_email="1319158137@qq.com",
+    author="zhiyiYo",
+    author_email="shokokawaii@outlook.com",
     description="A cross-platform frameless window based on pyqt5, support Win32, X11, Wayland and macOS.",
     long_description=long_description,
     long_description_content_type='text/markdown',
