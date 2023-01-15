@@ -1,9 +1,9 @@
 # coding:utf-8
 from enum import Enum
 
-from PyQt5.QtCore import QFile, QPointF, QRectF, QSize, Qt, pyqtProperty
-from PyQt5.QtGui import QColor, QIcon, QPainter, QPainterPath, QPen
-from PyQt5.QtWidgets import QToolButton, QAbstractButton
+from PyQt5.QtCore import QFile, QPointF, QRectF, Qt, pyqtProperty
+from PyQt5.QtGui import QColor, QPainter, QPainterPath, QPen
+from PyQt5.QtWidgets import QAbstractButton
 from PyQt5.QtSvg import QSvgRenderer
 from PyQt5.QtXml import QDomDocument
 
@@ -47,6 +47,10 @@ class TitleBarButton(QAbstractButton):
         """
         self._state = state
         self.update()
+
+    def isPressed(self):
+        """ whether the button is pressed """
+        return self._state == TitleBarButtonState.PRESSED
 
     @deprecated
     def updateStyle(self, style):
