@@ -44,10 +44,17 @@ class MainWindow(FramelessMainWindow):
 
     def showHelpDialog(self):
         w = FramelessDialog(self)
+
+        # add a label to dialog
         w.setLayout(QHBoxLayout())
         w.layout().addWidget(QLabel('Frameless Dialog'), 0, Qt.AlignCenter)
+
+        # raise title bar
         w.titleBar.raise_()
         w.resize(300, 300)
+
+        # disable resizing dialog
+        w.setResizeEnabled(False)
         w.exec()
 
 
