@@ -25,6 +25,7 @@ class WindowsFramelessWindow(QWidget):
         super().__init__(parent=parent)
         self.windowEffect = WindowsWindowEffect(self)
         self.titleBar = TitleBar(self)
+        self._isResizeEnabled = True
 
         # remove window border
         if not win_utils.isWin7():
@@ -57,6 +58,10 @@ class WindowsFramelessWindow(QWidget):
         self.titleBar.setParent(self)
         self.titleBar.raise_()
 
+    def setResizeEnabled(self, isEnabled: bool):
+        """ set whether resizing is enabled """
+        self._isResizeEnabled = isEnabled
+
     def resizeEvent(self, e):
         super().resizeEvent(e)
         self.titleBar.resize(self.width(), self.titleBar.height())
@@ -67,7 +72,7 @@ class WindowsFramelessWindow(QWidget):
         if not msg.hWnd:
             return False, 0
 
-        if msg.message == win32con.WM_NCHITTEST:
+        if msg.message == win32con.WM_NCHITTEST and self._isResizeEnabled:
             pos = QCursor.pos()
             xPos = pos.x() - self.x()
             yPos = pos.y() - self.y()

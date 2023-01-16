@@ -19,6 +19,7 @@ class MacFramelessWindow(QWidget):
             self.windowEffect.setAcrylicEffect(self.winId())
 
         self.titleBar = TitleBar(self)
+        self._isResizeEnabled = True
 
         view = objc.objc_object(c_void_p=self.winId().__int__())
         self.__nsWindow = view.window()
@@ -41,6 +42,10 @@ class MacFramelessWindow(QWidget):
         self.titleBar = titleBar
         self.titleBar.setParent(self)
         self.titleBar.raise_()
+
+    def setResizeEnabled(self, isEnabled: bool):
+        """ set whether resizing is enabled """
+        self._isResizeEnabled = isEnabled
 
     def resizeEvent(self, e):
         super().resizeEvent(e)
