@@ -1,7 +1,7 @@
 # coding:utf-8
 import sys
 import warnings
-from ctypes import POINTER, byref, c_bool, c_int, cdll, pointer, sizeof
+from ctypes import POINTER, byref, c_bool, c_int, pointer, sizeof, WinDLL
 from ctypes.wintypes import DWORD, LONG, LPCVOID
 
 import win32api
@@ -23,8 +23,8 @@ class WindowsWindowEffect:
         self.window = window
 
         # Declare the function signature of the API
-        self.user32 = cdll.LoadLibrary("user32")
-        self.dwmapi = cdll.LoadLibrary("dwmapi")
+        self.user32 = WinDLL("user32")
+        self.dwmapi = WinDLL("dwmapi")
         self.SetWindowCompositionAttribute = self.user32.SetWindowCompositionAttribute
         self.DwmExtendFrameIntoClientArea = self.dwmapi.DwmExtendFrameIntoClientArea
         self.DwmSetWindowAttribute = self.dwmapi.DwmSetWindowAttribute

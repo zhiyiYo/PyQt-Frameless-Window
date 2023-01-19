@@ -7,7 +7,7 @@ from PyQt5.QtWidgets import QAbstractButton
 from PyQt5.QtSvg import QSvgRenderer
 from PyQt5.QtXml import QDomDocument
 
-from ..rc import resource
+from .._rc import resource
 from ..utils.deprecation import deprecated
 
 

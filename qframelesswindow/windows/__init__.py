@@ -158,7 +158,7 @@ class AcrylicWindow(WindowsFramelessWindow):
             if win_utils.isGreaterEqualWin11():
                 self.windowEffect.addShadowEffect(self.winId())
 
-        self.setStyleSheet("background:transparent")
+        self.setStyleSheet("AcrylicWindow{background:transparent}")
 
     def nativeEvent(self, eventType, message):
         """ Handle the Windows message """
