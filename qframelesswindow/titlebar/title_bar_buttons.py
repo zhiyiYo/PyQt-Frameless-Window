@@ -10,7 +10,7 @@ from PyQt6.QtXml import QDomDocument
 
 from ..utils.deprecation import deprecated
 
-path = Path(__file__).resolve().parent.parent/"rc/title_bar"
+path = Path(__file__).resolve().parent.parent/"_rc/title_bar"
 QDir.addSearchPath('qframelesswindow', str(path))
 
 

@@ -60,7 +60,7 @@ For more complex requirements, see [demo.py](./examples/demo.py) and [main_windo
 * Normal frameless window
 ![Normal Frameless Window](screenshot/normal_frameless_window.gif)
 * Acrylic frameless window
-![Acrylic Frameless Window](screenshot/Acrylic_window.gif)
+![Acrylic Frameless Window](screenshot/acrylic_window.jpg)
 
 
 

@@ -3,7 +3,7 @@ import sys
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QColor, QPixmap, QIcon
-from PyQt6.QtWidgets import QApplication, QLabel, QHBoxLayout
+from PyQt6.QtWidgets import QApplication, QLabel
 
 from qframelesswindow import FramelessWindow, TitleBar
 
