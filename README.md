@@ -1,8 +1,32 @@
-# PyQt-Frameless-Window
-A cross-platform frameless window based on pyqt5, support Win32, X11, Wayland and macOS.
+<p align="center">
+  <img width="15%" align="center" src="screenshot/logo.png" alt="logo">
+</p>
+  <h1 align="center">
+  PyQt-Frameless-Window
+</h1>
+<p align="center">
+  A cross-platform frameless window based on PyQt5
+</p>
+
+<p align="center">
+  <a style="text-decoration:none">
+    <img src="https://img.shields.io/badge/Platform-Win32%20|%20Linux%20|%20macOS-blue?color=#4ec820" alt="Platform Win32 | Linux | macOS"/>
+  </a>
+
+  <a style="text-decoration:none">
+    <img src="https://static.pepy.tech/personalized-badge/pyqt5-frameless-window?period=total&units=international_system&left_color=grey&right_color=brightgreen&left_text=Downloads" alt="Download"/>
+  </a>
+
+  <a style="text-decoration:none">
+    <img src="https://img.shields.io/badge/License-MIT-blue?color=#4ec820" alt="MIT"/>
+  </a>
+</p>
+
+![Cover](screenshot/cover.png)
+
 
 ## Features
-* Move
+* Moving
 * Stretching
 * Window animation
 * Window shadow
