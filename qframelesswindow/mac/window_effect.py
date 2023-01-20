@@ -1,7 +1,7 @@
 # coding:utf-8
 import Cocoa
-from PySide2.QtCore import Qt
-from PySide2.QtWidgets import QWidget
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QWidget
 
 from ..utils.mac_utils import getNSWindow
 
@@ -143,6 +143,15 @@ class MacWindowEffect:
         Parameters
         ----------
         hWnd : int or `sip.voidptr`
+            Window handle
+        """
+        pass
+
+    def enableBlurBehindWindow(self, hWnd):
+        """ enable the blur effect behind the whole client
+        Parameters
+        ----------
+        hWnd: int or `sip.voidptr`
             Window handle
         """
         pass

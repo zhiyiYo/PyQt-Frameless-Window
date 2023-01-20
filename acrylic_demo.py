@@ -1,7 +1,7 @@
 # coding:utf-8
 import sys
 
-from PySide2.QtWidgets import QApplication
+from PySide6.QtWidgets import QApplication
 from qframelesswindow import AcrylicWindow
 
 
@@ -23,4 +23,4 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     demo = Window()
     demo.show()
-    sys.exit(app.exec_())
+    app.exec()

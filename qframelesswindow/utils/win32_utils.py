@@ -1,5 +1,5 @@
 # coding:utf-8
-from ctypes import Structure, byref, sizeof, windll
+from ctypes import Structure, byref, sizeof, windll, c_int
 from ctypes.wintypes import DWORD, HWND, LPARAM, RECT, UINT
 from platform import platform
 import sys
@@ -7,10 +7,13 @@ import sys
 import win32api
 import win32con
 import win32gui
-from PySide2.QtCore import QOperatingSystemVersion, QVersionNumber
-from PySide2.QtGui import QGuiApplication
-from PySide2.QtWinExtras import QtWin
-from win32comext.shell import shellcon
+from PySide6.QtCore import QOperatingSystemVersion, QVersionNumber
+from PySide6.QtGui import QGuiApplication
+
+
+ABM_GETSTATE = 4
+ABS_AUTOHIDE = 1
+ABM_GETTASKBARPOS = 5
 
 
 def isMaximized(hWnd):
@@ -52,6 +55,13 @@ def isFullScreen(hWnd):
     return all(i == j for i, j in zip(winRect, monitorRect))
 
 
+def isCompositionEnabled():
+    """ detect if dwm composition is enabled """
+    bResult = c_int(0)
+    windll.dwmapi.DwmIsCompositionEnabled(byref(bResult))
+    return bool(bResult.value)
+
+
 def getMonitorInfo(hWnd, dwFlags):
     """ get monitor info, return `None` if failed
 
@@ -91,7 +101,7 @@ def getResizeBorderThickness(hWnd):
     if result > 0:
         return result
 
-    thickness = 8 if QtWin.isCompositionEnabled() else 4
+    thickness = 8 if isCompositionEnabled() else 4
     return round(thickness*window.devicePixelRatio())
 
 
@@ -164,10 +174,9 @@ class Taskbar:
         """ detect whether the taskbar is hidden automatically """
         appbarData = APPBARDATA(sizeof(APPBARDATA), 0,
                                 0, 0, RECT(0, 0, 0, 0), 0)
-        taskbarState = windll.shell32.SHAppBarMessage(
-            shellcon.ABM_GETSTATE, byref(appbarData))
+        taskbarState = windll.shell32.SHAppBarMessage(ABM_GETSTATE, byref(appbarData))
 
-        return taskbarState == shellcon.ABS_AUTOHIDE
+        return taskbarState == ABS_AUTOHIDE
 
     @classmethod
     def getPosition(cls, hWnd):
@@ -208,8 +217,7 @@ class Taskbar:
                 return cls.NO_POSITION
 
             if taskbarMonitor == windowMonitor:
-                windll.shell32.SHAppBarMessage(
-                    shellcon.ABM_GETTASKBARPOS, byref(appbarData))
+                windll.shell32.SHAppBarMessage(ABM_GETTASKBARPOS, byref(appbarData))
                 return appbarData.uEdge
 
         return cls.NO_POSITION

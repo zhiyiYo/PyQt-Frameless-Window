@@ -1,8 +1,8 @@
 # coding:utf-8
 import sys
 
-from PySide2.QtCore import Qt, QEvent
-from PySide2.QtWidgets import QHBoxLayout, QWidget
+from PySide6.QtCore import Qt, QEvent
+from PySide6.QtWidgets import QHBoxLayout, QWidget
 
 from ..utils import startSystemMove
 from .title_bar_buttons import (CloseButton, MaximizeButton, MinimizeButton,

@@ -59,7 +59,7 @@ For more complex requirements, you can refer to the [demo.py](./demo.py).
 * Normal frameless window
 ![Normal Frameless Window](screenshot/normal_frameless_window.gif)
 * Acrylic frameless window
-![Acrylic Frameless Window](screenshot/Acrylic_window.gif)
+![Acrylic Frameless Window](screenshot/Acrylic_window.jpg)
 
 
 

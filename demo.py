@@ -1,9 +1,9 @@
 # coding:utf-8
 import sys
 
-from PySide2.QtCore import Qt
-from PySide2.QtGui import QColor, QPixmap, QIcon
-from PySide2.QtWidgets import QApplication, QLabel, QHBoxLayout
+from PySide6.QtCore import Qt
+from PySide6.QtGui import QColor, QPixmap, QIcon
+from PySide6.QtWidgets import QApplication, QLabel
 
 from qframelesswindow import FramelessWindow, TitleBar
 
@@ -85,14 +85,7 @@ class Window(FramelessWindow):
 
 
 if __name__ == "__main__":
-    # enable dpi scale
-    QApplication.setHighDpiScaleFactorRoundingPolicy(
-        Qt.HighDpiScaleFactorRoundingPolicy.PassThrough)
-    QApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
-    QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps)
-
-    # run app
     app = QApplication(sys.argv)
     demo = Window()
     demo.show()
-    sys.exit(app.exec_())
+    app.exec()

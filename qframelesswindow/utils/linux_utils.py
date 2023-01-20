@@ -3,8 +3,8 @@ import os
 from enum import Enum
 
 import xcffib as xcb
-from PySide2.QtCore import QPointF, Qt
-from PySide2.QtX11Extras import QX11Info
+from PySide6.QtCore import QPointF, Qt
+from PySide6.QtX11Extras import QX11Info
 from xcffib.xproto import (ButtonIndex, ButtonMask, ButtonReleaseEvent,
                            ClientMessageData, ClientMessageEvent, EventMask,
                            xprotoExtension)

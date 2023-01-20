@@ -1,14 +1,13 @@
 # coding:utf-8
 from enum import Enum
 
-from PySide2.QtCore import QFile, QPointF, QRectF, Qt, Property
-from PySide2.QtGui import QColor, QPainter, QPainterPath, QPen
-from PySide2.QtWidgets import QAbstractButton
-from PySide2.QtSvg import QSvgRenderer
-from PySide2.QtXml import QDomDocument
+from PySide6.QtCore import QFile, QPointF, QRectF, Qt, Property
+from PySide6.QtGui import QColor, QPainter, QPainterPath, QPen
+from PySide6.QtWidgets import QAbstractButton
+from PySide6.QtSvg import QSvgRenderer
+from PySide6.QtXml import QDomDocument
 
-from ..rc import resource
-from ..utils.deprecation import deprecated
+from .._rc import resource
 
 
 class TitleBarButtonState(Enum):
@@ -51,11 +50,6 @@ class TitleBarButton(QAbstractButton):
     def isPressed(self):
         """ whether the button is pressed """
         return self._state == TitleBarButtonState.PRESSED
-
-    @deprecated
-    def updateStyle(self, style):
-        """ update the style of button """
-        pass
 
     def getNormalColor(self):
         """ get the icon color of the button in normal state """

@@ -116,3 +116,12 @@ class LinuxWindowEffect:
             Window handle
         """
         pass
+
+    def enableBlurBehindWindow(self, hWnd):
+        """ enable the blur effect behind the whole client
+        Parameters
+        ----------
+        hWnd: int or `sip.voidptr`
+            Window handle
+        """
+        pass

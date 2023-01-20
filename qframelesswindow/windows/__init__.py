@@ -1,14 +1,12 @@
 # coding:utf-8
-import sys
 from ctypes import cast
 from ctypes.wintypes import LPRECT, MSG
 
 import win32con
 import win32gui
-from PySide2.QtCore import Qt
-from PySide2.QtGui import QCloseEvent, QCursor
-from PySide2.QtWidgets import QApplication, QWidget
-from PySide2.QtWinExtras import QtWin
+from PySide6.QtCore import Qt
+from PySide6.QtGui import QCloseEvent, QCursor
+from PySide6.QtWidgets import QApplication, QWidget
 
 from ..titlebar import TitleBar
 from ..utils import win32_utils as win_utils
@@ -145,9 +143,8 @@ class AcrylicWindow(WindowsFramelessWindow):
         super().__init__(parent=parent)
         self.__closedByKey = False
 
-        QtWin.enableBlurBehindWindow(self)
-        self.setWindowFlags(Qt.FramelessWindowHint |
-                            Qt.WindowMinMaxButtonsHint)
+        self.setWindowFlags(Qt.FramelessWindowHint)
+        self.windowEffect.enableBlurBehindWindow(self.winId())
         self.windowEffect.addWindowAnimation(self.winId())
 
         if win_utils.isWin7():
@@ -158,7 +155,7 @@ class AcrylicWindow(WindowsFramelessWindow):
             if win_utils.isGreaterEqualWin11():
                 self.windowEffect.addShadowEffect(self.winId())
 
-        self.setStyleSheet("background:transparent")
+        self.setStyleSheet("AcrylicWindow{background:transparent}")
 
     def nativeEvent(self, eventType, message):
         """ Handle the Windows message """
