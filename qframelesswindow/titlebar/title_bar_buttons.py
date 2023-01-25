@@ -8,7 +8,6 @@ from PyQt5.QtSvg import QSvgRenderer
 from PyQt5.QtXml import QDomDocument
 
 from .._rc import resource
-from ..utils.deprecation import deprecated
 
 
 class TitleBarButtonState(Enum):
@@ -51,11 +50,6 @@ class TitleBarButton(QAbstractButton):
     def isPressed(self):
         """ whether the button is pressed """
         return self._state == TitleBarButtonState.PRESSED
-
-    @deprecated
-    def updateStyle(self, style):
-        """ update the style of button """
-        pass
 
     def getNormalColor(self):
         """ get the icon color of the button in normal state """
