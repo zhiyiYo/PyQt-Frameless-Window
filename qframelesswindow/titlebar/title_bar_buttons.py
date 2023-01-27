@@ -8,7 +8,6 @@ from PyQt6.QtWidgets import QAbstractButton
 from PyQt6.QtSvg import QSvgRenderer
 from PyQt6.QtXml import QDomDocument
 
-from ..utils.deprecation import deprecated
 
 path = Path(__file__).resolve().parent.parent/"_rc/title_bar"
 QDir.addSearchPath('qframelesswindow', str(path))
@@ -54,11 +53,6 @@ class TitleBarButton(QAbstractButton):
     def isPressed(self):
         """ whether the button is pressed """
         return self._state == TitleBarButtonState.PRESSED
-
-    @deprecated
-    def updateStyle(self, style):
-        """ update the style of button """
-        pass
 
     def getNormalColor(self):
         """ get the icon color of the button in normal state """

@@ -1,8 +1,31 @@
-# PyQt-Frameless-Window
-A cross-platform frameless window based on pyqt5, support Win32, X11, Wayland and macOS.
+<p align="center">
+  <img width="15%" align="center" src="screenshot/logo.png" alt="logo">
+</p>
+  <h1 align="center">
+  PyQt-Frameless-Window
+</h1>
+<p align="center">
+  A cross-platform frameless window based on PyQt6
+</p>
+
+<p align="center">
+  <a style="text-decoration:none">
+    <img src="https://img.shields.io/badge/Platform-Win32%20|%20Linux%20|%20macOS-blue?color=#4ec820" alt="Platform Win32 | Linux | macOS"/>
+  </a>
+
+  <a style="text-decoration:none">
+    <img src="https://static.pepy.tech/personalized-badge/pyqt6-frameless-window?period=total&units=international_system&left_color=grey&right_color=brightgreen&left_text=Downloads" alt="Download"/>
+  </a>
+
+  <a style="text-decoration:none">
+    <img src="https://img.shields.io/badge/License-MIT-blue?color=#4ec820" alt="MIT"/>
+  </a>
+</p>
+
+![Cover](screenshot/cover.png)
 
 ## Features
-* Move
+* Moving
 * Stretching
 * Window animation
 * Window shadow
@@ -14,11 +37,11 @@ A cross-platform frameless window based on pyqt5, support Win32, X11, Wayland an
 ## Install
 To install use pip:
 ```shell
-pip install PyQt5-Frameless-Window
+pip install PyQt6-Frameless-Window
 ```
 Or clone the repo:
 ```shell
-git clone https://github.com/zhiyiYo/PyQt-Frameless-Window.git
+git clone -b PyQt6 https://github.com/zhiyiYo/PyQt-Frameless-Window.git
 python setup.py install
 ```
 
@@ -27,7 +50,6 @@ python setup.py install
 | Platform | Requirement |
 | :------: | :---------: |
 |  Win32   |   pywin32   |
-|  Linux   |   xcffib    |
 |  MacOS   |   pyobjc    |
 
 
@@ -36,7 +58,7 @@ To use the frameless window, you only need to inherit `FramelessWindow` or `Fram
 ```python
 import sys
 
-from PyQt5.QtWidgets import QApplication
+from PyQt6.QtWidgets import QApplication
 from qframelesswindow import FramelessWindow
 
 
