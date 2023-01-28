@@ -1,16 +1,13 @@
 # coding:utf-8
 from enum import Enum
-from pathlib import Path
 
-from PyQt6.QtCore import QDir, QFile, QPointF, QRectF, Qt, pyqtProperty
+from PyQt6.QtCore import QFile, QPointF, QRectF, Qt, pyqtProperty
 from PyQt6.QtGui import QColor, QPainter, QPainterPath, QPen
 from PyQt6.QtWidgets import QAbstractButton
 from PyQt6.QtSvg import QSvgRenderer
 from PyQt6.QtXml import QDomDocument
 
-
-path = Path(__file__).resolve().parent.parent/"_rc/title_bar"
-QDir.addSearchPath('qframelesswindow', str(path))
+from .._rc import resource
 
 
 class TitleBarButtonState(Enum):
@@ -302,7 +299,7 @@ class CloseButton(SvgTitleBarButton):
     """ Close button """
 
     def __init__(self, parent=None):
-        super().__init__("qframelesswindow:close.svg", parent)
+        super().__init__(":/qframelesswindow/close.svg", parent)
         self.setHoverColor(Qt.GlobalColor.white)
         self.setPressedColor(Qt.GlobalColor.white)
         self.setHoverBackgroundColor(QColor(232, 17, 35))

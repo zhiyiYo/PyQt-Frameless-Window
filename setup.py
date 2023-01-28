@@ -16,7 +16,6 @@ setuptools.setup(
     license="MIT",
     url="https://github.com/zhiyiYo/PyQt-Frameless-Window/tree/PyQt6",
     packages=setuptools.find_packages(),
-    include_package_data=True,
     install_requires=[
         "pywin32;platform_system=='Windows'",
         "pyobjc;platform_system=='Darwin'",
