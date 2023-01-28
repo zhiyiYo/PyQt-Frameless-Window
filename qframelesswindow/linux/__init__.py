@@ -1,6 +1,5 @@
 # coding:utf-8
 from PySide2.QtCore import QCoreApplication, QEvent, Qt
-from PySide2.QtGui import QMouseEvent
 from PySide2.QtWidgets import QWidget
 
 from ..titlebar import TitleBar
@@ -51,7 +50,7 @@ class LinuxFramelessWindow(QWidget):
         if et != QEvent.MouseButtonPress and et != QEvent.MouseMove or not self._isResizeEnabled:
             return False
 
-        edges = Qt.Edges()
+        edges = Qt.Edge(0)
         pos = event.globalPos() - self.pos()
         if pos.x() < self.BORDER_WIDTH:
             edges |= Qt.LeftEdge
