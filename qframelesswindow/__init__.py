@@ -1,6 +1,6 @@
 """
 PyQt6-Frameless-Window
-===================
+======================
 A cross-platform frameless window based on pyqt6, support Win32, Linux and macOS.
 
 Documentation is available in the docstrings and
@@ -8,17 +8,17 @@ online at https://github.com/zhiyiYo/PyQt-Frameless-Window/tree/PyQt6.
 
 Examples are available at https://github.com/zhiyiYo/PyQt-Frameless-Window/tree/PyQt6/examples.
 
-:copyright: (c) 2023 by zhiyiYo.
+:copyright: (c) 2021 by zhiyiYo.
 :license: MIT, see LICENSE for more details.
 """
 
-__version__ = "0.0.2"
+__version__ = "0.0.3"
 
 import sys
 
 from PyQt6.QtWidgets import QDialog, QMainWindow
 
-from .titlebar import TitleBar
+from .titlebar import TitleBar, TitleBarButton, SvgTitleBarButton, StandardTitleBar
 
 if sys.platform == "win32":
     from .windows import AcrylicWindow
