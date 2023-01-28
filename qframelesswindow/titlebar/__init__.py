@@ -2,7 +2,8 @@
 import sys
 
 from PyQt5.QtCore import QEvent, Qt
-from PyQt5.QtWidgets import QHBoxLayout, QWidget
+from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import QHBoxLayout, QLabel, QWidget
 
 from ..utils import startSystemMove
 from .title_bar_buttons import (CloseButton, MaximizeButton, MinimizeButton,
@@ -10,7 +11,7 @@ from .title_bar_buttons import (CloseButton, MaximizeButton, MinimizeButton,
 
 
 class TitleBar(QWidget):
-    """ Title bar """
+    """ Title bar with minimize, maximum and close button """
 
     def __init__(self, parent):
         super().__init__(parent)
@@ -99,3 +100,49 @@ class TitleBar(QWidget):
             whether to enable double click
         """
         self._isDoubleClickEnabled = isEnabled
+
+
+class StandardTitleBar(TitleBar):
+    """ Title bar with icon and title """
+
+    def __init__(self, parent):
+        super().__init__(parent)
+        # add window icon
+        self.iconLabel = QLabel(self)
+        self.iconLabel.setFixedSize(20, 20)
+        self.hBoxLayout.insertSpacing(0, 10)
+        self.hBoxLayout.insertWidget(1, self.iconLabel, 0, Qt.AlignLeft)
+        self.window().windowIconChanged.connect(self.setIcon)
+
+        # add title label
+        self.titleLabel = QLabel(self)
+        self.hBoxLayout.insertWidget(2, self.titleLabel, 0, Qt.AlignLeft)
+        self.titleLabel.setStyleSheet("""
+            QLabel{
+                background: transparent;
+                font: 13px 'Segoe UI';
+                padding: 0 4px
+            }
+        """)
+        self.window().windowTitleChanged.connect(self.setTitle)
+
+    def setTitle(self, title):
+        """ set the title of title bar
+
+        Parameters
+        ----------
+        title: str
+            the title of title bar
+        """
+        self.titleLabel.setText(title)
+        self.titleLabel.adjustSize()
+
+    def setIcon(self, icon):
+        """ set the icon of title bar
+
+        Parameters
+        ----------
+        icon: QIcon | QPixmap | str
+            the icon of title bar
+        """
+        self.iconLabel.setPixmap(QIcon(icon).pixmap(20, 20))

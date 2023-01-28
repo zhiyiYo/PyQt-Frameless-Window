@@ -5,32 +5,14 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QColor, QPixmap, QIcon
 from PyQt5.QtWidgets import QApplication, QLabel
 
-from qframelesswindow import FramelessWindow, TitleBar
+from qframelesswindow import FramelessWindow, StandardTitleBar
 
 
-class CustomTitleBar(TitleBar):
+class CustomTitleBar(StandardTitleBar):
     """ Custom title bar """
 
     def __init__(self, parent):
         super().__init__(parent)
-        # add window icon
-        self.iconLabel = QLabel(self)
-        self.iconLabel.setFixedSize(20, 20)
-        self.hBoxLayout.insertSpacing(0, 10)
-        self.hBoxLayout.insertWidget(1, self.iconLabel, 0, Qt.AlignLeft)
-        self.window().windowIconChanged.connect(self.setIcon)
-
-        # add title label
-        self.titleLabel = QLabel(self)
-        self.hBoxLayout.insertWidget(2, self.titleLabel, 0, Qt.AlignLeft)
-        self.titleLabel.setStyleSheet("""
-            QLabel{
-                background: transparent;
-                font: 13px 'Segoe UI';
-                padding: 0 4px
-            }
-        """)
-        self.window().windowTitleChanged.connect(self.setTitle)
 
         # customize the style of title bar button
         self.minBtn.setHoverColor(Qt.white)
@@ -48,13 +30,6 @@ class CustomTitleBar(TitleBar):
             }
         """)
 
-    def setTitle(self, title):
-        self.titleLabel.setText(title)
-        self.titleLabel.adjustSize()
-
-    def setIcon(self, icon):
-        self.iconLabel.setPixmap(icon.pixmap(20, 20))
-
 
 class Window(FramelessWindow):
 
@@ -66,7 +41,7 @@ class Window(FramelessWindow):
         self.label = QLabel(self)
         self.label.setScaledContents(True)
         self.label.setPixmap(QPixmap("screenshot/shoko.png"))
-        
+
         self.setWindowIcon(QIcon("screenshot/logo.png"))
         self.setWindowTitle("PyQt-Frameless-Window")
         self.setStyleSheet("background:white")
