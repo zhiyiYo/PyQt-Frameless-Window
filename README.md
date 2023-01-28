@@ -22,7 +22,7 @@
   </a>
 </p>
 
-![Cover](screenshot/cover.png)
+![Cover](screenshot/cover.jpg)
 
 
 ## Features
