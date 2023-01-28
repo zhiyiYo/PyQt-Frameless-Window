@@ -1,4 +1,8 @@
 # coding: utf-8
+from PySide6.QtCore import QEvent, QPoint, Qt
+from PySide6.QtGui import QMouseEvent
+from PySide6.QtWidgets import QApplication
+
 
 class LinuxMoveResize:
     """ Tool class for moving and resizing window """
@@ -16,6 +20,9 @@ class LinuxMoveResize:
             the global point of mouse release event
         """
         window.windowHandle().startSystemMove()
+        event = QMouseEvent(QEvent.MouseButtonRelease, QPoint(-1, -1),
+                            Qt.LeftButton, Qt.NoButton, Qt.NoModifier)
+        QApplication.instance().postEvent(window.windowHandle(), event)
 
     @classmethod
     def starSystemResize(cls, window, globalPos, edges):

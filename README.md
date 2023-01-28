@@ -37,7 +37,7 @@
 ## Install
 To install use pip:
 ```shell
-pip install PySide6_Frameless_Window
+pip install PySideSix-Frameless-Window
 ```
 Or clone the repo:
 ```shell

@@ -10,7 +10,7 @@ setuptools.setup(
     keywords="pyside6 frameless",
     author="zhiyiYo",
     author_email="shokokawaii@outlook.com",
-    description="A cross-platform frameless window based on pyside6, support Win32, X11, Wayland and macOS.",
+    description="A cross-platform frameless window based on pyside6, support Win32, Linux and macOS.",
     long_description=long_description,
     long_description_content_type='text/markdown',
     license="MIT",
