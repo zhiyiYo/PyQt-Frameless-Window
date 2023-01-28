@@ -77,7 +77,7 @@ if __name__ == '__main__':
     demo.show()
     sys.exit(app.exec_())
 ```
-For more complex requirements, you can refer to the [demo.py](examples/demo.py).
+For more complex requirements, see [demo.py](examples/demo.py) and [main_window.py](examples/main_window.py).
 
 ## Examples
 * Normal frameless window

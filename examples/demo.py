@@ -3,7 +3,7 @@ import sys
 
 from PySide2.QtCore import Qt
 from PySide2.QtGui import QColor, QPixmap, QIcon
-from PySide2.QtWidgets import QApplication, QLabel, QHBoxLayout
+from PySide2.QtWidgets import QApplication, QLabel
 
 from qframelesswindow import FramelessWindow, TitleBar, StandardTitleBar
 

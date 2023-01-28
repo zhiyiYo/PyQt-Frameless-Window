@@ -7,7 +7,7 @@ from PySide2.QtWidgets import QAbstractButton
 from PySide2.QtSvg import QSvgRenderer
 from PySide2.QtXml import QDomDocument
 
-from ..rc import resource
+from .._rc import resource
 
 
 class TitleBarButtonState(Enum):

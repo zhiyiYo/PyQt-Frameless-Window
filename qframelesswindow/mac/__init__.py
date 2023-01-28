@@ -13,6 +13,8 @@ class MacFramelessWindow(QWidget):
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
+
+    def _initFrameless(self):
         self.windowEffect = MacWindowEffect(self)
         # must enable acrylic effect before creating title bar
         if isinstance(self, AcrylicWindow):
@@ -81,8 +83,8 @@ class MacFramelessWindow(QWidget):
 class AcrylicWindow(MacFramelessWindow):
     """ A frameless window with acrylic effect """
 
-    def __init__(self, parent=None):
-        super().__init__(parent)
+    def _initFrameless(self):
+        super()._initFrameless()
         self.setAttribute(Qt.WA_TranslucentBackground)
         self.windowEffect.setAcrylicEffect(self.winId())
         self.setStyleSheet("background: transparent")
