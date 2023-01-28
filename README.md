@@ -96,7 +96,7 @@ For more complex requirements, see [demo.py](./examples/demo.py) and [main_windo
 
    see my answer on [stackoverflow](https://stackoverflow.com/questions/58612306/how-to-fix-importerror-dll-load-failed-while-importing-win32api/72488468#72488468) or my [blog](https://www.cnblogs.com/zhiyiYo/p/16340429.html) for the solution.
 
-
+4. If you are using PySide2, PySide6 or PyQt5, you can download the code in [PySide2](https://github.com/zhiyiYo/PyQt-Frameless-Window/tree/Pyside2), [PySide6](https://github.com/zhiyiYo/PyQt-Frameless-Window/tree/PySide6) or [PyQt5](https://github.com/zhiyiYo/PyQt-Frameless-Window) branch.
 
 ## See Also
 Here are some projects that use PyQt-Frameless-Window:

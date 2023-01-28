@@ -6,7 +6,7 @@ with open('README.md', encoding='utf-8') as f:
 
 setuptools.setup(
     name="PyQt6-Frameless-Window",
-    version="0.0.1",
+    version="0.0.2",
     keywords="pyqt6 frameless",
     author="zhiyiYo",
     author_email="shokokawaii@outlook.com",
@@ -14,7 +14,7 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type='text/markdown',
     license="MIT",
-    url="https://github.com/zhiyiYo/PyQt-Frameless-Window",
+    url="https://github.com/zhiyiYo/PyQt-Frameless-Window/tree/PyQt6",
     packages=setuptools.find_packages(),
     install_requires=[
         "pywin32;platform_system=='Windows'",

@@ -15,3 +15,4 @@ test.py
 dist
 build
 PyQt5_Frameless_Window.egg-info
+PyQt6_Frameless_Window.egg-info

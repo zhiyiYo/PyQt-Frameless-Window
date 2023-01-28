@@ -1,12 +1,7 @@
 # coding: utf-8
-from PyQt6.QtCore import QPointF, Qt
-from PyQt6.QtWidgets import QWidget
-
 
 class LinuxMoveResize:
     """ Tool class for moving and resizing window """
-
-    moveResizeAtom = None
 
     @classmethod
     def startSystemMove(cls, window, globalPos):
