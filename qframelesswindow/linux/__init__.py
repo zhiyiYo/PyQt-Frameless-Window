@@ -50,7 +50,7 @@ class LinuxFramelessWindow(QWidget):
         if et != QEvent.MouseButtonPress and et != QEvent.MouseMove or not self._isResizeEnabled:
             return False
 
-        edges = Qt.Edges()
+        edges = Qt.Edge(0)
         pos = event.globalPos() - self.pos()
         if pos.x() < self.BORDER_WIDTH:
             edges |= Qt.LeftEdge
