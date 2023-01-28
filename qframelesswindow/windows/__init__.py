@@ -20,8 +20,7 @@ class WindowsFramelessWindow(QWidget):
 
     BORDER_WIDTH = 5
 
-    def __init__(self, parent=None):
-        super().__init__(parent=parent)
+    def _initFrameless(self):
         self.windowEffect = WindowsWindowEffect(self)
         self.titleBar = TitleBar(self)
         self._isResizeEnabled = True
@@ -143,6 +142,8 @@ class AcrylicWindow(WindowsFramelessWindow):
         super().__init__(parent=parent)
         self.__closedByKey = False
 
+    def _initFrameless(self):
+        super()._initFrameless()
         self.setWindowFlags(Qt.FramelessWindowHint)
         self.windowEffect.enableBlurBehindWindow(self.winId())
         self.windowEffect.addWindowAnimation(self.winId())

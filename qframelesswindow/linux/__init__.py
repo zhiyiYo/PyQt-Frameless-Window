@@ -14,6 +14,8 @@ class LinuxFramelessWindow(QWidget):
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
+
+    def _initFrameless(self):
         self.windowEffect = LinuxWindowEffect(self)
         self.titleBar = TitleBar(self)
         self._isResizeEnabled = True
