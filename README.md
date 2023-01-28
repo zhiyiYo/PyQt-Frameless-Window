@@ -14,7 +14,7 @@
   </a>
 
   <a style="text-decoration:none">
-    <img src="https://static.pepy.tech/personalized-badge/pyside6_frameless_window?period=total&units=international_system&left_color=grey&right_color=brightgreen&left_text=Downloads" alt="Download"/>
+    <img src="https://static.pepy.tech/personalized-badge/pysidesix_frameless_window?period=total&units=international_system&left_color=grey&right_color=brightgreen&left_text=Downloads" alt="Download"/>
   </a>
 
   <a style="text-decoration:none">
@@ -22,7 +22,7 @@
   </a>
 </p>
 
-![Cover](screenshot/cover.png)
+![Cover](screenshot/cover.jpg)
 
 ## Features
 * Moving
@@ -82,7 +82,7 @@ For more complex requirements, you can refer to the [demo.py](examples/demo.py).
 * Normal frameless window
 ![Normal Frameless Window](screenshot/normal_frameless_window.gif)
 * Acrylic frameless window
-![Acrylic Frameless Window](screenshot/Acrylic_window.jpg)
+![Acrylic Frameless Window](screenshot/acrylic_window.jpg)
 
 
 
