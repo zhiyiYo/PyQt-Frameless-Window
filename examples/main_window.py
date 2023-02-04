@@ -60,6 +60,10 @@ class MainWindow(FramelessMainWindow):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
+
+    # fix issue #50
+    app.setAttribute(Qt.AA_DontCreateNativeWidgetSiblings)
+
     window = MainWindow()
     window.show()
     app.exec()
