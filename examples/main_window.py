@@ -66,6 +66,10 @@ if __name__ == '__main__':
     QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps)
 
     app = QApplication(sys.argv)
+
+    # fix issue #50
+    app.setAttribute(Qt.AA_DontCreateNativeWidgetSiblings)
+
     window = MainWindow()
     window.show()
     app.exec()
