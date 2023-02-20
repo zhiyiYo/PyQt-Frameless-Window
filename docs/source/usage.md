@@ -86,7 +86,7 @@ class Window(FramelessWindow):
 When the window icon or title changes, the icon and title of `StandardTitleBar` will also change accordingly. However, we can also use `StandardTitleBar.setTitle()` or `StandardTitleBar.setIcon()` to change them manually.
 
 ### Work with Qt Designer
-To prevent the title bar from being blocked by other parts, we need to leave 32px space for title bar.
+To prevent the title bar from being blocked by other widgets, we need to leave **32px** space for title bar.
 ![](_static/title_bar_margin.png)
 
 After compiling the ui file into a Ui class, we can use the frameless window through multiple inheritance. Here is an example:

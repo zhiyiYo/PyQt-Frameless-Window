@@ -1,4 +1,5 @@
 ## Window effect
+PyQt-Frameless-Window use `WindowEffect` class to control the effect of frameless window. You can add shadow, animation or blur effect to window through `WindowEffect`.
 
 ### Acrylic effect
 PyQt-Frameless-Window provides the `AcrylicWindow` class, which uses the acrylic blur effect.
@@ -23,8 +24,7 @@ class Window(AcrylicWindow):
         # self.windowEffect.setMicaEffect(self.winId(), False)
 ```
 
-### WindowEffect class
-This above example shows that `windowEffect` member controls the window effect. Because moving or resizing the acrylic window on Win10 may get stuck, we can use the following method to toggle acrylic effect:
+Because moving or resizing the acrylic window on Win10 may get stuck, we can use the following method to toggle acrylic effect:
 ```python
 def setAcrylicEffectEnabled(self, enable: bool):
     """ set acrylic effect enabled """

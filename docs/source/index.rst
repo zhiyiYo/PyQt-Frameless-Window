@@ -48,5 +48,6 @@ Welcome to PyQt-Frameless-Window's document!
    quick-start
    usage
    window-effect
+   snap-layout
    see-also
 
