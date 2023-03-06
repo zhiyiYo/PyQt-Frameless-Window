@@ -55,7 +55,7 @@ class MacFramelessWindow(QWidget):
 
     def paintEvent(self, e):
         super().paintEvent(e)
-        self.__nsWindow.setTitlebarAppearsTransparent_(True)
+        self.__hideSystemTitleBar()
 
     def changeEvent(self, event):
         super().changeEvent(event)

@@ -4,7 +4,7 @@ PySide2-Frameless-Window
 A cross-platform frameless window based on pyside2, support Win32, Linux and macOS.
 
 Documentation is available in the docstrings and
-online at https://github.com/zhiyiYo/PyQt-Frameless-Window/tree/Pyside2.
+online at https://pyqt-frameless-window.readthedocs.io.
 
 Examples are available at https://github.com/zhiyiYo/PyQt-Frameless-Window/tree/Pyside2/examples.
 
@@ -12,7 +12,7 @@ Examples are available at https://github.com/zhiyiYo/PyQt-Frameless-Window/tree/
 :license: MIT, see LICENSE for more details.
 """
 
-__version__ = "0.0.2"
+__version__ = "0.0.3"
 
 import sys
 
