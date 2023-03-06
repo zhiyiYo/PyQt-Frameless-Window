@@ -4,7 +4,7 @@ PyQt6-Frameless-Window
 A cross-platform frameless window based on pyqt6, support Win32, Linux and macOS.
 
 Documentation is available in the docstrings and
-online at https://github.com/zhiyiYo/PyQt-Frameless-Window/tree/PyQt6.
+online at https://pyqt-frameless-window.readthedocs.io/en/latest.
 
 Examples are available at https://github.com/zhiyiYo/PyQt-Frameless-Window/tree/PyQt6/examples.
 
@@ -12,7 +12,7 @@ Examples are available at https://github.com/zhiyiYo/PyQt-Frameless-Window/tree/
 :license: MIT, see LICENSE for more details.
 """
 
-__version__ = "0.0.4"
+__version__ = "0.0.5"
 
 import sys
 
