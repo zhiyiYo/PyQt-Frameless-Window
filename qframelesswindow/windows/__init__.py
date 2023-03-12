@@ -108,15 +108,15 @@ class WindowsFramelessWindow(QWidget):
             isMax = win_utils.isMaximized(msg.hWnd)
             isFull = win_utils.isFullScreen(msg.hWnd)
 
-            borderWidth = win32api.GetSystemMetrics(win32con.SM_CXSIZEFRAME)
-            borderHeight = win32api.GetSystemMetrics(win32con.SM_CYSIZEFRAME)
-
             # adjust the size of client rect
             if isMax and not isFull:
-                rect.top += borderHeight
-                rect.left += borderWidth
-                rect.right -= borderWidth
-                rect.bottom -= borderHeight
+                ty = win_utils.getResizeBorderThickness(msg.hWnd, False)
+                rect.top += ty
+                rect.bottom -= ty
+
+                tx = win_utils.getResizeBorderThickness(msg.hWnd, True)
+                rect.left += tx
+                rect.right -= tx
 
             # handle the situation that an auto-hide taskbar is enabled
             if (isMax or isFull) and Taskbar.isAutoHide():
