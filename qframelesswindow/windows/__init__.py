@@ -3,6 +3,7 @@ import sys
 from ctypes import cast
 from ctypes.wintypes import LPRECT, MSG
 
+import win32api
 import win32con
 import win32gui
 from PySide2.QtCore import Qt
@@ -111,11 +112,13 @@ class WindowsFramelessWindow(QWidget):
 
             # adjust the size of client rect
             if isMax and not isFull:
-                thickness = win_utils.getResizeBorderThickness(msg.hWnd)
-                rect.top += thickness
-                rect.left += thickness
-                rect.right -= thickness
-                rect.bottom -= thickness
+                ty = win_utils.getResizeBorderThickness(msg.hWnd, False)
+                rect.top += ty
+                rect.bottom -= ty
+
+                tx = win_utils.getResizeBorderThickness(msg.hWnd, True)
+                rect.left += tx
+                rect.right -= tx
 
             # handle the situation that an auto-hide taskbar is enabled
             if (isMax or isFull) and Taskbar.isAutoHide():
