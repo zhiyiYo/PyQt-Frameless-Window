@@ -69,7 +69,7 @@ def getMonitorInfo(hWnd, dwFlags):
     return win32api.GetMonitorInfo(monitor)
 
 
-def getResizeBorderThickness(hWnd):
+def getResizeBorderThickness(hWnd, horizontal=True):
     """ get resize border thickness of widget
 
     Parameters
@@ -84,8 +84,11 @@ def getResizeBorderThickness(hWnd):
     if not window:
         return 0
 
-    result = win32api.GetSystemMetrics(
-        win32con.SM_CXSIZEFRAME) + win32api.GetSystemMetrics(92)
+    user32 = windll.user32
+
+    frame = win32con.SM_CXSIZEFRAME if horizontal else win32con.SM_CYSIZEFRAME
+    dpi = user32.GetDpiForWindow(hWnd)
+    result = user32.GetSystemMetricsForDpi(frame, dpi) + user32.GetSystemMetricsForDpi(92, dpi)
 
     if result > 0:
         return result
