@@ -1,5 +1,4 @@
 # coding:utf-8
-import ctypes
 from ctypes import Structure, byref, sizeof, windll
 from ctypes.wintypes import DWORD, HWND, LPARAM, RECT, UINT
 from platform import platform
@@ -86,9 +85,7 @@ def getResizeBorderThickness(hWnd, horizontal=True):
     if not window:
         return 0
 
-    user32 = ctypes.windll.user32
-    user32.GetSystemMetricsForDpi.argtypes = [ctypes.c_int, ctypes.c_uint]
-    user32.GetSystemMetricsForDpi.restype = ctypes.c_int
+    user32 = windll.user32
 
     frame = win32con.SM_CXSIZEFRAME if horizontal else win32con.SM_CYSIZEFRAME
     dpi = user32.GetDpiForWindow(hWnd)
