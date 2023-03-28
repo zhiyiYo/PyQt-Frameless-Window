@@ -9,10 +9,10 @@ online at https://pyqt-frameless-window.readthedocs.io.
 Examples are available at https://github.com/zhiyiYo/PyQt-Frameless-Window/tree/Pyside2/examples.
 
 :copyright: (c) 2021 by zhiyiYo.
-:license: MIT, see LICENSE for more details.
+:license: LGPLv3, see LICENSE for more details.
 """
 
-__version__ = "0.0.4"
+__version__ = "0.0.5"
 
 import sys
 
