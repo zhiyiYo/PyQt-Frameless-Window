@@ -7,6 +7,8 @@ Snap layouts are a new Windows 11 feature to help introduce users to the power o
 ### Implementation
 PyQt-Frameless-Window does not enable the snap layout feature by default, because user may change the maximize button in the title bar. Here is an example shows how to enable snap layout when using the default title bar. You should replace `WindowsFramelessWindow.nativeEvent()` in `qframelesswindow/windows/__init__.py` with the following code:
 ```python
+from ..titlebar.title_bar_buttons import TitleBarButtonState
+
 def nativeEvent(self, eventType, message):
     """ Handle the Windows message """
     msg = MSG.from_address(message.__int__())
@@ -46,12 +48,14 @@ def nativeEvent(self, eventType, message):
     elif msg.message in [0x2A2, win32con.WM_MOUSELEAVE]:
         self.titleBar.maxBtn.setState(TitleBarButtonState.NORMAL)
     elif msg.message in [win32con.WM_NCLBUTTONDOWN, win32con.WM_NCLBUTTONDBLCLK]:
-        QApplication.sendEvent(self.titleBar.maxBtn, QMouseEvent(
-            QEvent.MouseButtonPress, QPoint(), Qt.LeftButton, Qt.LeftButton, Qt.NoModifier))
-        return True, 0
+        if self.titleBar.childAt(QCursor.pos()-self.geometry().topLeft()) is self.titleBar.maxBtn:
+            QApplication.sendEvent(self.titleBar.maxBtn, QMouseEvent(
+                QEvent.MouseButtonPress, QPoint(), Qt.LeftButton, Qt.LeftButton, Qt.NoModifier))
+            return True, 0
     elif msg.message in [win32con.WM_NCLBUTTONUP, win32con.WM_NCRBUTTONUP]:
-        QApplication.sendEvent(self.titleBar.maxBtn, QMouseEvent(
-            QEvent.MouseButtonRelease, QPoint(), Qt.LeftButton, Qt.LeftButton, Qt.NoModifier))
+        if self.titleBar.childAt(QCursor.pos()-self.geometry().topLeft()) is self.titleBar.maxBtn:
+            QApplication.sendEvent(self.titleBar.maxBtn, QMouseEvent(
+                QEvent.MouseButtonRelease, QPoint(), Qt.LeftButton, Qt.LeftButton, Qt.NoModifier))
     #------------------------------------------------------------------------------------------#
 
     elif msg.message == win32con.WM_NCCALCSIZE:
