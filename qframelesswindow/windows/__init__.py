@@ -1,4 +1,5 @@
 # coding:utf-8
+import ctypes
 import sys
 from ctypes import cast
 from ctypes.wintypes import LPRECT, MSG
@@ -20,8 +21,6 @@ from .window_effect import WindowsWindowEffect
 
 class WindowsFramelessWindow(QWidget):
     """  Frameless window for Windows system """
-
-    BORDER_WIDTH = 5
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
@@ -79,10 +78,17 @@ class WindowsFramelessWindow(QWidget):
             xPos = pos.x() - self.x()
             yPos = pos.y() - self.y()
             w, h = self.width(), self.height()
-            lx = xPos < self.BORDER_WIDTH
-            rx = xPos > w - self.BORDER_WIDTH
-            ty = yPos < self.BORDER_WIDTH
-            by = yPos > h - self.BORDER_WIDTH
+            user32 = ctypes.windll.user32
+            dpi = user32.GetDpiForWindow(msg.hWnd)
+            SM_CXPADDEDBORDER = 92
+            borderWidth = user32.GetSystemMetricsForDpi(win32con.SM_CXSIZEFRAME, dpi) + user32.GetSystemMetricsForDpi(
+                SM_CXPADDEDBORDER, dpi)
+            borderHeight = user32.GetSystemMetricsForDpi(win32con.SM_CYSIZEFRAME, dpi) + user32.GetSystemMetricsForDpi(
+                SM_CXPADDEDBORDER, dpi)
+            lx = xPos < borderWidth
+            rx = xPos > w - borderWidth
+            ty = yPos < borderHeight
+            by = yPos > h - borderHeight
             if lx and ty:
                 return True, win32con.HTTOPLEFT
             elif rx and by:
