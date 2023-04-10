@@ -78,7 +78,7 @@ class LinuxFramelessWindowBase:
         elif obj in (self, self.titleBar) and et == QEvent.MouseButtonPress and edges:
             LinuxMoveResize.starSystemResize(self, event.globalPos(), edges)
 
-        return super().eventFilter(obj, event)
+        return False
 
 
 class LinuxFramelessWindow(QWidget, LinuxFramelessWindowBase):

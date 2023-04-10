@@ -39,5 +39,5 @@ else:
     from .linux import LinuxFramelessDialog as FramelessDialog
     from .linux import LinuxWindowEffect as WindowEffect
 
-    AcrylicWindowBase = FramelessWindow
+    AcrylicWindow = FramelessWindow
 
