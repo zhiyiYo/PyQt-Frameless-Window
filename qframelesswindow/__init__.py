@@ -30,8 +30,8 @@ if sys.platform == "win32":
 elif sys.platform == "darwin":
     from .mac import AcrylicWindow
     from .mac import MacFramelessWindow as FramelessWindow
-    from .max import MacFramelessMainWindow as FramelessMainWindow
-    from .max import MacFramelessDialog as FramelessDialog
+    from .mac import MacFramelessMainWindow as FramelessMainWindow
+    from .mac import MacFramelessDialog as FramelessDialog
     from .mac import MacWindowEffect as WindowEffect
 else:
     from .linux import LinuxFramelessWindow as FramelessWindow
