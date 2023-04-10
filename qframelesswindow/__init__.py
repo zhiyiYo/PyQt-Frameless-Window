@@ -12,7 +12,7 @@ Examples are available at https://github.com/zhiyiYo/PyQt-Frameless-Window/tree/
 :license: LGPLv3, see LICENSE for more details.
 """
 
-__version__ = "0.0.5"
+__version__ = "0.0.6"
 
 import sys
 
