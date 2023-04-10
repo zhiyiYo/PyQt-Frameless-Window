@@ -2,17 +2,17 @@
 import Cocoa
 import objc
 from PySide6.QtCore import QEvent, Qt
-from PySide6.QtWidgets import QWidget
+from PySide6.QtWidgets import QWidget, QMainWindow, QDialog
 
 from ..titlebar import TitleBar
 from .window_effect import MacWindowEffect
 
 
-class MacFramelessWindow(QWidget):
-    """ Frameless window for Linux system """
+class MacFramelessWindowBase:
+    """ Frameless window base class for mac """
 
-    def __init__(self, parent=None):
-        super().__init__(parent=parent)
+    def __init__(self, *args, **kwargs):
+        pass
 
     def _initFrameless(self):
         self.windowEffect = MacWindowEffect(self)
@@ -50,19 +50,13 @@ class MacFramelessWindow(QWidget):
         self._isResizeEnabled = isEnabled
 
     def resizeEvent(self, e):
-        super().resizeEvent(e)
         self.titleBar.resize(self.width(), self.titleBar.height())
 
-    def paintEvent(self, e):
-        super().paintEvent(e)
-        self.__hideSystemTitleBar()
-
     def changeEvent(self, event):
-        super().changeEvent(event)
         if event.type() == QEvent.WindowStateChange:
-            self.__hideSystemTitleBar()
+            self._hideSystemTitleBar()
 
-    def __hideSystemTitleBar(self):
+    def _hideSystemTitleBar(self):
         # extend view to title bar region
         self.__nsWindow.setStyleMask_(
             self.__nsWindow.styleMask() | Cocoa.NSFullSizeContentViewWindowMask)
@@ -80,6 +74,24 @@ class MacFramelessWindow(QWidget):
         self.__nsWindow.standardWindowButton_(Cocoa.NSWindowMiniaturizeButton).setHidden_(True)
 
 
+class MacFramelessWindow(QWidget, MacFramelessWindowBase):
+    """ Frameless window for Linux system """
+
+    def __init__(self, parent=None):
+        super().__init__(parent=parent)
+        self._initFrameless()
+
+    def resizeEvent(self, e):
+        MacFramelessWindowBase.resizeEvent(self, e)
+
+    def changeEvent(self, e):
+        MacFramelessMainWindow.changeEvent(self, e)
+
+    def paintEvent(self, e):
+        QWidget.paintEvent(self, e)
+        self._hideSystemTitleBar()
+
+
 class AcrylicWindow(MacFramelessWindow):
     """ A frameless window with acrylic effect """
 
@@ -88,3 +100,42 @@ class AcrylicWindow(MacFramelessWindow):
         self.setAttribute(Qt.WA_TranslucentBackground)
         self.windowEffect.setAcrylicEffect(self.winId())
         self.setStyleSheet("background: transparent")
+
+
+class MacFramelessMainWindow(QMainWindow, MacFramelessWindowBase):
+    """ Frameless window for Linux system """
+
+    def __init__(self, parent=None):
+        super().__init__(parent=parent)
+        self._initFrameless()
+
+    def resizeEvent(self, e):
+        MacFramelessWindowBase.resizeEvent(self, e)
+
+    def changeEvent(self, e):
+        MacFramelessMainWindow.changeEvent(self, e)
+
+    def paintEvent(self, e):
+        QMainWindow.paintEvent(self, e)
+        self._hideSystemTitleBar()
+
+
+class MacFramelessDialog(QDialog, MacFramelessWindowBase):
+    """ Frameless window for Linux system """
+
+    def __init__(self, parent=None):
+        super().__init__(parent=parent)
+        self._initFrameless()
+        self.titleBar.minBtn.hide()
+        self.titleBar.maxBtn.hide()
+        self.titleBar.setDoubleClickEnabled(False)
+
+    def resizeEvent(self, e):
+        MacFramelessWindowBase.resizeEvent(self, e)
+
+    def changeEvent(self, e):
+        MacFramelessMainWindow.changeEvent(self, e)
+
+    def paintEvent(self, e):
+        QDialog.paintEvent(self, e)
+        self._hideSystemTitleBar()

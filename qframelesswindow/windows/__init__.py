@@ -2,12 +2,11 @@
 from ctypes import cast
 from ctypes.wintypes import LPRECT, MSG
 
-import win32api
 import win32con
 import win32gui
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QCloseEvent, QCursor
-from PySide6.QtWidgets import QApplication, QWidget
+from PySide6.QtWidgets import QApplication, QDialog, QWidget, QMainWindow
 
 from ..titlebar import TitleBar
 from ..utils import win32_utils as win_utils
@@ -16,10 +15,13 @@ from .c_structures import LPNCCALCSIZE_PARAMS
 from .window_effect import WindowsWindowEffect
 
 
-class WindowsFramelessWindow(QWidget):
-    """  Frameless window for Windows system """
+class WindowsFramelessWindowBase:
+    """ Frameless window base class for Windows system """
 
     BORDER_WIDTH = 5
+
+    def __init__(self, *args, **kwargs):
+        pass
 
     def _initFrameless(self):
         self.windowEffect = WindowsWindowEffect(self)
@@ -61,15 +63,11 @@ class WindowsFramelessWindow(QWidget):
         """ set whether resizing is enabled """
         self._isResizeEnabled = isEnabled
 
-    def resizeEvent(self, e):
-        super().resizeEvent(e)
-        self.titleBar.resize(self.width(), self.titleBar.height())
-
     def nativeEvent(self, eventType, message):
         """ Handle the Windows message """
         msg = MSG.from_address(message.__int__())
         if not msg.hWnd:
-            return super().nativeEvent(eventType, message)
+            return False, 0
 
         if msg.message == win32con.WM_NCHITTEST and self._isResizeEnabled:
             pos = QCursor.pos()
@@ -130,12 +128,29 @@ class WindowsFramelessWindow(QWidget):
             result = 0 if not msg.wParam else win32con.WVR_REDRAW
             return True, result
 
-        return super().nativeEvent(eventType, message)
+        return False, 0
 
     def __onScreenChanged(self):
         hWnd = int(self.windowHandle().winId())
         win32gui.SetWindowPos(hWnd, None, 0, 0, 0, 0, win32con.SWP_NOMOVE |
                               win32con.SWP_NOSIZE | win32con.SWP_FRAMECHANGED)
+
+    def resizeEvent(self, e):
+        self.titleBar.resize(self.width(), self.titleBar.height())
+
+
+class WindowsFramelessWindow(QWidget, WindowsFramelessWindowBase):
+    """  Frameless window for Windows system """
+
+    def __init__(self, parent=None):
+        super().__init__(parent=parent)
+        self._initFrameless()
+
+    def resizeEvent(self, e):
+        WindowsFramelessWindowBase.resizeEvent(self, e)
+
+    def nativeEvent(self, eventType, message):
+        return WindowsFramelessWindowBase.nativeEvent(self, eventType, message)
 
 
 class AcrylicWindow(WindowsFramelessWindow):
@@ -182,3 +197,35 @@ class AcrylicWindow(WindowsFramelessWindow):
         # system tray icon
         self.__closedByKey = False
         self.hide()
+
+
+class WindowsFramelessMainWindow(QMainWindow, WindowsFramelessWindowBase):
+    """ Frameless main window for Windows system """
+
+    def __init__(self, parent=None):
+        super().__init__(parent=parent)
+        self._initFrameless()
+
+    def resizeEvent(self, e):
+        QMainWindow.resizeEvent(self, e)
+        self.titleBar.resize(self.width(), self.titleBar.height())
+
+    def nativeEvent(self, eventType, message):
+        return WindowsFramelessWindowBase.nativeEvent(self, eventType, message)
+
+
+class WindowsFramelessDialog(QDialog, WindowsFramelessWindowBase):
+    """ Frameless dialog for Windows system """
+
+    def __init__(self, parent=None):
+        super().__init__(parent=parent)
+        self._initFrameless()
+        self.titleBar.minBtn.hide()
+        self.titleBar.maxBtn.hide()
+        self.titleBar.setDoubleClickEnabled(False)
+
+    def resizeEvent(self, e):
+        WindowsFramelessWindowBase.resizeEvent(self, e)
+
+    def nativeEvent(self, eventType, message):
+        return WindowsFramelessWindowBase.nativeEvent(self, eventType, message)
