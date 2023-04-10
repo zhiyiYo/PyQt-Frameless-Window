@@ -27,7 +27,7 @@ class MacFramelessWindowBase:
         self.__nsWindow = view.window()
 
         # hide system title bar
-        self.__hideSystemTitleBar()
+        self._hideSystemTitleBar()
 
         self.resize(500, 500)
         self.titleBar.raise_()
@@ -85,7 +85,7 @@ class MacFramelessWindow(QWidget, MacFramelessWindowBase):
         MacFramelessWindowBase.resizeEvent(self, e)
 
     def changeEvent(self, e):
-        MacFramelessMainWindow.changeEvent(self, e)
+        MacFramelessWindowBase.changeEvent(self, e)
 
     def paintEvent(self, e):
         QWidget.paintEvent(self, e)
@@ -110,10 +110,11 @@ class MacFramelessMainWindow(QMainWindow, MacFramelessWindowBase):
         self._initFrameless()
 
     def resizeEvent(self, e):
+        QMainWindow.resizeEvent(self, e)
         MacFramelessWindowBase.resizeEvent(self, e)
 
     def changeEvent(self, e):
-        MacFramelessMainWindow.changeEvent(self, e)
+        MacFramelessWindowBase.changeEvent(self, e)
 
     def paintEvent(self, e):
         QMainWindow.paintEvent(self, e)
@@ -134,7 +135,7 @@ class MacFramelessDialog(QDialog, MacFramelessWindowBase):
         MacFramelessWindowBase.resizeEvent(self, e)
 
     def changeEvent(self, e):
-        MacFramelessMainWindow.changeEvent(self, e)
+        MacFramelessWindowBase.changeEvent(self, e)
 
     def paintEvent(self, e):
         QDialog.paintEvent(self, e)
