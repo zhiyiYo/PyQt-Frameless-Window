@@ -7,6 +7,7 @@ import sys
 import win32api
 import win32con
 import win32gui
+import win32print
 from PySide2.QtCore import QOperatingSystemVersion, QVersionNumber
 from PySide2.QtGui import QGuiApplication
 from PySide2.QtWinExtras import QtWin
@@ -85,17 +86,52 @@ def getResizeBorderThickness(hWnd, horizontal=True):
     if not window:
         return 0
 
-    user32 = windll.user32
-
     frame = win32con.SM_CXSIZEFRAME if horizontal else win32con.SM_CYSIZEFRAME
-    dpi = user32.GetDpiForWindow(hWnd)
-    result = user32.GetSystemMetricsForDpi(frame, dpi) + user32.GetSystemMetricsForDpi(92, dpi)
+    result = getSystemMetrics(hWnd, frame, horizontal) + getSystemMetrics(hWnd, 92, horizontal)
 
     if result > 0:
         return result
 
     thickness = 8 if QtWin.isCompositionEnabled() else 4
     return round(thickness*window.devicePixelRatio())
+
+
+def getSystemMetrics(hWnd, index, horizontal):
+    """ get system metrics """
+    if not hasattr(windll.user32, 'GetSystemMetricsForDpi'):
+        return win32api.GetSystemMetrics(index)
+
+    dpi = getDpiForWindow(hWnd, horizontal)
+    return windll.user32.GetSystemMetricsForDpi(index, dpi)
+
+
+def getDpiForWindow(hWnd, horizontal=True):
+    """ get dpi for window
+
+    Parameters
+    ----------
+    hWnd: int or `sip.voidptr`
+        window handle
+
+    dpiScale: bool
+        whether to use dpi scale
+    """
+    if hasattr(windll.user32, 'GetDpiForWindow'):
+        return windll.user32.GetDpiForWindow(hWnd)
+
+    hdc = win32gui.GetDC(hWnd)
+    if not hdc:
+        return 96
+
+    dpiX = win32print.GetDeviceCaps(hdc, win32con.LOGPIXELSX)
+    dpiY = win32print.GetDeviceCaps(hdc, win32con.LOGPIXELSY)
+    win32gui.ReleaseDC(hWnd, hdc)
+    if dpiX > 0 and horizontal:
+        return dpiX
+    elif dpiY > 0 and not horizontal:
+        return dpiY
+
+    return 96
 
 
 def findWindow(hWnd):
