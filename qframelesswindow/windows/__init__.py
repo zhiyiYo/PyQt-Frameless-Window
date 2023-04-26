@@ -32,9 +32,10 @@ class WindowsFramelessWindow(QWidget):
         # remove window border
         if not win_utils.isWin7():
             self.setWindowFlags(self.windowFlags() | Qt.FramelessWindowHint)
+        elif parent:
+            self.setWindowFlags(parent.windowFlags() |Qt.FramelessWindowHint | Qt.WindowMinMaxButtonsHint)
         else:
-            self.setWindowFlags(Qt.FramelessWindowHint |
-                                Qt.WindowMinMaxButtonsHint)
+            self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowMinMaxButtonsHint)
 
         # add DWM shadow and window animation
         self.windowEffect.addWindowAnimation(self.winId())
