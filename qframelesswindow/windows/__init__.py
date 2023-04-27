@@ -150,8 +150,12 @@ class AcrylicWindow(WindowsFramelessWindow):
         self.__closedByKey = False
 
         QtWin.enableBlurBehindWindow(self)
-        self.setWindowFlags(Qt.FramelessWindowHint |
-                            Qt.WindowMinMaxButtonsHint)
+        
+        if parent:
+            self.setWindowFlags(parent.windowFlags() | Qt.FramelessWindowHint | Qt.WindowMinMaxButtonsHint)
+        else:
+            self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowMinMaxButtonsHint)
+        
         self.windowEffect.addWindowAnimation(self.winId())
 
         if win_utils.isWin7():
