@@ -151,7 +151,7 @@ class AcrylicWindow(WindowsFramelessWindow):
 
         QtWin.enableBlurBehindWindow(self)
         
-        if parent:
+        if win_utils.isWin7() and parent:
             self.setWindowFlags(parent.windowFlags() | Qt.FramelessWindowHint | Qt.WindowMinMaxButtonsHint)
         else:
             self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowMinMaxButtonsHint)
