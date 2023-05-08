@@ -1,5 +1,5 @@
 # coding:utf-8
-from ctypes import Structure, byref, sizeof, windll
+from ctypes import Structure, byref, sizeof, windll, c_int
 from ctypes.wintypes import DWORD, HWND, LPARAM, RECT, UINT
 from platform import platform
 import sys
@@ -10,7 +10,6 @@ import win32gui
 import win32print
 from PyQt5.QtCore import QOperatingSystemVersion
 from PyQt5.QtGui import QGuiApplication
-from PyQt5.QtWinExtras import QtWin
 from win32comext.shell import shellcon
 
 
@@ -53,6 +52,13 @@ def isFullScreen(hWnd):
     return all(i == j for i, j in zip(winRect, monitorRect))
 
 
+def isCompositionEnabled():
+    """ detect if dwm composition is enabled """
+    bResult = c_int(0)
+    windll.dwmapi.DwmIsCompositionEnabled(byref(bResult))
+    return bool(bResult.value)
+
+
 def getMonitorInfo(hWnd, dwFlags):
     """ get monitor info, return `None` if failed
 
@@ -92,7 +98,7 @@ def getResizeBorderThickness(hWnd, horizontal=True):
     if result > 0:
         return result
 
-    thickness = 8 if QtWin.isCompositionEnabled() else 4
+    thickness = 8 if isCompositionEnabled() else 4
     return round(thickness*window.devicePixelRatio())
 
 

@@ -7,13 +7,12 @@ from ctypes.wintypes import DWORD, LONG, LPCVOID
 import win32api
 import win32con
 import win32gui
-from PyQt5.QtWinExtras import QtWin
 
 from .c_structures import (ACCENT_POLICY, ACCENT_STATE, DWMNCRENDERINGPOLICY,
                            DWMWINDOWATTRIBUTE, MARGINS,
                            WINDOWCOMPOSITIONATTRIB,
-                           WINDOWCOMPOSITIONATTRIBDATA)
-from ..utils.win32_utils import isGreaterEqualWin10, isGreaterEqualWin11
+                           WINDOWCOMPOSITIONATTRIBDATA, DWM_BLURBEHIND)
+from ..utils.win32_utils import isGreaterEqualWin10, isGreaterEqualWin11, isCompositionEnabled
 
 
 class WindowsWindowEffect:
@@ -27,16 +26,21 @@ class WindowsWindowEffect:
         self.dwmapi = WinDLL("dwmapi")
         self.SetWindowCompositionAttribute = self.user32.SetWindowCompositionAttribute
         self.DwmExtendFrameIntoClientArea = self.dwmapi.DwmExtendFrameIntoClientArea
+        self.DwmEnableBlurBehindWindow = self.dwmapi.DwmEnableBlurBehindWindow
         self.DwmSetWindowAttribute = self.dwmapi.DwmSetWindowAttribute
+
         self.SetWindowCompositionAttribute.restype = c_bool
         self.DwmExtendFrameIntoClientArea.restype = LONG
+        self.DwmEnableBlurBehindWindow.restype = LONG
         self.DwmSetWindowAttribute.restype = LONG
+
         self.SetWindowCompositionAttribute.argtypes = [
             c_int,
             POINTER(WINDOWCOMPOSITIONATTRIBDATA),
         ]
         self.DwmSetWindowAttribute.argtypes = [c_int, DWORD, LPCVOID, DWORD]
         self.DwmExtendFrameIntoClientArea.argtypes = [c_int, POINTER(MARGINS)]
+        self.DwmEnableBlurBehindWindow.argtypes = [c_int, POINTER(DWM_BLURBEHIND)]
 
         # Initialize structure
         self.accentPolicy = ACCENT_POLICY()
@@ -135,21 +139,6 @@ class WindowsWindowEffect:
         self.accentPolicy.AccentState = ACCENT_STATE.ACCENT_DISABLED.value
         self.SetWindowCompositionAttribute(hWnd, pointer(self.winCompAttrData))
 
-    @staticmethod
-    def moveWindow(hWnd):
-        """ Move the window
-
-        Parameters
-        ----------
-        hWnd: int or `sip.voidptr`
-            Window handle
-        """
-        hWnd = int(hWnd)
-        win32gui.ReleaseCapture()
-        win32api.SendMessage(
-            hWnd, win32con.WM_SYSCOMMAND, win32con.SC_MOVE + win32con.HTCAPTION, 0
-        )
-
     def addShadowEffect(self, hWnd):
         """ Add DWM shadow to window
 
@@ -158,7 +147,7 @@ class WindowsWindowEffect:
         hWnd: int or `sip.voidptr`
             Window handle
         """
-        if not QtWin.isCompositionEnabled():
+        if not isCompositionEnabled():
             return
 
         hWnd = int(hWnd)
@@ -173,7 +162,7 @@ class WindowsWindowEffect:
         hWnd: int or `sip.voidptr`
             Window handle
         """
-        if not QtWin.isCompositionEnabled():
+        if not isCompositionEnabled():
             return
 
         hWnd = int(hWnd)
@@ -237,3 +226,13 @@ class WindowsWindowEffect:
             | win32con.CS_DBLCLKS
             | win32con.WS_THICKFRAME,
         )
+
+    def enableBlurBehindWindow(self, hWnd):
+        """ enable the blur effect behind the whole client
+        Parameters
+        ----------
+        hWnd: int or `sip.voidptr`
+            Window handle
+        """
+        blurBehind = DWM_BLURBEHIND(1, True, 0, False)
+        self.DwmEnableBlurBehindWindow(int(hWnd), byref(blurBehind))
