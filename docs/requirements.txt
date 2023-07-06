@@ -2,3 +2,6 @@ pywin32==227 ; sys_platform=="win32"
 xcffib==0.11.1; sys_platform=="linux"
 pyobjc ; sys_platform=="darwin"
 PyCocoa ; sys_platform=="darwin"
+sphinx-markdown-tables==0.0.17
+sphinx-rtd-theme==1.1.1
+urllib3<2.0.0
