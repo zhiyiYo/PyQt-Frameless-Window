@@ -223,6 +223,7 @@ class WindowsFramelessDialog(QDialog, WindowsFramelessWindowBase):
         self.titleBar.minBtn.hide()
         self.titleBar.maxBtn.hide()
         self.titleBar.setDoubleClickEnabled(False)
+        self.windowEffect.disableMaximizeButton(self.winId())
 
     def resizeEvent(self, e):
         WindowsFramelessWindowBase.resizeEvent(self, e)
