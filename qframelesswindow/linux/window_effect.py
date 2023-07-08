@@ -115,7 +115,16 @@ class LinuxWindowEffect:
         hWnd : int or `sip.voidptr`
             Window handle
         """
-        pass
+
+    @staticmethod
+    def disableMaximizeButton(hWnd):
+        """ Disable the maximize button of window
+
+        Parameters
+        ----------
+        hWnd : int or `sip.voidptr`
+            Window handle
+        """
 
     def enableBlurBehindWindow(self, hWnd):
         """ enable the blur effect behind the whole client

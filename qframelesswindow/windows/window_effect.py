@@ -227,6 +227,23 @@ class WindowsWindowEffect:
             | win32con.WS_THICKFRAME,
         )
 
+    @staticmethod
+    def disableMaximizeButton(hWnd):
+        """ Disable the maximize button of window
+
+        Parameters
+        ----------
+        hWnd : int or `sip.voidptr`
+            Window handle
+        """
+        hWnd = int(hWnd)
+        style = win32gui.GetWindowLong(hWnd, win32con.GWL_STYLE)
+        win32gui.SetWindowLong(
+            hWnd,
+            win32con.GWL_STYLE,
+            style & ~win32con.WS_MAXIMIZEBOX,
+        )
+
     def enableBlurBehindWindow(self, hWnd):
         """ enable the blur effect behind the whole client
         Parameters

@@ -12,7 +12,7 @@ Examples are available at https://github.com/zhiyiYo/PyQt-Frameless-Window/tree/
 :license: GPLv3, see LICENSE for more details.
 """
 
-__version__ = "0.2.7"
+__version__ = "0.2.8"
 
 import sys
 
@@ -43,6 +43,7 @@ class FramelessDialog(QDialog, FramelessWindow):
         self.titleBar.minBtn.hide()
         self.titleBar.maxBtn.hide()
         self.titleBar.setDoubleClickEnabled(False)
+        self.windowEffect.disableMaximizeButton(self.winId())
 
 
 class FramelessMainWindow(QMainWindow, FramelessWindow):
