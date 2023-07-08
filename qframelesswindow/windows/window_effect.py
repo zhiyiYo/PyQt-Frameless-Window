@@ -217,6 +217,23 @@ class WindowsWindowEffect:
         win32api.SetClassLong(hWnd, win32con.GCL_STYLE, style)
 
     @staticmethod
+    def disableMaximizeButton(hWnd):
+        """ Disable the maximize button of window
+
+        Parameters
+        ----------
+        hWnd : int or `sip.voidptr`
+            Window handle
+        """
+        hWnd = int(hWnd)
+        style = win32gui.GetWindowLong(hWnd, win32con.GWL_STYLE)
+        win32gui.SetWindowLong(
+            hWnd,
+            win32con.GWL_STYLE,
+            style & ~win32con.WS_MAXIMIZEBOX,
+        )
+
+    @staticmethod
     def addWindowAnimation(hWnd):
         """ Enables the maximize and minimize animation of the window
 

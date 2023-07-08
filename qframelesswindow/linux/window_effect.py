@@ -116,3 +116,13 @@ class LinuxWindowEffect:
             Window handle
         """
         pass
+
+    @staticmethod
+    def disableMaximizeButton(hWnd):
+        """ Disable the maximize button of window
+
+        Parameters
+        ----------
+        hWnd : int or `sip.voidptr`
+            Window handle
+        """
