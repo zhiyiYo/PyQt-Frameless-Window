@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="15%" align="center" src="screenshot/logo.png" alt="logo">
+  <img width="15%" align="center" src="https://raw.githubusercontent.com/zhiyiYo/PyQt-Frameless-Window/master/screenshot/logo.png" alt="logo">
 </p>
   <h1 align="center">
   PyQt-Frameless-Window
@@ -22,7 +22,7 @@
   </a>
 </p>
 
-![Cover](screenshot/cover.jpg)
+![Cover](https://raw.githubusercontent.com/zhiyiYo/PyQt-Frameless-Window/master/screenshot/cover.jpg)
 
 
 ## Features
@@ -79,13 +79,13 @@ if __name__ == '__main__':
     demo.show()
     sys.exit(app.exec_())
 ```
-For more complex requirements, see [demo.py](./examples/demo.py) and [main_window.py](./examples/main_window.py).
+For more complex requirements, see [demo.py](https://github.com/zhiyiYo/PyQt-Frameless-Window/blob/master/examples/demo.py) and [main_window.py](https://github.com/zhiyiYo/PyQt-Frameless-Window/blob/master/examples/main_window.py).
 
 ## Examples
 * Normal frameless window
-![Normal Frameless Window](screenshot/normal_frameless_window.gif)
+![Normal Frameless Window](https://raw.githubusercontent.com/zhiyiYo/PyQt-Frameless-Window/master/screenshot/normal_frameless_window.gif)
 * Acrylic frameless window
-![Acrylic Frameless Window](screenshot/acrylic_window.jpg)
+![Acrylic Frameless Window](https://raw.githubusercontent.com/zhiyiYo/PyQt-Frameless-Window/master/screenshot/acrylic_window.jpg)
 
 
 ## Document
@@ -93,7 +93,7 @@ Want to know more about PyQt-Frameless-Window? Please read the [help document](h
 
 
 ## Notes
-1. `FramelessWindow` provides a default custom title bar. If you don't like it, just rewrite it as [demo.py](./examples/demo.py) does.
+1. `FramelessWindow` provides a default custom title bar. If you don't like it, just rewrite it as [demo.py](https://github.com/zhiyiYo/PyQt-Frameless-Window/blob/master/examples/demo.py) does.
 
 2. Moving the acrylic window on Win10 may get stuck. At present, there is no good solution. Maybe you can disable the acrylic effect when moving the window, but I haven't done this in the source code.
 3. Snap layout is not enabled by default. See [#56](https://github.com/zhiyiYo/PyQt-Frameless-Window/issues/56) to learn how to enable it.
