@@ -14,28 +14,19 @@ from .title_bar_buttons import (CloseButton, MaximizeButton, MinimizeButton,
                                 SvgTitleBarButton, TitleBarButton)
 
 
-class TitleBar(QWidget):
-    """ Title bar """
+class TitleBarBase(QWidget):
+    """ Title bar base class """
 
     def __init__(self, parent):
         super().__init__(parent)
         self.minBtn = MinimizeButton(parent=self)
         self.closeBtn = CloseButton(parent=self)
         self.maxBtn = MaximizeButton(parent=self)
-        self.hBoxLayout = QHBoxLayout(self)
+
         self._isDoubleClickEnabled = True
 
         self.resize(200, 32)
         self.setFixedHeight(32)
-
-        # add buttons to layout
-        self.hBoxLayout.setSpacing(0)
-        self.hBoxLayout.setContentsMargins(0, 0, 0, 0)
-        self.hBoxLayout.setAlignment(Qt.AlignVCenter | Qt.AlignLeft)
-        self.hBoxLayout.addStretch(1)
-        self.hBoxLayout.addWidget(self.minBtn, 0, Qt.AlignRight)
-        self.hBoxLayout.addWidget(self.maxBtn, 0, Qt.AlignRight)
-        self.hBoxLayout.addWidget(self.closeBtn, 0, Qt.AlignRight)
 
         # connect signal to slot
         self.minBtn.clicked.connect(self.window().showMinimized)
@@ -103,6 +94,24 @@ class TitleBar(QWidget):
             whether to enable double click
         """
         self._isDoubleClickEnabled = isEnabled
+
+
+
+class TitleBar(TitleBarBase):
+    """ Title bar """
+
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.hBoxLayout = QHBoxLayout(self)
+
+        # add buttons to layout
+        self.hBoxLayout.setSpacing(0)
+        self.hBoxLayout.setContentsMargins(0, 0, 0, 0)
+        self.hBoxLayout.setAlignment(Qt.AlignVCenter | Qt.AlignLeft)
+        self.hBoxLayout.addStretch(1)
+        self.hBoxLayout.addWidget(self.minBtn, 0, Qt.AlignRight)
+        self.hBoxLayout.addWidget(self.maxBtn, 0, Qt.AlignRight)
+        self.hBoxLayout.addWidget(self.closeBtn, 0, Qt.AlignRight)
 
 
 class StandardTitleBar(TitleBar):
