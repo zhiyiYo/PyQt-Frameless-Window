@@ -12,13 +12,13 @@ Examples are available at https://github.com/zhiyiYo/PyQt-Frameless-Window/tree/
 :license: GPLv3, see LICENSE for more details.
 """
 
-__version__ = "0.2.9"
+__version__ = "0.3.0"
 
 import sys
 
 from PyQt5.QtWidgets import QDialog, QMainWindow
 
-from .titlebar import TitleBar, TitleBarButton, SvgTitleBarButton, StandardTitleBar
+from .titlebar import TitleBar, TitleBarButton, SvgTitleBarButton, StandardTitleBar, TitleBarBase
 
 if sys.platform == "win32":
     from .windows import AcrylicWindow
