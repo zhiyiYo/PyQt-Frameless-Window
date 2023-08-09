@@ -110,6 +110,8 @@ class WindowsWindowEffect:
         else:
             self.DwmSetWindowAttribute(hWnd, 38, byref(c_int(2)), 4)
 
+        self.DwmSetWindowAttribute(hWnd, 20, byref(c_int(1*isDarkMode)), 4)
+
     def setAeroEffect(self, hWnd):
         """ Add the aero effect to the window
 
