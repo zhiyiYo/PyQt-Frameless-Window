@@ -25,7 +25,7 @@ class LinuxWindowEffect:
         """
         pass
 
-    def setMicaEffect(self, hWnd, isDarkMode=False):
+    def setMicaEffect(self, hWnd, isDarkMode=False, isAlt=False):
         """ Add mica effect to the window (Win11 only)
 
         Parameters
@@ -35,6 +35,9 @@ class LinuxWindowEffect:
 
         isDarkMode: bool
             whether to use dark mode mica effect
+
+        isAlt: bool
+            whether to use mica alt effect
         """
         pass
 
