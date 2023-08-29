@@ -82,7 +82,7 @@ class WindowsWindowEffect:
         self.winCompAttrData.Attribute = WINDOWCOMPOSITIONATTRIB.WCA_ACCENT_POLICY.value
         self.SetWindowCompositionAttribute(hWnd, pointer(self.winCompAttrData))
 
-    def setMicaEffect(self, hWnd, isDarkMode=False):
+    def setMicaEffect(self, hWnd, isDarkMode=False, isAlt=False):
         """ Add the mica effect to the window (Win11 only)
 
         Parameters
@@ -92,6 +92,9 @@ class WindowsWindowEffect:
 
         isDarkMode: bool
             whether to use dark mode mica effect
+
+        isAlt: bool
+            whether to enable mica alt effect
         """
         if not isGreaterEqualWin11():
             warnings.warn("The mica effect is only available on Win11")
@@ -113,7 +116,7 @@ class WindowsWindowEffect:
         if sys.getwindowsversion().build < 22523:
             self.DwmSetWindowAttribute(hWnd, 1029, byref(c_int(1)), 4)
         else:
-            self.DwmSetWindowAttribute(hWnd, 38, byref(c_int(2)), 4)
+            self.DwmSetWindowAttribute(hWnd, 38, byref(c_int(4 if isAlt else 2)), 4)
 
         self.DwmSetWindowAttribute(hWnd, 20, byref(c_int(1*isDarkMode)), 4)
 

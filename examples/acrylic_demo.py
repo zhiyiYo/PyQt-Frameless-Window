@@ -16,7 +16,7 @@ class Window(AcrylicWindow):
         # self.windowEffect.setAcrylicEffect(self.winId(), "106EBE99")
 
         # you can also enable mica effect on Win11
-        # self.windowEffect.setMicaEffect(self.winId(), False)
+        # self.windowEffect.setMicaEffect(self.winId(), isDarkMode=False, isAlt=False)
 
 
 if __name__ == '__main__':

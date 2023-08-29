@@ -54,7 +54,7 @@ class MacWindowEffect:
         content.addSubview_positioned_relativeTo_(
             visualEffectView, Cocoa.NSWindowBelow, container)
 
-    def setMicaEffect(self, hWnd, isDarkMode=False):
+    def setMicaEffect(self, hWnd, isDarkMode=False, isAlt=False):
         """ Add mica effect to the window (Win11 only)
 
         Parameters
@@ -64,6 +64,9 @@ class MacWindowEffect:
 
         isDarkMode: bool
             whether to use dark mode mica effect
+
+        isAlt: bool
+            whether to use mica alt effect
         """
         self.setAcrylicEffect(hWnd)
 
