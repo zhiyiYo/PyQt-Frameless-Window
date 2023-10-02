@@ -3,7 +3,9 @@ from enum import Enum
 
 import xcffib as xcb
 from PyQt5 import sip
-from PyQt5.QtCore import QPointF, Qt
+from PyQt5.QtCore import QPointF, Qt, QEvent, QPoint
+from PyQt5.QtGui import QMouseEvent
+from PyQt5.QtWidgets import QWidget, QApplication
 from PyQt5.QtX11Extras import QX11Info
 from xcffib.xproto import (ButtonIndex, ButtonMask, ButtonReleaseEvent,
                            ClientMessageData, ClientMessageEvent, EventMask,
@@ -123,8 +125,14 @@ class LinuxMoveResize:
     @classmethod
     def startSystemMove(cls, window, globalPos):
         """ move window """
-        cls.startSystemMoveResize(
-            window, globalPos, WindowMessage._NET_WM_MOVERESIZE_MOVE.value)
+        if QX11Info.isPlatformX11():
+            cls.startSystemMoveResize(
+                window, globalPos, WindowMessage._NET_WM_MOVERESIZE_MOVE.value)
+        else:
+            window.windowHandle().startSystemMove()
+            event = QMouseEvent(QEvent.MouseButtonRelease, QPoint(-1, -1),
+                                Qt.LeftButton, Qt.NoButton, Qt.NoModifier)
+            QApplication.instance().postEvent(window.windowHandle(), event)
 
     @classmethod
     def starSystemResize(cls, window, globalPos, edges):
@@ -144,14 +152,17 @@ class LinuxMoveResize:
         if not edges:
             return
 
-        messageMap = {
-            Qt.TopEdge: WindowMessage._NET_WM_MOVERESIZE_SIZE_TOP,
-            Qt.TopEdge | Qt.LeftEdge: WindowMessage._NET_WM_MOVERESIZE_SIZE_TOPLEFT,
-            Qt.TopEdge | Qt.RightEdge: WindowMessage._NET_WM_MOVERESIZE_SIZE_TOPRIGHT,
-            Qt.BottomEdge: WindowMessage._NET_WM_MOVERESIZE_SIZE_BOTTOM,
-            Qt.BottomEdge | Qt.LeftEdge: WindowMessage._NET_WM_MOVERESIZE_SIZE_BOTTOMLEFT,
-            Qt.BottomEdge | Qt.RightEdge: WindowMessage._NET_WM_MOVERESIZE_SIZE_BOTTOMRIGHT,
-            Qt.LeftEdge: WindowMessage._NET_WM_MOVERESIZE_SIZE_LEFT,
-            Qt.RightEdge: WindowMessage._NET_WM_MOVERESIZE_SIZE_RIGHT,
-        }
-        cls.startSystemMoveResize(window, globalPos, messageMap[edges].value)
+        if QX11Info.isPlatformX11():
+            messageMap = {
+                Qt.TopEdge: WindowMessage._NET_WM_MOVERESIZE_SIZE_TOP,
+                Qt.TopEdge | Qt.LeftEdge: WindowMessage._NET_WM_MOVERESIZE_SIZE_TOPLEFT,
+                Qt.TopEdge | Qt.RightEdge: WindowMessage._NET_WM_MOVERESIZE_SIZE_TOPRIGHT,
+                Qt.BottomEdge: WindowMessage._NET_WM_MOVERESIZE_SIZE_BOTTOM,
+                Qt.BottomEdge | Qt.LeftEdge: WindowMessage._NET_WM_MOVERESIZE_SIZE_BOTTOMLEFT,
+                Qt.BottomEdge | Qt.RightEdge: WindowMessage._NET_WM_MOVERESIZE_SIZE_BOTTOMRIGHT,
+                Qt.LeftEdge: WindowMessage._NET_WM_MOVERESIZE_SIZE_LEFT,
+                Qt.RightEdge: WindowMessage._NET_WM_MOVERESIZE_SIZE_RIGHT,
+            }
+            cls.startSystemMoveResize(window, globalPos, messageMap[edges].value)
+        else:
+            window.windowHandle().startSystemResize(edges)
