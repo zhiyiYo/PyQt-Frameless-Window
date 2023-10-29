@@ -8,6 +8,7 @@
 # 忽略python缓存文件
 */__pycache__
 *.py[cod]
+.DS_Store
 
 # 忽略测试文件
 test.py
