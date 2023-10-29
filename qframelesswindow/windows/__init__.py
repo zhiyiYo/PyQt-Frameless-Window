@@ -21,30 +21,29 @@ class WindowsFramelessWindowBase:
     BORDER_WIDTH = 5
 
     def __init__(self, *args, **kwargs):
-        pass
+        super().__init__(*args, **kwargs)
 
     def _initFrameless(self):
         self.windowEffect = WindowsWindowEffect(self)
         self.titleBar = TitleBar(self)
         self._isResizeEnabled = True
 
-        # remove window border
-        if not win_utils.isWin7():
-            self.setWindowFlags(self.windowFlags() | Qt.FramelessWindowHint)
-        else:
-            self.setWindowFlags(Qt.FramelessWindowHint |
-                                Qt.WindowMinMaxButtonsHint)
-
-        # add DWM shadow and window animation
-        self.windowEffect.addWindowAnimation(self.winId())
-        if not isinstance(self, AcrylicWindow):
-            self.windowEffect.addShadowEffect(self.winId())
+        self.updateFrameless()
 
         # solve issue #5
         self.windowHandle().screenChanged.connect(self.__onScreenChanged)
 
         self.resize(500, 500)
         self.titleBar.raise_()
+
+    def updateFrameless(self):
+        """ update frameless window """
+        self.setWindowFlags(self.windowFlags() | Qt.FramelessWindowHint)
+
+        # add DWM shadow and window animation
+        self.windowEffect.addWindowAnimation(self.winId())
+        if not isinstance(self, AcrylicWindow):
+            self.windowEffect.addShadowEffect(self.winId())
 
     def setTitleBar(self, titleBar):
         """ set custom title bar
@@ -143,18 +142,12 @@ class WindowsFramelessWindowBase:
         self.titleBar.resize(self.width(), self.titleBar.height())
 
 
-class WindowsFramelessWindow(QWidget, WindowsFramelessWindowBase):
+class WindowsFramelessWindow(WindowsFramelessWindowBase, QWidget):
     """  Frameless window for Windows system """
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
         self._initFrameless()
-
-    def resizeEvent(self, e):
-        WindowsFramelessWindowBase.resizeEvent(self, e)
-
-    def nativeEvent(self, eventType, message):
-        return WindowsFramelessWindowBase.nativeEvent(self, eventType, message)
 
 
 class AcrylicWindow(WindowsFramelessWindow):
@@ -166,19 +159,20 @@ class AcrylicWindow(WindowsFramelessWindow):
 
     def _initFrameless(self):
         super()._initFrameless()
+        self.updateFrameless()
+
+        self.setStyleSheet("AcrylicWindow{background:transparent}")
+        self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
+
+    def updateFrameless(self):
         self.setWindowFlags(Qt.FramelessWindowHint)
+
         self.windowEffect.enableBlurBehindWindow(self.winId())
         self.windowEffect.addWindowAnimation(self.winId())
 
-        if win_utils.isWin7():
+        self.windowEffect.setAcrylicEffect(self.winId())
+        if win_utils.isGreaterEqualWin11():
             self.windowEffect.addShadowEffect(self.winId())
-            self.windowEffect.setAeroEffect(self.winId())
-        else:
-            self.windowEffect.setAcrylicEffect(self.winId())
-            if win_utils.isGreaterEqualWin11():
-                self.windowEffect.addShadowEffect(self.winId())
-
-        self.setStyleSheet("AcrylicWindow{background:transparent}")
 
     def nativeEvent(self, eventType, message):
         """ Handle the Windows message """
@@ -203,22 +197,15 @@ class AcrylicWindow(WindowsFramelessWindow):
         self.hide()
 
 
-class WindowsFramelessMainWindow(QMainWindow, WindowsFramelessWindowBase):
+class WindowsFramelessMainWindow(WindowsFramelessWindowBase, QMainWindow):
     """ Frameless main window for Windows system """
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
         self._initFrameless()
 
-    def resizeEvent(self, e):
-        QMainWindow.resizeEvent(self, e)
-        self.titleBar.resize(self.width(), self.titleBar.height())
 
-    def nativeEvent(self, eventType, message):
-        return WindowsFramelessWindowBase.nativeEvent(self, eventType, message)
-
-
-class WindowsFramelessDialog(QDialog, WindowsFramelessWindowBase):
+class WindowsFramelessDialog(WindowsFramelessWindowBase, QDialog):
     """ Frameless dialog for Windows system """
 
     def __init__(self, parent=None):
@@ -229,8 +216,3 @@ class WindowsFramelessDialog(QDialog, WindowsFramelessWindowBase):
         self.titleBar.setDoubleClickEnabled(False)
         self.windowEffect.disableMaximizeButton(self.winId())
 
-    def resizeEvent(self, e):
-        WindowsFramelessWindowBase.resizeEvent(self, e)
-
-    def nativeEvent(self, eventType, message):
-        return WindowsFramelessWindowBase.nativeEvent(self, eventType, message)

@@ -13,18 +13,21 @@ class LinuxFramelessWindowBase:
     BORDER_WIDTH = 5
 
     def __init__(self, *args, **kwargs):
-        pass
+        super().__init__(*args, **kwargs)
 
     def _initFrameless(self):
         self.windowEffect = LinuxWindowEffect(self)
         self.titleBar = TitleBar(self)
         self._isResizeEnabled = True
 
-        self.setWindowFlags(self.windowFlags() | Qt.FramelessWindowHint)
+        self.updateFrameless()
         QCoreApplication.instance().installEventFilter(self)
 
         self.titleBar.raise_()
         self.resize(500, 500)
+
+    def updateFrameless(self):
+        self.setWindowFlags(self.windowFlags() | Qt.FramelessWindowHint)
 
     def resizeEvent(self, e):
         self.titleBar.resize(self.width(), self.titleBar.height())
@@ -81,37 +84,23 @@ class LinuxFramelessWindowBase:
         return False
 
 
-class LinuxFramelessWindow(QWidget, LinuxFramelessWindowBase):
+class LinuxFramelessWindow(LinuxFramelessWindowBase, QWidget):
     """ Frameless window for Linux system """
-
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
         self._initFrameless()
 
-    def resizeEvent(self, e):
-        LinuxFramelessWindowBase.resizeEvent(self, e)
 
-    def eventFilter(self, obj, event):
-        return LinuxFramelessWindowBase.eventFilter(self, obj, event)
-
-
-class LinuxFramelessMainWindow(QMainWindow, LinuxFramelessWindowBase):
+class LinuxFramelessMainWindow(LinuxFramelessWindowBase, QMainWindow):
     """ Frameless main window for Linux system """
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
         self._initFrameless()
 
-    def resizeEvent(self, e):
-        QMainWindow.resizeEvent(self, e)
-        self.titleBar.resize(self.width(), self.titleBar.height())
 
-    def eventFilter(self, obj, event):
-        return LinuxFramelessWindowBase.eventFilter(self, obj, event)
-
-
-class LinuxFramelessDialog(QDialog, LinuxFramelessWindowBase):
+class LinuxFramelessDialog(LinuxFramelessWindowBase, QDialog):
     """ Frameless dialog for Windows system """
 
     def __init__(self, parent=None):
@@ -120,9 +109,3 @@ class LinuxFramelessDialog(QDialog, LinuxFramelessWindowBase):
         self.titleBar.minBtn.hide()
         self.titleBar.maxBtn.hide()
         self.titleBar.setDoubleClickEnabled(False)
-
-    def resizeEvent(self, e):
-        self.titleBar.resize(self.width(), self.titleBar.height())
-
-    def eventFilter(self, obj, event):
-        return LinuxFramelessWindowBase.eventFilter(self, obj, event)
