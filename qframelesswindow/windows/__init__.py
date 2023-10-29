@@ -59,6 +59,7 @@ class WindowsFramelessWindow(QWidget):
             title bar
         """
         self.titleBar.deleteLater()
+        self.titleBar.hide()
         self.titleBar = titleBar
         self.titleBar.setParent(self)
         self.titleBar.raise_()
