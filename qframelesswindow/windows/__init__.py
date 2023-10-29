@@ -162,7 +162,6 @@ class AcrylicWindow(WindowsFramelessWindow):
         self.updateFrameless()
 
         self.setStyleSheet("AcrylicWindow{background:transparent}")
-        self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
 
     def updateFrameless(self):
         self.setWindowFlags(Qt.FramelessWindowHint)
