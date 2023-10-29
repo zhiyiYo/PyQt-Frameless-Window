@@ -10,8 +10,8 @@ class FramelessWebEngineView(QWebEngineView):
     """ Frameless web engine view """
 
     def __init__(self, parent):
-        if sys.platform == "win32" and isinstance(parent, AcrylicWindow):
-            parent.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
+        if sys.platform == "win32" and isinstance(parent.window(), AcrylicWindow):
+            parent.window().setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
 
         super().__init__(parent=parent)
         self.setHtml("")
