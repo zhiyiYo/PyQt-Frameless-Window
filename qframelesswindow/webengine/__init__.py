@@ -3,7 +3,7 @@ import sys
 
 from PySide6.QtCore import Qt
 from PySide6.QtWebEngineWidgets import QWebEngineView
-from qframelesswindow import AcrylicWindow
+from qframelesswindow import AcrylicWindow, FramelessWindow, FramelessMainWindow, FramelessDialog
 
 
 class FramelessWebEngineView(QWebEngineView):
@@ -15,4 +15,6 @@ class FramelessWebEngineView(QWebEngineView):
 
         super().__init__(parent=parent)
         self.setHtml("")
-        self.window().updateFrameless()
+
+        if isinstance(self.window(), (FramelessWindow, FramelessMainWindow, FramelessDialog)):
+            self.window().updateFrameless()
