@@ -3,7 +3,7 @@ import sys
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtWebEngineWidgets import QWebEngineView
-from qframelesswindow import AcrylicWindow
+from qframelesswindow import AcrylicWindow, FramelessWindow
 
 
 class FramelessWebEngineView(QWebEngineView):
@@ -15,4 +15,6 @@ class FramelessWebEngineView(QWebEngineView):
 
         super().__init__(parent=parent)
         self.setHtml("")
-        self.window().updateFrameless()
+
+        if isinstance(self.window(), FramelessWindow):
+            self.window().updateFrameless()
