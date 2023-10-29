@@ -19,7 +19,7 @@ class LinuxFramelessWindow(QWidget):
         self.titleBar = TitleBar(self)
         self._isResizeEnabled = True
 
-        self.setWindowFlags(self.windowFlags() | Qt.FramelessWindowHint)
+        self.updateFrameless()
         QCoreApplication.instance().installEventFilter(self)
 
         self.titleBar.raise_()
@@ -28,6 +28,9 @@ class LinuxFramelessWindow(QWidget):
     def resizeEvent(self, e):
         super().resizeEvent(e)
         self.titleBar.resize(self.width(), self.titleBar.height())
+
+    def updateFrameless(self):
+        self.setWindowFlags(self.windowFlags() | Qt.FramelessWindowHint)
 
     def setTitleBar(self, titleBar):
         """ set custom title bar

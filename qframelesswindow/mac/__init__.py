@@ -21,14 +21,18 @@ class MacFramelessWindow(QWidget):
         self.titleBar = TitleBar(self)
         self._isResizeEnabled = True
 
+        self.updateFrameless()
+
+        self.resize(500, 500)
+        self.titleBar.raise_()
+
+    def updateFrameless(self):
+        """ update frameless window """
         view = objc.objc_object(c_void_p=self.winId().__int__())
         self.__nsWindow = view.window()
 
         # hide system title bar
         self.__hideSystemTitleBar()
-
-        self.resize(500, 500)
-        self.titleBar.raise_()
 
     def setTitleBar(self, titleBar):
         """ set custom title bar
