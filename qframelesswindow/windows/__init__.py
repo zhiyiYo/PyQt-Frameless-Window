@@ -31,6 +31,16 @@ class WindowsFramelessWindow(QWidget):
         self.titleBar = TitleBar(self)
         self._isResizeEnabled = True
 
+        self.updateFrameless()
+
+        # solve issue #5
+        self.windowHandle().screenChanged.connect(self.__onScreenChanged)
+
+        self.resize(500, 500)
+        self.titleBar.raise_()
+
+    def updateFrameless(self):
+        """ update frameless window """
         # remove window border
         if not win_utils.isWin7():
             self.setWindowFlags(self.windowFlags() | Qt.FramelessWindowHint)
@@ -44,12 +54,6 @@ class WindowsFramelessWindow(QWidget):
         if not isinstance(self, AcrylicWindow):
             self.windowEffect.addShadowEffect(self.winId())
 
-        # solve issue #5
-        self.windowHandle().screenChanged.connect(self.__onScreenChanged)
-
-        self.resize(500, 500)
-        self.titleBar.raise_()
-
     def setTitleBar(self, titleBar):
         """ set custom title bar
 
@@ -59,6 +63,7 @@ class WindowsFramelessWindow(QWidget):
             title bar
         """
         self.titleBar.deleteLater()
+        self.titleBar.hide()
         self.titleBar = titleBar
         self.titleBar.setParent(self)
         self.titleBar.raise_()
@@ -156,6 +161,10 @@ class AcrylicWindow(WindowsFramelessWindow):
 
     def _initFrameless(self):
         super()._initFrameless()
+        self.updateFrameless()
+        self.setStyleSheet("background:transparent")
+
+    def updateFrameless(self):
         QtWin.enableBlurBehindWindow(self)
 
         if win_utils.isWin7() and self.parent():
@@ -172,8 +181,6 @@ class AcrylicWindow(WindowsFramelessWindow):
             self.windowEffect.setAcrylicEffect(self.winId())
             if win_utils.isGreaterEqualWin11():
                 self.windowEffect.addShadowEffect(self.winId())
-
-        self.setStyleSheet("background:transparent")
 
     def nativeEvent(self, eventType, message):
         """ Handle the Windows message """

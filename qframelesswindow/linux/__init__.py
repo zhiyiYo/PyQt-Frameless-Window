@@ -20,11 +20,14 @@ class LinuxFramelessWindow(QWidget):
         self.titleBar = TitleBar(self)
         self._isResizeEnabled = True
 
-        self.setWindowFlags(self.windowFlags() | Qt.FramelessWindowHint)
+        self.updateFrameless()
         QCoreApplication.instance().installEventFilter(self)
 
         self.titleBar.raise_()
         self.resize(500, 500)
+
+    def updateFrameless(self):
+        self.setWindowFlags(self.windowFlags() | Qt.FramelessWindowHint)
 
     def resizeEvent(self, e):
         super().resizeEvent(e)
@@ -39,6 +42,7 @@ class LinuxFramelessWindow(QWidget):
             title bar
         """
         self.titleBar.deleteLater()
+        self.titleBar.hide()
         self.titleBar = titleBar
         self.titleBar.setParent(self)
         self.titleBar.raise_()
