@@ -154,11 +154,10 @@ class AcrylicWindow(WindowsFramelessWindow):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
         self.__closedByKey = False
-
-        self.updateFrameless()
         self.setStyleSheet("AcrylicWindow{background:transparent}")
 
     def updateFrameless(self):
+        super().updateFrameless()
         self.windowEffect.enableBlurBehindWindow(self.winId())
 
         if win_utils.isWin7() and self.parent():
