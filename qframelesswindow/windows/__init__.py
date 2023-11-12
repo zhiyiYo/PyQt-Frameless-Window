@@ -165,6 +165,7 @@ class AcrylicWindow(WindowsFramelessWindow):
         self.setStyleSheet("background:transparent")
 
     def updateFrameless(self):
+        super().updateFrameless()
         QtWin.enableBlurBehindWindow(self)
 
         if win_utils.isWin7() and self.parent():
