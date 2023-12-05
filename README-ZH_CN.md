@@ -14,12 +14,11 @@
   </a>
 
   <a style="text-decoration:none">
-    <img src="https://static.pepy.tech/personalized-badge/pyqt5-frameless-window?period=total&units=international_system&left_color=grey&right_color=brightgreen&left_text=下载量" alt="下载"/>
+    <img src="https://static.pepy.tech/personalized-badge/pyqt5-frameless-window?period=total&units=international_system&left_color=grey&right_color=brightgreen&left_text=Downloads" alt="下载"/>
   </a>
 
   <a style="text-decoration:none">
-    <img src="![Static Badge](https://img.shields.io/badge/%E8%AE%B8%E5%8F%AF%E8%AF%81-GPLv3-blue%3Fcolor%3D%234ec820)
-" alt="GPLv3"/>
+    <img src="https://img.shields.io/badge/License-GPLv3-blue?color=#4ec820" alt="GPLv3"/>
   </a>
 </p>
 
