@@ -81,7 +81,8 @@ class WindowsFramelessWindow(QWidget):
             pos = QCursor.pos()
             xPos = pos.x() - self.x()
             yPos = pos.y() - self.y()
-            w, h = self.width(), self.height()
+            w = self.frameGeometry().width()
+            h = self.frameGeometry().height()
 
             # fixes https://github.com/zhiyiYo/PyQt-Frameless-Window/issues/98
             bw = 0 if win_utils.isMaximized(msg.hWnd) or win_utils.isFullScreen(msg.hWnd) else self.BORDER_WIDTH
