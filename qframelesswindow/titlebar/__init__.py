@@ -64,6 +64,7 @@ class TitleBarBase(QWidget):
             self.window().showNormal()
         else:
             self.window().showMaximized()
+            
         if sys.platform == "win32":
             from ..utils.win32_utils import releaseMouseLeftButton
             releaseMouseLeftButton(self.window().winId())

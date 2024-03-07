@@ -214,6 +214,7 @@ def releaseMouseLeftButton(hWnd, x=0, y=0):
         lp
     )
 
+
 class APPBARDATA(Structure):
     _fields_ = [
         ('cbSize',            DWORD),
