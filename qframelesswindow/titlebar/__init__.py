@@ -68,6 +68,10 @@ class TitleBarBase(QWidget):
             self.window().showNormal()
         else:
             self.window().showMaximized()
+            
+        if sys.platform == "win32":
+            from ..utils.win32_utils import releaseMouseLeftButton
+            releaseMouseLeftButton(self.window().winId())
 
     def _isDragRegion(self, pos):
         """ Check whether the position belongs to the area where dragging is allowed """
