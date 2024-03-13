@@ -199,20 +199,15 @@ def releaseMouseLeftButton(hWnd, x=0, y=0):
     ----------
     hWnd: int or `sip.voidptr`
         window handle
-        
+
     x: int
         mouse x pos
-        
+
     y: int
         mouse y pos
     """
     lp = (y & 0xFFFF) << 16 | (x & 0xFFFF)
-    win32api.SendMessage(
-        hWnd,
-        win32con.WM_LBUTTONUP,
-        0,
-        lp
-    )
+    win32api.SendMessage(int(hWnd), win32con.WM_LBUTTONUP, 0, lp)
 
 
 class APPBARDATA(Structure):
