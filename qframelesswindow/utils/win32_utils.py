@@ -192,6 +192,24 @@ def isWin7():
     return "Windows-7" in platform()
 
 
+def releaseMouseLeftButton(hWnd, x=0, y=0):
+    """ release mouse left button at (x, y)
+
+    Parameters
+    ----------
+    hWnd: int or `sip.voidptr`
+        window handle
+
+    x: int
+        mouse x pos
+
+    y: int
+        mouse y pos
+    """
+    lp = (y & 0xFFFF) << 16 | (x & 0xFFFF)
+    win32api.SendMessage(int(hWnd), win32con.WM_LBUTTONUP, 0, lp)
+
+
 class APPBARDATA(Structure):
     _fields_ = [
         ('cbSize',            DWORD),
