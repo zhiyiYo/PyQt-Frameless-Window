@@ -164,11 +164,12 @@ def isGreaterEqualWin8_1():
 
 def isGreaterEqualWin10():
     """ determine if the windows version ≥ Win10 """
-    return "Windows-10" in platform()
+    cv = QOperatingSystemVersion.current()
+    return cv.type() == QOperatingSystemVersion.OSType.Windows and cv.majorVersion() >= 10
 
 
 def isGreaterEqualWin11():
-    """ determine if the windows version ≥ Win10 """
+    """ determine if the windows version ≥ Win11 """
     return isGreaterEqualWin10() and sys.getwindowsversion().build >= 22000
 
 
@@ -273,7 +274,7 @@ class Taskbar:
 
 
 class WindowsMoveResize:
-    """ Tool class for moving and resizing Mac OS window """
+    """ Tool class for moving and resizing Windows window """
 
     @staticmethod
     def startSystemMove(window, globalPos):
