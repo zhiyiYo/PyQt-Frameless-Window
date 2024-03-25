@@ -20,8 +20,8 @@ class WindowsFramelessWindowBase:
 
     BORDER_WIDTH = 5
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, parent=None):
+        super().__init__(parent)
 
     def _initFrameless(self):
         self.windowEffect = WindowsWindowEffect(self)
