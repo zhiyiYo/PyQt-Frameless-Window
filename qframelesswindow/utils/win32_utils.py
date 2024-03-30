@@ -175,7 +175,7 @@ def isGreaterEqualWin8_1():
 def isGreaterEqualWin10():
     """ determine if the windows version ≥ Win10 """
     cv = QOperatingSystemVersion.current()
-    return cv.type() == QOperatingSystemVersion.OSType.Windows and cv.majorVersion() >= 10
+    return sys.platform == "win32" and cv.majorVersion() >= 10
 
 
 def isGreaterEqualWin11():
