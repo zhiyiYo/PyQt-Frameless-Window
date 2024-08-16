@@ -61,9 +61,9 @@ class MacFramelessWindow(QWidget):
         self.setSystemTitleBarButtonVisible(self.isSystemButtonVisible())
 
     def changeEvent(self, event):
-        if event.type() == QEvent.WindowStateChange:
+        if event.type() == QEvent.Type.WindowStateChange:
             self.setSystemTitleBarButtonVisible(self.isSystemButtonVisible())
-        elif event.type() == QEvent.Resize:
+        elif event.type() == QEvent.Type.Resize:
             self._updateSystemButtonRect()
 
     def _hideSystemTitleBar(self):
@@ -106,7 +106,7 @@ class MacFramelessWindow(QWidget):
 
         # get system title bar
         titlebar = rightButton.superview()
-        titlebarHeight = titlebar.frame().size.height
+        titlebarHeight = int(titlebar.frame().size.height)
 
         spacing = midButton.frame().origin.x - leftButton.frame().origin.x
         width = midButton.frame().size.width
