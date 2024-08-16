@@ -1,7 +1,7 @@
 # coding:utf-8
 import Cocoa
 import objc
-from PyQt5.QtCore import QEvent, Qt, QRect, QSize, QPoint
+from PyQt5.QtCore import QEvent, Qt, QRect, QSize, QPoint, QTimer
 from PyQt5.QtWidgets import QWidget
 
 from ..titlebar import TitleBar
@@ -62,13 +62,15 @@ class MacFramelessWindow(QWidget):
         self.setSystemTitleBarButtonVisible(self.isSystemButtonVisible())
 
     def changeEvent(self, event):
-        super().changeEvent(event)
         if event.type() == QEvent.WindowStateChange:
-            self.setSystemTitleBarButtonVisible(self.isSystemButtonVisible())
+            self._hideSystemTitleBar(self.isSystemButtonVisible())
+
+            # Delay must be added, otherwise the buttons will be misplaced
+            QTimer.singleShot(1, self._updateSystemButtonRect)
         elif event.type() == QEvent.Resize:
             self._updateSystemButtonRect()
 
-    def _hideSystemTitleBar(self):
+    def _hideSystemTitleBar(self, showButton=False):
         # extend view to title bar region
         self.__nsWindow.setStyleMask_(
             self.__nsWindow.styleMask() | Cocoa.NSFullSizeContentViewWindowMask)
@@ -80,7 +82,7 @@ class MacFramelessWindow(QWidget):
 
         # hide title bar buttons and title
         self.__nsWindow.setTitleVisibility_(Cocoa.NSWindowTitleHidden)
-        self.setSystemTitleBarButtonVisible(False)
+        self.setSystemTitleBarButtonVisible(showButton)
 
     def isSystemButtonVisible(self):
         return self._isSystemButtonVisible
@@ -108,7 +110,7 @@ class MacFramelessWindow(QWidget):
 
         # get system title bar
         titlebar = rightButton.superview()
-        titlebarHeight = titlebar.frame().size.height
+        titlebarHeight = int(titlebar.frame().size.height)
 
         spacing = midButton.frame().origin.x - leftButton.frame().origin.x
         width = midButton.frame().size.width
