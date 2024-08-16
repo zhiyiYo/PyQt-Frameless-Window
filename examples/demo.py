@@ -1,7 +1,7 @@
 # coding:utf-8
 import sys
 
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import QRect, QSize, Qt
 from PyQt5.QtGui import QColor, QPixmap, QIcon
 from PyQt5.QtWidgets import QApplication, QLabel
 
@@ -48,6 +48,13 @@ class Window(FramelessWindow):
 
         self.titleBar.raise_()
 
+        # customize the area of system title bar button, only works for macOS
+        if sys.platform == "darwin":
+            self.setSystemTitleBarButtonVisible(True)
+            self.titleBar.minBtn.hide()
+            self.titleBar.maxBtn.hide()
+            self.titleBar.closeBtn.hide()
+
     def resizeEvent(self, e):
         # don't forget to call the resizeEvent() of super class
         super().resizeEvent(e)
@@ -57,6 +64,16 @@ class Window(FramelessWindow):
             self.width() // 2 - length // 2,
             self.height() // 2 - length // 2
         )
+
+    def systemTitleBarRect(self, size: QSize) -> QRect:
+        """ Returns the system title bar rect, only works for macOS
+
+        Parameters
+        ----------
+        size: QSize
+            original system title bar rect
+        """
+        return QRect(size.width() - 75, 0, 75, size.height())
 
 
 if __name__ == "__main__":
