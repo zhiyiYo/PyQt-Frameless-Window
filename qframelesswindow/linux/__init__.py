@@ -1,5 +1,5 @@
 # coding:utf-8
-from PySide6.QtCore import QCoreApplication, QEvent, Qt
+from PySide6.QtCore import QCoreApplication, QEvent, Qt, QSize, QRect
 from PySide6.QtWidgets import QWidget, QMainWindow, QDialog
 
 from ..titlebar import TitleBar
@@ -14,6 +14,7 @@ class LinuxFramelessWindowBase:
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self._isSystemButtonVisible = False
 
     def _initFrameless(self):
         self.windowEffect = LinuxWindowEffect(self)
@@ -49,6 +50,24 @@ class LinuxFramelessWindowBase:
     def setResizeEnabled(self, isEnabled: bool):
         """ set whether resizing is enabled """
         self._isResizeEnabled = isEnabled
+
+    def isSystemButtonVisible(self):
+        """ Returns whether the system title bar button is visible """
+        return self._isSystemButtonVisible
+
+    def setSystemTitleBarButtonVisible(self, isVisible):
+        """ set the visibility of system title bar button, only works for macOS """
+        pass
+
+    def systemTitleBarRect(self, size: QSize) -> QRect:
+        """ Returns the system title bar rect, only works for macOS
+
+        Parameters
+        ----------
+        size: QSize
+            original system title bar rect
+        """
+        return QRect(0, 0, size.width(), size.height())
 
     def eventFilter(self, obj, event):
         et = event.type()
