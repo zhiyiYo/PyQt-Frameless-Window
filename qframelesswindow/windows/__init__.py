@@ -6,7 +6,7 @@ from ctypes.wintypes import LPRECT, MSG
 import win32api
 import win32con
 import win32gui
-from PySide2.QtCore import Qt
+from PySide2.QtCore import Qt, QSize, QRect
 from PySide2.QtGui import QCloseEvent, QCursor
 from PySide2.QtWidgets import QApplication, QWidget
 from PySide2.QtWinExtras import QtWin
@@ -25,6 +25,7 @@ class WindowsFramelessWindow(QWidget):
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
+        self._isSystemButtonVisible = False
 
     def _initFrameless(self):
         self.windowEffect = WindowsWindowEffect(self)
@@ -75,6 +76,24 @@ class WindowsFramelessWindow(QWidget):
     def resizeEvent(self, e):
         super().resizeEvent(e)
         self.titleBar.resize(self.width(), self.titleBar.height())
+
+    def isSystemButtonVisible(self):
+        """ Returns whether the system title bar button is visible """
+        return self._isSystemButtonVisible
+
+    def setSystemTitleBarButtonVisible(self, isVisible):
+        """ set the visibility of system title bar button, only works for macOS """
+        pass
+
+    def systemTitleBarRect(self, size: QSize) -> QRect:
+        """ Returns the system title bar rect, only works for macOS
+
+        Parameters
+        ----------
+        size: QSize
+            original system title bar rect
+        """
+        return QRect(0, 0, size.width(), size.height())
 
     def nativeEvent(self, eventType, message):
         """ Handle the Windows message """
