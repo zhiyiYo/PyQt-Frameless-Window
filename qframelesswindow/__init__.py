@@ -12,11 +12,12 @@ Examples are available at https://github.com/zhiyiYo/PyQt-Frameless-Window/tree/
 :license: GPLv3, see LICENSE for more details.
 """
 
-__version__ = "0.4.0"
+__version__ = "0.4.1"
 __author__ = "zhiyiYo"
 
 import sys
 
+from PyQt5.QtCore import QTimer
 from PyQt5.QtWidgets import QDialog, QMainWindow
 
 from .titlebar import TitleBar, TitleBarButton, SvgTitleBarButton, StandardTitleBar, TitleBarBase
@@ -45,6 +46,9 @@ class FramelessDialog(QDialog, FramelessWindow):
         self.titleBar.maxBtn.hide()
         self.titleBar.setDoubleClickEnabled(False)
         self.windowEffect.disableMaximizeButton(self.winId())
+
+        if sys.platform == "darwin":
+            QTimer.singleShot(1, lambda: self._hideSystemTitleBar(self.isSystemButtonVisible()))
 
 
 class FramelessMainWindow(QMainWindow, FramelessWindow):
