@@ -59,7 +59,7 @@ class MacFramelessWindow(QWidget):
 
     def paintEvent(self, e):
         super().paintEvent(e)
-        self.setSystemTitleBarButtonVisible(self.isSystemButtonVisible())
+        self._hideSystemTitleBar(self.isSystemButtonVisible())
 
     def changeEvent(self, event):
         if event.type() == QEvent.WindowStateChange:
