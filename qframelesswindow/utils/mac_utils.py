@@ -81,4 +81,9 @@ def getSystemAccentColor():
     color: QColor
         accent color
     """
-    return QColor()
+    color = Cocoa.NSColor.controlAccentColor()
+    color = color.colorUsingColorSpace_(Cocoa.NSColorSpace.sRGBColorSpace())
+    r = int(color.redComponent() * 255)
+    g = int(color.greenComponent() * 255)
+    b = int(color.blueComponent() * 255)
+    return QColor(r, g, b)
