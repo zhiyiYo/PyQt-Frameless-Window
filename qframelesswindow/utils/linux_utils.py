@@ -1,4 +1,5 @@
 # coding: utf-8
+from PyQt6.QtGui import QColor
 
 class LinuxMoveResize:
     """ Tool class for moving and resizing window """
@@ -24,3 +25,14 @@ class LinuxMoveResize:
             window edges
         """
         window.windowHandle().startSystemResize(edges)
+
+
+def getSystemAccentColor():
+    """ get the accent color of system
+
+    Returns
+    -------
+    color: QColor
+        accent color
+    """
+    return QColor()

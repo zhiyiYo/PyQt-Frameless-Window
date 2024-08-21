@@ -1,16 +1,39 @@
 # coding:utf-8
-from ctypes import Structure, byref, sizeof, windll, c_int
+from ctypes import Structure, byref, sizeof, windll, c_int, c_ulong, c_bool, POINTER
 from ctypes.wintypes import DWORD, HWND, LPARAM, RECT, UINT
 from platform import platform
 import sys
+import warnings
 
 import win32api
 import win32con
 import win32gui
 import win32print
 from PyQt6.QtCore import QOperatingSystemVersion
-from PyQt6.QtGui import QGuiApplication
+from PyQt6.QtGui import QGuiApplication, QColor
 from win32comext.shell import shellcon
+
+
+def getSystemAccentColor():
+    """ get the accent color of system
+
+    Returns
+    -------
+    color: QColor
+        accent color
+    """
+    DwmGetColorizationColor = windll.dwmapi.DwmGetColorizationColor
+    DwmGetColorizationColor.restype = c_ulong
+    DwmGetColorizationColor.argtypes = [POINTER(c_ulong), POINTER(c_bool)]
+
+    color = c_ulong()
+    code = DwmGetColorizationColor(byref(color), byref(c_bool()))
+
+    if code != 0:
+        warnings.warn("Unable to obtain system accent color.")
+        return QColor()
+
+    return QColor(color.value)
 
 
 def isMaximized(hWnd):
