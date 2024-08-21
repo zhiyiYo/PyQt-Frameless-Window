@@ -4,6 +4,7 @@ from ctypes import c_void_p
 import Cocoa
 import objc
 from PySide2.QtCore import qVersion
+from PySide2.QtGui import QColor
 from PySide2.QtWidgets import QWidget
 from Quartz.CoreGraphics import (CGEventCreateMouseEvent,
                                  kCGEventLeftMouseDown, kCGMouseButtonLeft)
@@ -70,3 +71,19 @@ def getNSWindow(winId):
     """
     view = objc.objc_object(c_void_p=c_void_p(int(winId)))
     return view.window()
+
+
+def getSystemAccentColor():
+    """ get the accent color of system
+
+    Returns
+    -------
+    color: QColor
+        accent color
+    """
+    color = Cocoa.NSColor.controlAccentColor()
+    color = color.colorUsingColorSpace_(Cocoa.NSColorSpace.sRGBColorSpace())
+    r = int(color.redComponent() * 255)
+    g = int(color.greenComponent() * 255)
+    b = int(color.blueComponent() * 255)
+    return QColor(r, g, b)

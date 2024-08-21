@@ -1,6 +1,6 @@
 # coding: utf-8
 from PySide2.QtCore import QEvent, QPoint, Qt
-from PySide2.QtGui import QMouseEvent
+from PySide2.QtGui import QMouseEvent, QColor
 from PySide2.QtWidgets import QApplication
 
 
@@ -43,3 +43,14 @@ class LinuxMoveResize:
             return
 
         window.windowHandle().startSystemResize(edges)
+
+
+def getSystemAccentColor():
+    """ get the accent color of system
+
+    Returns
+    -------
+    color: QColor
+        accent color
+    """
+    return QColor()
