@@ -4,6 +4,7 @@ from ctypes import c_void_p
 import Cocoa
 import objc
 from PyQt5.QtCore import QT_VERSION_STR
+from PyQt5.QtGui import QColor
 from PyQt5.QtWidgets import QWidget
 from Quartz.CoreGraphics import (CGEventCreateMouseEvent,
                                  kCGEventLeftMouseDown, kCGMouseButtonLeft)
@@ -70,3 +71,14 @@ def getNSWindow(winId):
     """
     view = objc.objc_object(c_void_p=c_void_p(int(winId)))
     return view.window()
+
+
+def getSystemAccentColor():
+    """ get the accent color of system
+
+    Returns
+    -------
+    color: QColor
+        accent color
+    """
+    return QColor()

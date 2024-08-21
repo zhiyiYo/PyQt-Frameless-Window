@@ -4,7 +4,7 @@ from enum import Enum
 import xcffib as xcb
 from PyQt5 import sip
 from PyQt5.QtCore import QPointF, Qt, QEvent, QPoint
-from PyQt5.QtGui import QMouseEvent
+from PyQt5.QtGui import QMouseEvent, QColor
 from PyQt5.QtWidgets import QWidget, QApplication
 from PyQt5.QtX11Extras import QX11Info
 from xcffib.xproto import (ButtonIndex, ButtonMask, ButtonReleaseEvent,
@@ -166,3 +166,14 @@ class LinuxMoveResize:
             cls.startSystemMoveResize(window, globalPos, messageMap[edges].value)
         else:
             window.windowHandle().startSystemResize(edges)
+
+
+def getSystemAccentColor():
+    """ get the accent color of system
+
+    Returns
+    -------
+    color: QColor
+        accent color
+    """
+    return QColor()
