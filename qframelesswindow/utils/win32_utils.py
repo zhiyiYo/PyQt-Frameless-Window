@@ -146,6 +146,8 @@ def getDpiForWindow(hWnd, horizontal=True):
         whether to use dpi scale
     """
     if hasattr(windll.user32, 'GetDpiForWindow'):
+        windll.user32.GetDpiForWindow.argtypes = [HWND]
+        windll.user32.GetDpiForWindow.restype = UINT
         return windll.user32.GetDpiForWindow(hWnd)
 
     hdc = win32gui.GetDC(hWnd)
