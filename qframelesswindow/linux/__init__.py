@@ -33,6 +33,23 @@ class LinuxFramelessWindow(QWidget):
     def updateFrameless(self):
         self.setWindowFlags(self.windowFlags() | Qt.FramelessWindowHint)
 
+    def setStayOnTop(self, isTop: bool):
+        """ set the stay on top status """
+        if isTop:
+            self.setWindowFlags(self.windowFlags() | Qt.WindowStaysOnTopHint)
+        else:
+            self.setWindowFlags(self.windowFlags() & ~Qt.WindowStaysOnTopHint)
+
+        self.updateFrameless()
+        self.show()
+
+    def toggleStayOnTop(self):
+        """ toggle the stay on top status """
+        if self.windowFlags() & Qt.WindowStaysOnTopHint:
+            self.setStayOnTop(False)
+        else:
+            self.setStayOnTop(True)
+
     def setTitleBar(self, titleBar):
         """ set custom title bar
 

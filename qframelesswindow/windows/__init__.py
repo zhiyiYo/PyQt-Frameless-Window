@@ -39,12 +39,14 @@ class WindowsFramelessWindow(QWidget):
 
     def updateFrameless(self):
         """ update frameless window """
+        stayOnTop = Qt.WindowStaysOnTopHint if self.windowFlags() & Qt.WindowStaysOnTopHint else 0
+
         if not win_utils.isWin7():
             self.setWindowFlags(self.windowFlags() | Qt.FramelessWindowHint)
         elif self.parent():
-            self.setWindowFlags(self.parent().windowFlags() | Qt.FramelessWindowHint | Qt.WindowMinMaxButtonsHint)
+            self.setWindowFlags(self.parent().windowFlags() | Qt.FramelessWindowHint | Qt.WindowMinMaxButtonsHint | stayOnTop)
         else:
-            self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowMinMaxButtonsHint)
+            self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowMinMaxButtonsHint | stayOnTop)
 
         # add DWM shadow and window animation
         self.windowEffect.addWindowAnimation(self.winId())
@@ -68,6 +70,23 @@ class WindowsFramelessWindow(QWidget):
     def setResizeEnabled(self, isEnabled: bool):
         """ set whether resizing is enabled """
         self._isResizeEnabled = isEnabled
+
+    def setStayOnTop(self, isTop: bool):
+        """ set the stay on top status """
+        if isTop:
+            self.setWindowFlags(self.windowFlags() | Qt.WindowStaysOnTopHint)
+        else:
+            self.setWindowFlags(self.windowFlags() & ~Qt.WindowStaysOnTopHint)
+
+        self.updateFrameless()
+        self.show()
+
+    def toggleStayOnTop(self):
+        """ toggle the stay on top status """
+        if self.windowFlags() & Qt.WindowStaysOnTopHint:
+            self.setStayOnTop(False)
+        else:
+            self.setStayOnTop(True)
 
     def resizeEvent(self, e):
         super().resizeEvent(e)
@@ -180,10 +199,12 @@ class AcrylicWindow(WindowsFramelessWindow):
         super().updateFrameless()
         self.windowEffect.enableBlurBehindWindow(self.winId())
 
+        stayOnTop = Qt.WindowStaysOnTopHint if self.windowFlags() & Qt.WindowStaysOnTopHint else 0
+
         if win_utils.isWin7() and self.parent():
-            self.setWindowFlags(self.parent().windowFlags() | Qt.FramelessWindowHint | Qt.WindowMinMaxButtonsHint)
+            self.setWindowFlags(self.parent().windowFlags() | Qt.FramelessWindowHint | Qt.WindowMinMaxButtonsHint | stayOnTop)
         else:
-            self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowMinMaxButtonsHint)
+            self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowMinMaxButtonsHint | stayOnTop)
 
         self.windowEffect.addWindowAnimation(self.winId())
 
