@@ -39,11 +39,13 @@ class WindowsFramelessWindow(QWidget):
 
     def updateFrameless(self):
         """ update frameless window """
+        stayOnTop = Qt.WindowType.WindowStaysOnTopHint if self.windowFlags() & Qt.WindowType.WindowStaysOnTopHint else 0
+
         if not win_utils.isWin7():
-            self.setWindowFlags(self.windowFlags() | Qt.WindowType.FramelessWindowHint)
+            self.setWindowFlags(self.windowFlags() | Qt.WindowType.FramelessWindowHint | stayOnTop)
         else:
             self.setWindowFlags(Qt.WindowType.FramelessWindowHint |
-                                Qt.WindowType.WindowMinMaxButtonsHint)
+                                Qt.WindowType.WindowMinMaxButtonsHint | stayOnTop)
 
         # add DWM shadow and window animation
         self.windowEffect.addWindowAnimation(self.winId())
@@ -67,6 +69,23 @@ class WindowsFramelessWindow(QWidget):
     def setResizeEnabled(self, isEnabled: bool):
         """ set whether resizing is enabled """
         self._isResizeEnabled = isEnabled
+
+    def setStayOnTop(self, isTop: bool):
+        """ set the stay on top status """
+        if isTop:
+            self.setWindowFlags(self.windowFlags() | Qt.WindowType.WindowStaysOnTopHint)
+        else:
+            self.setWindowFlags(self.windowFlags() & ~Qt.WindowType.WindowStaysOnTopHint)
+
+        self.updateFrameless()
+        self.show()
+
+    def toggleStayOnTop(self):
+        """ toggle the stay on top status """
+        if self.windowFlags() & Qt.WindowType.WindowStaysOnTopHint:
+            self.setStayOnTop(False)
+        else:
+            self.setStayOnTop(True)
 
     def resizeEvent(self, e):
         super().resizeEvent(e)
