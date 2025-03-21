@@ -39,7 +39,8 @@ class WindowsFramelessWindowBase:
 
     def updateFrameless(self):
         """ update frameless window """
-        self.setWindowFlags(self.windowFlags() | Qt.FramelessWindowHint)
+        stayOnTop = Qt.WindowStaysOnTopHint if self.windowFlags() & Qt.WindowStaysOnTopHint else 0
+        self.setWindowFlags(self.windowFlags() | Qt.FramelessWindowHint | stayOnTop)
 
         # add DWM shadow and window animation
         self.windowEffect.addWindowAnimation(self.winId())
@@ -63,6 +64,23 @@ class WindowsFramelessWindowBase:
     def setResizeEnabled(self, isEnabled: bool):
         """ set whether resizing is enabled """
         self._isResizeEnabled = isEnabled
+
+    def setStayOnTop(self, isTop: bool):
+        """ set the stay on top status """
+        if isTop:
+            self.setWindowFlags(self.windowFlags() | Qt.WindowStaysOnTopHint)
+        else:
+            self.setWindowFlags(self.windowFlags() & ~Qt.WindowStaysOnTopHint)
+
+        self.updateFrameless()
+        self.show()
+
+    def toggleStayOnTop(self):
+        """ toggle the stay on top status """
+        if self.windowFlags() & Qt.WindowStaysOnTopHint:
+            self.setStayOnTop(False)
+        else:
+            self.setStayOnTop(True)
 
     def isSystemButtonVisible(self):
         """ Returns whether the system title bar button is visible """
@@ -184,7 +202,8 @@ class AcrylicWindow(WindowsFramelessWindow):
         self.setStyleSheet("AcrylicWindow{background:transparent}")
 
     def updateFrameless(self):
-        self.setWindowFlags(Qt.FramelessWindowHint)
+        stayOnTop = Qt.WindowStaysOnTopHint if self.windowFlags() & Qt.WindowStaysOnTopHint else 0
+        self.setWindowFlags(Qt.FramelessWindowHint | stayOnTop)
 
         self.windowEffect.enableBlurBehindWindow(self.winId())
         self.windowEffect.addWindowAnimation(self.winId())
