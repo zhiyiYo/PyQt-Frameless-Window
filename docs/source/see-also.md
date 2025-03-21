@@ -10,5 +10,5 @@ Here are some projects that use PyQt-Frameless-Window:
 
 <br>
 
-* [**zhiyiYo/PyQt-Fluent-Widgets**: A fluent design widgets library based on PyQt5](https://github.com/zhiyiYo/PyQt-Fluent-Widgets)
+* [**zhiyiYo/QFluentWidgets**: A fluent design widgets library based on PyQt5](https://qfluentwidgets.com)
   ![](./_static/PyQt-Fluent-Widgets.jpg)

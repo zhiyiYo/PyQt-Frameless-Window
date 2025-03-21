@@ -106,14 +106,13 @@ Want to know more about PyQt-Frameless-Window? Please read the [help document](h
 5. If you are using PySide2, PySide6 or PyQt6, you can download the code in [PySide2](https://github.com/zhiyiYo/PyQt-Frameless-Window/tree/Pyside2), [PySide6](https://github.com/zhiyiYo/PyQt-Frameless-Window/tree/PySide6) or [PyQt6](https://github.com/zhiyiYo/PyQt-Frameless-Window/tree/PyQt6) branch.
 
 ## Support
-If this project helps you a lot and you want to support the development and maintenance of this project, feel free to sponsor me via [爱发电](https://afdian.net/a/zhiyiYo) or [ko-fi](https://ko-fi.com/zhiyiYo). Your support is highly appreciated 🥰
+If this project helps you a lot and you want to support the development and maintenance of this project, feel free to sponsor me via [爱发电](https://afdian.com/a/zhiyiYo) or [ko-fi](https://ko-fi.com/zhiyiYo). Your support is highly appreciated 🥰
 
 ## See Also
 Here are some projects that use PyQt-Frameless-Window:
+* [**zhiyiYo/QFluentWidgets**: A fluent design widgets library based on Qt](https://qfluentwidgets.com)
 * [**zhiyiYo/Groove**: A cross-platform music player based on PyQt5](https://github.com/zhiyiYo/Groove)
 * [**zhiyiYo/Alpha-Gobang-Zero**: A gobang robot based on reinforcement learning](https://github.com/zhiyiYo/Alpha-Gobang-Zero)
-* [**zhiyiYo/PyQt-Fluent-Widgets**: A fluent design widgets library based on Qt](https://github.com/zhiyiYo/PyQt-Fluent-Widgets)
-* [**zhiyiYo/QMaterialWidgets**: A material design widgets library based on Qt](https://qmaterialwidgets.vercel.app)
 
 ## Reference
 * [**wangwenx190/framelesshelper**: Frameless windows for Qt Widgets and Qt Quick applications. Support Win32, X11, Wayland and macOS](https://github.com/wangwenx190/framelesshelper)
