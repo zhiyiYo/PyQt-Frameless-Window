@@ -32,7 +32,9 @@ class MacFramelessWindow(QWidget):
         self.__nsWindow = view.window()
 
         # hide system title bar
-        self._hideSystemTitleBar(self.isSystemButtonVisible())
+        isButtonVisible = self.isSystemButtonVisible()
+        self._hideSystemTitleBar()
+        self.setSystemTitleBarButtonVisible(isButtonVisible)
 
     def setStayOnTop(self, isTop: bool):
         """ set the stay on top status """
