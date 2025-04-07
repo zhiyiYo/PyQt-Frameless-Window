@@ -35,6 +35,7 @@
 * Win11 mica blur
 * Win7 Aero blur
 * MacOS blur
+* Disable screen capture
 
 ## Install
 To install use pip:
