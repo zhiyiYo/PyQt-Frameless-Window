@@ -1,7 +1,7 @@
 # coding: utf-8
-from PySide6.QtCore import QEvent, QPoint, Qt
+from PySide6.QtCore import QEvent, QPoint, Qt, QObject
 from PySide6.QtGui import QMouseEvent, QColor
-from PySide6.QtWidgets import QApplication
+from PySide6.QtWidgets import QApplication, QWidget
 
 
 class LinuxMoveResize:
@@ -54,3 +54,22 @@ def getSystemAccentColor():
         accent color
     """
     return QColor()
+
+
+class LinuxScreenCaptureFilter(QObject):
+    """ Filter for screen capture """
+
+    def __init__(self, parent: QWidget):
+        super().__init__(parent)
+        self.setScreenCaptureEnabled(False)
+
+    def eventFilter(self, watched, event):
+        if watched == self.parent():
+            if event.type() == QEvent.Type.WinIdChange:
+                self.setScreenCaptureEnabled(self.isScreenCaptureEnabled)
+
+        return super().eventFilter(watched, event)
+
+    def setScreenCaptureEnabled(self, enabled: bool):
+        """ Set screen capture enabled """
+        self.isScreenCaptureEnabled = enabled
