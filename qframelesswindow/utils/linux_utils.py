@@ -3,7 +3,7 @@ from enum import Enum
 
 import xcffib as xcb
 from PyQt5 import sip
-from PyQt5.QtCore import QPointF, Qt, QEvent, QPoint
+from PyQt5.QtCore import QPointF, Qt, QEvent, QPoint, QObject
 from PyQt5.QtGui import QMouseEvent, QColor
 from PyQt5.QtWidgets import QWidget, QApplication
 from PyQt5.QtX11Extras import QX11Info
@@ -177,3 +177,22 @@ def getSystemAccentColor():
         accent color
     """
     return QColor()
+
+
+class LinuxScreenCaptureFilter(QObject):
+    """ Filter for screen capture """
+
+    def __init__(self, parent: QWidget):
+        super().__init__(parent)
+        self.setScreenCaptureEnabled(False)
+
+    def eventFilter(self, watched, event):
+        if watched == self.parent():
+            if event.type() == QEvent.Type.WinIdChange:
+                self.setScreenCaptureEnabled(self.isScreenCaptureEnabled)
+
+        return super().eventFilter(watched, event)
+
+    def setScreenCaptureEnabled(self, enabled: bool):
+        """ Set screen capture enabled """
+        self.isScreenCaptureEnabled = enabled
