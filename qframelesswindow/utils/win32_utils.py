@@ -1,5 +1,5 @@
 # coding:utf-8
-from ctypes import Structure, byref, sizeof, windll, c_int, c_ulong, c_bool, POINTER
+from ctypes import Structure, byref, sizeof, windll, c_int, c_ulong, c_bool, POINTER, WinDLL, wintypes
 from ctypes.wintypes import DWORD, HWND, LPARAM, RECT, UINT
 from platform import platform
 import sys
@@ -9,8 +9,9 @@ import win32api
 import win32con
 import win32gui
 import win32print
-from PyQt6.QtCore import QOperatingSystemVersion
+from PyQt6.QtCore import QOperatingSystemVersion, QObject, QEvent
 from PyQt6.QtGui import QGuiApplication, QColor
+from PyQt6.QtWidgets import QWidget
 from win32comext.shell import shellcon
 
 
@@ -351,3 +352,31 @@ class WindowsMoveResize:
             window edges
         """
         pass
+
+
+class WindowsScreenCaptureFilter(QObject):
+    """ Filter for screen capture """
+
+    def __init__(self, parent: QWidget):
+        super().__init__(parent)
+        self.setScreenCaptureEnabled(False)
+
+    def eventFilter(self, watched, event):
+        if watched == self.parent():
+            if event.type() == QEvent.Type.WinIdChange:
+                self.setScreenCaptureEnabled(self.isScreenCaptureEnabled)
+
+        return super().eventFilter(watched, event)
+
+    def setScreenCaptureEnabled(self, enabled: bool):
+        """ Set screen capture enabled """
+        self.isScreenCaptureEnabled = enabled
+        WDA_NONE = 0x00000000
+        WDA_EXCLUDEFROMCAPTURE = 0x00000011
+
+        user32 = WinDLL('user32', use_last_error=True)
+        SetWindowDisplayAffinity = user32.SetWindowDisplayAffinity
+        SetWindowDisplayAffinity.argtypes = (wintypes.HWND, wintypes.DWORD)
+        SetWindowDisplayAffinity.restype = wintypes.BOOL
+
+        SetWindowDisplayAffinity(int(self.parent().winId()), WDA_NONE if enabled else WDA_EXCLUDEFROMCAPTURE)
