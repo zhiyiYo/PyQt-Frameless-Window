@@ -1,10 +1,9 @@
 # coding:utf-8
+import sys
+import warnings
 from ctypes import Structure, byref, sizeof, windll, c_int, c_ulong, c_bool, POINTER, WinDLL, wintypes
 from ctypes.wintypes import DWORD, HWND, LPARAM, RECT, UINT
 from platform import platform
-import sys
-import warnings
-
 from winreg import OpenKey, HKEY_CURRENT_USER, KEY_READ, QueryValueEx, CloseKey
 
 import win32api
@@ -14,7 +13,6 @@ import win32print
 from PySide6.QtCore import QOperatingSystemVersion, QVersionNumber, QObject, QEvent
 from PySide6.QtGui import QGuiApplication, QColor
 from PySide6.QtWidgets import QWidget
-
 
 ABM_GETSTATE = 4
 ABS_AUTOHIDE = 1
@@ -42,16 +40,21 @@ def getSystemAccentColor():
 
     return QColor(color.value)
 
+
 def isBorderAccentOpen():
     """ Check whether the border accent is open """
     if not isGreaterEqualWin11():
         return False
 
-    key = OpenKey(HKEY_CURRENT_USER, r"SOFTWARE\Microsoft\Windows\DWM", 0, KEY_READ)
-    value, _ = QueryValueEx(key, "ColorPrevalence")
-    CloseKey(key)
+    try:
+        key = OpenKey(HKEY_CURRENT_USER, r"SOFTWARE\Microsoft\Windows\DWM", 0, KEY_READ)
+        value, _ = QueryValueEx(key, "ColorPrevalence")
+        CloseKey(key)
 
-    return bool(value)
+        return bool(value)
+    except:
+        return False
+
 
 def isMaximized(hWnd):
     """ Determine whether the window is maximized

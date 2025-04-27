@@ -83,9 +83,17 @@ class WindowsWindowEffect:
         self.winCompAttrData.Attribute = WINDOWCOMPOSITIONATTRIB.WCA_ACCENT_POLICY.value
         self.SetWindowCompositionAttribute(hWnd, pointer(self.winCompAttrData))
 
-    def setBorderAccentColor(self, hWnd, color:QColor):
-        """ Set the border color of the window"""
+    def setBorderAccentColor(self, hWnd, color: QColor):
+        """ Set the border color of the window
 
+        Parameters
+        ----------
+        hWnd: int or `sip.voidptr`
+            Window handle
+
+        color: QColor
+            Border Accent color
+        """
         if not isGreaterEqualWin11():
             return
 
@@ -96,10 +104,14 @@ class WindowsWindowEffect:
                                    byref(colorref),
                                    4)
 
-
     def removeBorderAccentColor(self, hWnd):
-        """ Remove the border color of the window"""
+        """ Remove the border color of the window
 
+        Parameters
+        ----------
+        hWnd: int or `sip.voidptr`
+            Window handle
+        """
         if not isGreaterEqualWin11():
             return
 
