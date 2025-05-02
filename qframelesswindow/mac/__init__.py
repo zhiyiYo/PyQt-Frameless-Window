@@ -165,6 +165,7 @@ class MacFramelessWindow(QWidget, MacFramelessWindowBase):
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
+        self._isSystemButtonVisible = False
         self._initFrameless()
 
     def resizeEvent(self, e):
@@ -193,6 +194,7 @@ class MacFramelessMainWindow(QMainWindow, MacFramelessWindowBase):
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
+        self._isSystemButtonVisible = False
         self._initFrameless()
 
     def resizeEvent(self, e):
@@ -212,6 +214,7 @@ class MacFramelessDialog(QDialog, MacFramelessWindowBase):
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
+        self._isSystemButtonVisible = False
         self._initFrameless()
         self.titleBar.minBtn.hide()
         self.titleBar.maxBtn.hide()
