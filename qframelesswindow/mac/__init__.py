@@ -5,6 +5,7 @@ from PyQt6.QtCore import QEvent, Qt, QRect, QSize, QPoint
 from PyQt6.QtWidgets import QWidget
 
 from ..titlebar import TitleBar
+from ..utils.mac_utils import QT_VERSION
 from .window_effect import MacWindowEffect
 
 
@@ -21,6 +22,11 @@ class MacFramelessWindow(QWidget):
         self.titleBar = TitleBar(self)
         self._isSystemButtonVisible = False
         self._isResizeEnabled = True
+
+        # remove content margin
+        if QT_VERSION >= (6, 8, 0):
+            self.setAttribute(Qt.WidgetAttribute.WA_ContentsMarginsRespectsSafeArea, False)
+            self.titleBar.setAttribute(Qt.WidgetAttribute.WA_LayoutOnEntireRect, True)
 
         self.updateFrameless()
 
@@ -66,6 +72,9 @@ class MacFramelessWindow(QWidget):
         self.titleBar = titleBar
         self.titleBar.setParent(self)
         self.titleBar.raise_()
+
+        if QT_VERSION >= (6, 8, 0):
+            self.titleBar.setAttribute(Qt.WidgetAttribute.WA_LayoutOnEntireRect)
 
     def setResizeEnabled(self, isEnabled: bool):
         """ set whether resizing is enabled """
