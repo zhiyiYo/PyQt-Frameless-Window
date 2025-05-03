@@ -1,10 +1,6 @@
 # coding:utf-8
 import sys
 
-from PySide6.QtCore import QPoint
-from PySide6.QtGui import QMouseEvent
-from PySide6.QtWidgets import QApplication
-
 from PySide6.QtCore import Qt, QEvent
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QLabel, QHBoxLayout, QWidget
@@ -61,6 +57,40 @@ class TitleBarBase(QWidget):
             return
 
         startSystemMove(self.window(), e.globalPos())
+
+    def mouseReleaseEvent(self, e):
+        if sys.platform == "win32" and e.button() == Qt.RightButton:
+            from ctypes import windll
+            import win32con
+            systemMenu = windll.user32.GetSystemMenu(self.window().winId(), False)
+            if self.window()._isResizeEnabled:
+                windll.user32.EnableMenuItem(systemMenu, win32con.SC_SIZE, win32con.MF_ENABLED)
+                if self.window().isMaximized():
+                    windll.user32.EnableMenuItem(systemMenu, win32con.SC_MAXIMIZE, win32con.MF_GRAYED)
+                    windll.user32.EnableMenuItem(systemMenu, win32con.SC_MOVE, win32con.MF_GRAYED)
+                    windll.user32.EnableMenuItem(systemMenu, win32con.SC_SIZE, win32con.MF_GRAYED)
+                    windll.user32.EnableMenuItem(systemMenu, win32con.SC_RESTORE, win32con.MF_ENABLED)
+                else:
+                    windll.user32.EnableMenuItem(systemMenu, win32con.SC_MAXIMIZE, win32con.MF_ENABLED)
+                    windll.user32.EnableMenuItem(systemMenu, win32con.SC_MOVE, win32con.MF_ENABLED)
+                    windll.user32.EnableMenuItem(systemMenu, win32con.SC_SIZE, win32con.MF_ENABLED)
+                    windll.user32.EnableMenuItem(systemMenu, win32con.SC_RESTORE, win32con.MF_GRAYED)
+            else:
+                windll.user32.EnableMenuItem(systemMenu, win32con.SC_MAXIMIZE, win32con.MF_GRAYED)
+                windll.user32.EnableMenuItem(systemMenu, win32con.SC_MOVE, win32con.MF_GRAYED)
+                windll.user32.EnableMenuItem(systemMenu, win32con.SC_SIZE, win32con.MF_GRAYED)
+                windll.user32.EnableMenuItem(systemMenu, win32con.SC_RESTORE, win32con.MF_GRAYED)
+
+            command = windll.user32.TrackPopupMenuEx(
+                systemMenu,
+                win32con.TPM_LEFTALIGN | win32con.TPM_RETURNCMD,
+                e.globalX(),
+                e.globalY(),
+                self.window().winId(),
+                None
+            )
+            if command:
+                windll.user32.SendMessageW(self.window().winId(), 0x0112, command, 0)
 
     def __toggleMaxState(self):
         """ Toggles the maximization state of the window and change icon """
