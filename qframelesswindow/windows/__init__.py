@@ -170,8 +170,10 @@ class WindowsFramelessWindowBase:
             return True, result
         elif msg.message == win32con.WM_SETFOCUS and isBorderAccentOpen():
             self.windowEffect.setBorderAccentColor(self.winId(), getSystemAccentColor())
+            return True, 0
         elif msg.message == win32con.WM_KILLFOCUS:
             self.windowEffect.removeBorderAccentColor(self.winId())
+            return True, 0
 
         return False, 0
 
