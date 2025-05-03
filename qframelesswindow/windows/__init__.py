@@ -209,8 +209,6 @@ class AcrylicWindow(WindowsFramelessWindow):
         self.windowEffect.addWindowAnimation(self.winId())
 
         self.windowEffect.setAcrylicEffect(self.winId())
-        if win_utils.isGreaterEqualWin11():
-            self.windowEffect.addShadowEffect(self.winId())
 
     def nativeEvent(self, eventType, message):
         """ Handle the Windows message """
