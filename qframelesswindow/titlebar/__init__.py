@@ -90,7 +90,7 @@ class TitleBarBase(QWidget):
                 None
             )
             if command:
-                windll.user32.SendMessageW(self.window().winId(), 0x0112, command, 0)
+                windll.user32.PostMessageW(self.window().winId(), 0x0112, command, 0)
         super().mouseReleaseEvent(e)
         
     def __toggleMaxState(self):
