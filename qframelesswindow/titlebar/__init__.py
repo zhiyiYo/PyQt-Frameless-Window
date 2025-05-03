@@ -91,7 +91,8 @@ class TitleBarBase(QWidget):
             )
             if command:
                 windll.user32.SendMessageW(self.window().winId(), 0x0112, command, 0)
-
+        super().mouseReleaseEvent(e)
+        
     def __toggleMaxState(self):
         """ Toggles the maximization state of the window and change icon """
         if self.window().isMaximized():
