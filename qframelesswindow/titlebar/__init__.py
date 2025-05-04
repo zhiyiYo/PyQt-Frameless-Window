@@ -62,7 +62,7 @@ class TitleBarBase(QWidget):
         if sys.platform == "win32" and e.button() == Qt.RightButton:
             from ctypes import windll
             import win32con
-            systemMenu = windll.user32.GetSystemMenu(self.window().winId(), False)
+            systemMenu = windll.user32.GetSystemMenu(int(self.window().winId()), False)
             if self.window()._isResizeEnabled:
                 windll.user32.EnableMenuItem(systemMenu, win32con.SC_SIZE, win32con.MF_ENABLED)
                 if self.window().isMaximized():
@@ -86,7 +86,7 @@ class TitleBarBase(QWidget):
                 win32con.TPM_LEFTALIGN | win32con.TPM_RETURNCMD,
                 e.globalX(),
                 e.globalY(),
-                self.window().winId(),
+                int(self.window().winId()),
                 None
             )
             if command:
