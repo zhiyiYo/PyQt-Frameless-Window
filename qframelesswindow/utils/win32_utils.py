@@ -41,8 +41,8 @@ def getSystemAccentColor():
     return QColor(color.value)
 
 
-def isBorderAccentOpen():
-    """ Check whether the border accent is open """
+def isSystemBorderAccentEnabled():
+    """ Check whether the border accent is enabled """
     if not isGreaterEqualWin11():
         return False
 
