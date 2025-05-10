@@ -37,6 +37,7 @@
 * MacOS blur
 * Disable screen capture
 
+
 ## Install
 To install use pip:
 ```shell
