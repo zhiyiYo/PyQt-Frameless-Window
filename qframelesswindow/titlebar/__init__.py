@@ -1,7 +1,7 @@
 # coding:utf-8
 import sys
 
-from PySide6.QtCore import Qt, QEvent
+from PySide6.QtCore import Qt, QEvent, qVersion
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QLabel, QHBoxLayout, QWidget
 
@@ -9,9 +9,12 @@ from ..utils import startSystemMove
 from .title_bar_buttons import (CloseButton, MaximizeButton, MinimizeButton,
                                 SvgTitleBarButton, TitleBarButton)
 
+QT_VERSION = tuple(int(v) for v in qVersion().split('.'))
+
 if sys.platform == "win32":
-    from win32gui import PostMessage
-    from win32con import WM_SYSCOMMAND, SC_MAXIMIZE, SC_RESTORE
+    if QT_VERSION >= (6, 8, 0):
+        from win32gui import PostMessage
+        from win32con import WM_SYSCOMMAND, SC_MAXIMIZE, SC_RESTORE
     from ..utils.win32_utils import releaseMouseLeftButton
 
 class TitleBarBase(QWidget):
@@ -64,17 +67,19 @@ class TitleBarBase(QWidget):
 
     def __toggleMaxState(self):
         """ Toggles the maximization state of the window and change icon """
-        if sys.platform == "win32":
+        if sys.platform == "win32" and QT_VERSION >= (6, 8, 0):
             if self.window().isMaximized():
                 PostMessage(self.window().winId(), WM_SYSCOMMAND, SC_RESTORE, 0)
             else:
                 PostMessage(self.window().winId(), WM_SYSCOMMAND, SC_MAXIMIZE, 0)
-            releaseMouseLeftButton(self.window().winId())
         else:
             if self.window().isMaximized():
                 self.window().showNormal()
             else:
                 self.window().showMaximized()
+
+        if sys.platform == "win32":
+            releaseMouseLeftButton()
 
     def _isDragRegion(self, pos):
         """ Check whether the position belongs to the area where dragging is allowed """
