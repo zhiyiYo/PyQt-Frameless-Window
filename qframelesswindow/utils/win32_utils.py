@@ -10,10 +10,11 @@ import win32api
 import win32con
 import win32gui
 import win32print
-from PyQt6.QtCore import QOperatingSystemVersion, QObject, QEvent
+from PyQt6.QtCore import QOperatingSystemVersion, QObject, QEvent, qVersion
 from PyQt6.QtGui import QGuiApplication, QColor
 from PyQt6.QtWidgets import QWidget
 from win32comext.shell import shellcon
+QT_VERSION = tuple(int(v) for v in qVersion().split('.'))
 
 
 def getSystemAccentColor():
@@ -368,6 +369,21 @@ class WindowsMoveResize:
             window edges
         """
         pass
+
+    @classmethod
+    def toggleMaxState(cls, window):
+        if QT_VERSION < (6, 8, 0):
+            if window.isMaximized():
+                window.showNormal()
+            else:
+                window.showMaximized()
+        else:
+            if window.isMaximized():
+                win32gui.PostMessage(int(window.winId()), win32con.WM_SYSCOMMAND, win32con.SC_RESTORE, 0)
+            else:
+                win32gui.PostMessage(int(window.winId()), win32con.WM_SYSCOMMAND, win32con.SC_MAXIMIZE, 0)
+
+        releaseMouseLeftButton(window.winId())
 
 
 class WindowsScreenCaptureFilter(QObject):

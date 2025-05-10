@@ -60,6 +60,13 @@ class MacMoveResize:
         """
         pass
 
+    @classmethod
+    def toggleMaxState(cls, window):
+        if window.isMaximized():
+            window.showNormal()
+        else:
+            window.showMaximized()
+
 
 def getNSWindow(winId):
     """ convert window handle to NSWindow

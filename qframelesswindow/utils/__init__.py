@@ -29,6 +29,17 @@ def startSystemMove(window, globalPos):
     MoveResize.startSystemMove(window, globalPos)
 
 
+def toggleMaxState(window):
+    """toggle maximized state of window
+
+    Parameters
+    ----------
+    window: QWidget
+        the window to be toggled
+    """
+    MoveResize.toggleMaxState(window)
+
+
 def starSystemResize(window, globalPos, edges):
     """ resize window
 
