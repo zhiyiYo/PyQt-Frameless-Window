@@ -365,7 +365,7 @@ class WindowsMoveResize:
 
     @classmethod
     def toggleMaxState(cls, window):
-        if QT_VERSION < (6, 8, 2):
+        if QT_VERSION < (6, 8, 0):
             if window.isMaximized():
                 window.showNormal()
             else:
