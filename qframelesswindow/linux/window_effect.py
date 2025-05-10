@@ -1,4 +1,6 @@
 # coding:utf-8
+from PyQt5.QtGui import QColor
+
 
 class LinuxWindowEffect:
     """ Linux window effect """
@@ -22,6 +24,29 @@ class LinuxWindowEffect:
 
         animationId: int
             turn on blur animation or not
+        """
+        pass
+
+    def setBorderAccentColor(self, hWnd, color: QColor):
+        """ Set the border color of the window
+
+        Parameters
+        ----------
+        hWnd: int or `sip.voidptr`
+            Window handle
+
+        color: QColor
+            Border Accent color
+        """
+        pass
+
+    def removeBorderAccentColor(self, hWnd):
+        """ Remove the border color of the window
+
+        Parameters
+        ----------
+        hWnd: int or `sip.voidptr`
+            Window handle
         """
         pass
 
