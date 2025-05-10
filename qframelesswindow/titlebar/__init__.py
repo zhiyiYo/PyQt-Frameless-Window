@@ -9,7 +9,7 @@ from PySide6.QtCore import Qt, QEvent
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QLabel, QHBoxLayout, QWidget
 
-from ..utils import startSystemMove
+from ..utils import startSystemMove, toggleMaxState
 from .title_bar_buttons import (CloseButton, MaximizeButton, MinimizeButton,
                                 SvgTitleBarButton, TitleBarButton)
 
@@ -64,14 +64,7 @@ class TitleBarBase(QWidget):
 
     def __toggleMaxState(self):
         """ Toggles the maximization state of the window and change icon """
-        if self.window().isMaximized():
-            self.window().showNormal()
-        else:
-            self.window().showMaximized()
-            
-        if sys.platform == "win32":
-            from ..utils.win32_utils import releaseMouseLeftButton
-            releaseMouseLeftButton(self.window().winId())
+        toggleMaxState(self.window())
 
     def _isDragRegion(self, pos):
         """ Check whether the position belongs to the area where dragging is allowed """

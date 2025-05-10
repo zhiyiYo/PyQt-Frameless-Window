@@ -44,6 +44,13 @@ class LinuxMoveResize:
 
         window.windowHandle().startSystemResize(edges)
 
+    @classmethod
+    def toggleMaxState(cls, window):
+        if window.isMaximized():
+            window.showNormal()
+        else:
+            window.showMaximized()
+
 
 def getSystemAccentColor():
     """ get the accent color of system
