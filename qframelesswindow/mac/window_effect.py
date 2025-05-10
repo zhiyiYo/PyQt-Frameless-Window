@@ -2,7 +2,7 @@
 import Cocoa
 from PySide2.QtCore import Qt
 from PySide2.QtWidgets import QWidget
-
+from PySide2.QtGui import QColor
 from ..utils.mac_utils import getNSWindow
 
 
@@ -54,6 +54,29 @@ class MacWindowEffect:
         container = QMacCocoaViewContainer(0, self.window)
         content.addSubview_positioned_relativeTo_(
             visualEffectView, Cocoa.NSWindowBelow, container)
+
+    def setBorderAccentColor(self, hWnd, color: QColor):
+        """ Set the border color of the window
+
+        Parameters
+        ----------
+        hWnd: int or `sip.voidptr`
+            Window handle
+
+        color: QColor
+            Border Accent color
+        """
+        pass
+
+    def removeBorderAccentColor(self, hWnd):
+        """ Remove the border color of the window
+
+        Parameters
+        ----------
+        hWnd: int or `sip.voidptr`
+            Window handle
+        """
+        pass
 
     def setMicaEffect(self, hWnd, isDarkMode=False, isAlt=False):
         """ Add mica effect to the window (Win11 only)

@@ -131,7 +131,7 @@ class StandardTitleBar(TitleBar):
         self.titleLabel.setStyleSheet("""
             QLabel{
                 background: transparent;
-                font: 13px 'Segoe UI';
+                font: 13px 'Segoe UI', 'Microsoft YaHei', 'PingFang SC';
                 padding: 0 4px
             }
         """)

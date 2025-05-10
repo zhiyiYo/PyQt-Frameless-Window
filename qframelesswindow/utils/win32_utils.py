@@ -1,9 +1,10 @@
 # coding:utf-8
+import sys
+import warnings
 from ctypes import Structure, byref, sizeof, windll, c_ulong, c_bool, POINTER, WinDLL, wintypes
 from ctypes.wintypes import DWORD, HWND, LPARAM, RECT, UINT
 from platform import platform
-import sys
-import warnings
+from winreg import OpenKey, HKEY_CURRENT_USER, KEY_READ, QueryValueEx, CloseKey
 
 import win32api
 import win32con
@@ -36,6 +37,21 @@ def getSystemAccentColor():
         return QColor()
 
     return QColor(color.value)
+
+
+def isSystemBorderAccentEnabled():
+    """ Check whether the border accent is enabled """
+    if not isGreaterEqualWin11():
+        return False
+
+    try:
+        key = OpenKey(HKEY_CURRENT_USER, r"SOFTWARE\Microsoft\Windows\DWM", 0, KEY_READ)
+        value, _ = QueryValueEx(key, "ColorPrevalence")
+        CloseKey(key)
+
+        return bool(value)
+    except:
+        return False
 
 
 def isMaximized(hWnd):

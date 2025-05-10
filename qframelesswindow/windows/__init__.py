@@ -13,7 +13,7 @@ from PySide2.QtWinExtras import QtWin
 
 from ..titlebar import TitleBar
 from ..utils import win32_utils as win_utils
-from ..utils.win32_utils import Taskbar
+from ..utils.win32_utils import Taskbar, isSystemBorderAccentEnabled, getSystemAccentColor
 from .c_structures import LPNCCALCSIZE_PARAMS
 from .window_effect import WindowsWindowEffect
 
@@ -182,6 +182,12 @@ class WindowsFramelessWindow(QWidget):
 
             result = 0 if not msg.wParam else win32con.WVR_REDRAW
             return True, result
+        elif msg.message == win32con.WM_SETFOCUS and isSystemBorderAccentEnabled():
+            self.windowEffect.setBorderAccentColor(self.winId(), getSystemAccentColor())
+            return True, 0
+        elif msg.message == win32con.WM_KILLFOCUS:
+            self.windowEffect.removeBorderAccentColor(self.winId())
+            return True, 0
 
         return super().nativeEvent(eventType, message)
 
