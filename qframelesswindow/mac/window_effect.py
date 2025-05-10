@@ -1,6 +1,7 @@
 # coding:utf-8
 import Cocoa
 from PySide6.QtCore import Qt
+from PySide6.QtGui import QColor
 from PySide6.QtWidgets import QWidget
 
 from ..utils.mac_utils import getNSWindow
@@ -55,7 +56,7 @@ class MacWindowEffect:
         content.addSubview_positioned_relativeTo_(
             visualEffectView, Cocoa.NSWindowBelow, container)
 
-    def setBorderAccentColor(self, hWnd, color: "QColor"):
+    def setBorderAccentColor(self, hWnd, color: QColor):
         """ Set the border color of the window
 
         Parameters

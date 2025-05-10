@@ -1,4 +1,6 @@
 # coding:utf-8
+from PySide6.QtGui import QColor
+
 
 class LinuxWindowEffect:
     """ Linux window effect """
@@ -25,7 +27,7 @@ class LinuxWindowEffect:
         """
         pass
 
-    def setBorderAccentColor(self, hWnd, color: "QColor"):
+    def setBorderAccentColor(self, hWnd, color: QColor):
         """ Set the border color of the window
 
         Parameters
