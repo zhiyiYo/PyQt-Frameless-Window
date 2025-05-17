@@ -116,18 +116,18 @@ class WindowsFramelessWindow(QWidget):
             return False, 0
 
         if msg.message == win32con.WM_NCHITTEST and self._isResizeEnabled:
-            pos = QCursor.pos()
-            xPos = pos.x() - self.x()
-            yPos = pos.y() - self.y()
-            w = self.frameGeometry().width()
-            h = self.frameGeometry().height()
+            xPos, yPos = win32gui.ScreenToClient(msg.hWnd, (msg.lParam & 65535, msg.lParam >> 16))
+            clientRect = win32gui.GetClientRect(msg.hWnd)
+
+            w = clientRect[2] - clientRect[0]
+            h = clientRect[3] - clientRect[1]
 
             # fixes https://github.com/zhiyiYo/PyQt-Frameless-Window/issues/98
             bw = 0 if win_utils.isMaximized(msg.hWnd) or win_utils.isFullScreen(msg.hWnd) else self.BORDER_WIDTH
-            lx = xPos < bw
-            rx = xPos > w - bw
-            ty = yPos < bw
-            by = yPos > h - bw
+            lx = xPos < bw  # left
+            rx = xPos > w - bw  # right
+            ty = yPos < bw  # top
+            by = yPos > h - bw  # bottom
             if lx and ty:
                 return True, win32con.HTTOPLEFT
             elif rx and by:
