@@ -12,7 +12,7 @@ from PyQt5.QtWidgets import QApplication, QWidget
 
 from ..titlebar import TitleBar
 from ..utils import win32_utils as win_utils
-from ..utils.win32_utils import Taskbar, isSystemBorderAccentEnabled, getSystemAccentColor
+from ..utils.win32_utils import Taskbar, isSystemBorderAccentEnabled, getSystemAccentColor, GET_X_LPARAM, GET_Y_LPARAM
 from .c_structures import LPNCCALCSIZE_PARAMS
 from .window_effect import WindowsWindowEffect
 
@@ -117,7 +117,7 @@ class WindowsFramelessWindow(QWidget):
             return super().nativeEvent(eventType, message)
 
         if msg.message == win32con.WM_NCHITTEST and self._isResizeEnabled:
-            xPos, yPos = win32gui.ScreenToClient(msg.hWnd, (msg.lParam & 65535, msg.lParam >> 16))
+            xPos, yPos = win32gui.ScreenToClient(msg.hWnd, (GET_X_LPARAM(msg.lParam), GET_Y_LPARAM(msg.lParam)))
             clientRect = win32gui.GetClientRect(msg.hWnd)
 
             w = clientRect[2] - clientRect[0]

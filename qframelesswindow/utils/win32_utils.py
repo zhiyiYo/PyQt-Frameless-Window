@@ -252,6 +252,22 @@ def releaseMouseLeftButton(hWnd, x=0, y=0):
     win32api.SendMessage(int(hWnd), win32con.WM_LBUTTONUP, 0, lp)
 
 
+def GET_X_LPARAM(lParam):
+    """ Retrieves the signed x-coordinate from LPARAM """
+    x = lParam & 0xFFFF
+    if x >= 0x8000:
+        x -= 0x10000
+    return x
+
+
+def GET_Y_LPARAM(lParam):
+    """ Retrieves the signed y-coordinate from LPARAM """
+    y = lParam >> 16
+    if y >= 0x8000:
+        y -= 0x10000
+    return y
+
+
 class APPBARDATA(Structure):
     _fields_ = [
         ('cbSize',            DWORD),
