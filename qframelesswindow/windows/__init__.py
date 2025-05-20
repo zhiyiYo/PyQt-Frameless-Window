@@ -4,6 +4,7 @@ from ctypes.wintypes import LPRECT, MSG
 
 import win32con
 import win32gui
+import win32api
 from PySide6.QtCore import Qt, QSize, QRect
 from PySide6.QtGui import QCloseEvent, QCursor
 from PySide6.QtWidgets import QApplication, QDialog, QWidget, QMainWindow
@@ -107,7 +108,7 @@ class WindowsFramelessWindowBase:
             return False, 0
 
         if msg.message == win32con.WM_NCHITTEST and self._isResizeEnabled:
-            xPos, yPos = win32gui.ScreenToClient(msg.hWnd, (msg.lParam & 65535, msg.lParam >> 16))
+            xPos, yPos = win32gui.ScreenToClient(msg.hWnd, win32api.GetCursorPos())
             clientRect = win32gui.GetClientRect(msg.hWnd)
 
             w = clientRect[2] - clientRect[0]
