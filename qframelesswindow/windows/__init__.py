@@ -116,7 +116,7 @@ class WindowsFramelessWindow(QWidget):
             return False, 0
 
         if msg.message == win32con.WM_NCHITTEST and self._isResizeEnabled:
-            xPos, yPos = win32gui.ScreenToClient(msg.hWnd, (msg.lParam & 65535, msg.lParam >> 16))
+            xPos, yPos = win32gui.ScreenToClient(msg.hWnd, win32api.GetCursorPos())
             clientRect = win32gui.GetClientRect(msg.hWnd)
 
             w = clientRect[2] - clientRect[0]
