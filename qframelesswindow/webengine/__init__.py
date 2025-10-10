@@ -14,7 +14,9 @@ class FramelessWebEngineView(QWebEngineView):
             parent.window().setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
 
         super().__init__(parent=parent)
-        self.setHtml("")
+
+        if sys.platform in ("win32", "darwin"):
+            self.setHtml("")
 
         if isinstance(self.window(), FramelessWindow):
             self.window().updateFrameless()
