@@ -1,10 +1,6 @@
 # coding:utf-8
 import sys
 
-from PySide6.QtCore import QPoint
-from PySide6.QtGui import QMouseEvent
-from PySide6.QtWidgets import QApplication
-
 from PySide6.QtCore import Qt, QEvent
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QLabel, QHBoxLayout, QWidget
@@ -45,7 +41,7 @@ class TitleBarBase(QWidget):
 
     def mouseDoubleClickEvent(self, event):
         """ Toggles the maximization state of the window """
-        if event.button() != Qt.LeftButton or not self._isDoubleClickEnabled:
+        if sys.platform == "win32" or event.button() != Qt.LeftButton or not self._isDoubleClickEnabled:
             return
 
         self.__toggleMaxState()
