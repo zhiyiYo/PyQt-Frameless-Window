@@ -230,7 +230,7 @@ class WindowsFramelessWindowBase:
             # enable/disable double click on titlebar
             if not self._isResizeEnabled or not self.titleBar._isDoubleClickEnabled:
                 return True, 0
-        elif msg.message == win32con.WM_SYSCHAR and self._isSystemMenuEnabled:
+        elif self._isSystemMenuEnabled and msg.message == win32con.WM_SYSCHAR:
             if msg.wParam == win32con.VK_SPACE:
                 self._showSystemMenu(self.pos(), msg.hWnd)
                 return True, 0
