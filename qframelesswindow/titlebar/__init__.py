@@ -41,7 +41,7 @@ class TitleBarBase(QWidget):
 
     def mouseDoubleClickEvent(self, event):
         """ Toggles the maximization state of the window """
-        if sys.platform == "win32" or event.button() != Qt.LeftButton or not self._isDoubleClickEnabled:
+        if event.button() != Qt.LeftButton or not self._isDoubleClickEnabled:
             return
 
         self.__toggleMaxState()
