@@ -86,19 +86,21 @@ class MacFramelessWindow(QWidget):
 
     def paintEvent(self, e):
         super().paintEvent(e)
-        self.setSystemTitleBarButtonVisible(self.isSystemButtonVisible())
+        self._updateSystemTitleBar()
 
     def changeEvent(self, event):
         if event.type() == QEvent.Type.WindowStateChange:
-            self.setSystemTitleBarButtonVisible(self.isSystemButtonVisible())
+            self._updateSystemTitleBar()
         elif event.type() == QEvent.Type.Resize:
             self._updateSystemButtonRect()
 
+    def _updateSystemTitleBar(self):
+        self._extendTitleBarToClientArea()
+        self.setSystemTitleBarButtonVisible(self.isSystemButtonVisible())
+
     def _hideSystemTitleBar(self):
         # extend view to title bar region
-        self.__nsWindow.setStyleMask_(
-            self.__nsWindow.styleMask() | Cocoa.NSFullSizeContentViewWindowMask)
-        self.__nsWindow.setTitlebarAppearsTransparent_(True)
+        self._extendTitleBarToClientArea()
 
         # disable the moving behavior of system
         self.__nsWindow.setMovableByWindowBackground_(False)
@@ -107,6 +109,11 @@ class MacFramelessWindow(QWidget):
         # hide title bar buttons and title
         self.__nsWindow.setTitleVisibility_(Cocoa.NSWindowTitleHidden)
         self.setSystemTitleBarButtonVisible(False)
+
+    def _extendTitleBarToClientArea(self):
+        self.__nsWindow.setStyleMask_(
+            self.__nsWindow.styleMask() | Cocoa.NSFullSizeContentViewWindowMask)
+        self.__nsWindow.setTitlebarAppearsTransparent_(True)
 
     def isSystemButtonVisible(self):
         return self._isSystemButtonVisible
