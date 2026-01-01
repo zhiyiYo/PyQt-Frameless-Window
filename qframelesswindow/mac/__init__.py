@@ -86,15 +86,17 @@ class MacFramelessWindowBase:
 
     def changeEvent(self, event):
         if event.type() == QEvent.WindowStateChange:
-            self.setSystemTitleBarButtonVisible(self.isSystemButtonVisible())
+            self._updateSystemTitleBar()
         elif event.type() == QEvent.Resize:
             self._updateSystemButtonRect()
 
+    def _updateSystemTitleBar(self):
+        self._extendTitleBarToClientArea()
+        self.setSystemTitleBarButtonVisible(self.isSystemButtonVisible())
+
     def _hideSystemTitleBar(self):
         # extend view to title bar region
-        self.__nsWindow.setStyleMask_(
-            self.__nsWindow.styleMask() | Cocoa.NSFullSizeContentViewWindowMask)
-        self.__nsWindow.setTitlebarAppearsTransparent_(True)
+        self._extendTitleBarToClientArea()
 
         # disable the moving behavior of system
         self.__nsWindow.setMovableByWindowBackground_(False)
@@ -103,6 +105,11 @@ class MacFramelessWindowBase:
         # hide title bar buttons and title
         self.__nsWindow.setTitleVisibility_(Cocoa.NSWindowTitleHidden)
         self.setSystemTitleBarButtonVisible(False)
+
+    def _extendTitleBarToClientArea(self):
+        self.__nsWindow.setStyleMask_(
+            self.__nsWindow.styleMask() | Cocoa.NSFullSizeContentViewWindowMask)
+        self.__nsWindow.setTitlebarAppearsTransparent_(True)
 
     def isSystemButtonVisible(self):
         return self._isSystemButtonVisible
@@ -185,7 +192,7 @@ class MacFramelessWindow(QWidget, MacFramelessWindowBase):
 
     def paintEvent(self, e):
         QWidget.paintEvent(self, e)
-        self.setSystemTitleBarButtonVisible(self.isSystemButtonVisible())
+        self._updateSystemTitleBar()
 
 
 class AcrylicWindow(MacFramelessWindow):
@@ -215,7 +222,7 @@ class MacFramelessMainWindow(QMainWindow, MacFramelessWindowBase):
 
     def paintEvent(self, e):
         QMainWindow.paintEvent(self, e)
-        self.setSystemTitleBarButtonVisible(self.isSystemButtonVisible())
+        self._updateSystemTitleBar()
 
 
 class MacFramelessDialog(QDialog, MacFramelessWindowBase):
@@ -237,4 +244,4 @@ class MacFramelessDialog(QDialog, MacFramelessWindowBase):
 
     def paintEvent(self, e):
         QDialog.paintEvent(self, e)
-        self.setSystemTitleBarButtonVisible(self.isSystemButtonVisible())
+        self._updateSystemTitleBar()
