@@ -12,7 +12,7 @@ from PyQt6.QtWidgets import QApplication, QWidget
 
 from ..titlebar import TitleBar
 from ..utils import win32_utils as win_utils
-from ..utils.win32_utils import Taskbar, isSystemBorderAccentEnabled, getSystemAccentColor
+from ..utils.win32_utils import Taskbar, isSystemBorderAccentEnabled, getSystemAccentColor, QT_VERSION
 from .c_structures import LPNCCALCSIZE_PARAMS
 from .window_effect import WindowsWindowEffect
 
@@ -204,7 +204,13 @@ class AcrylicWindow(WindowsFramelessWindow):
         self.setStyleSheet("AcrylicWindow{background:transparent}")
 
     def updateFrameless(self):
-        self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
+        stayOnTop = Qt.WindowType.WindowStaysOnTopHint if self.windowFlags() & Qt.WindowType.WindowStaysOnTopHint else 0
+        if QT_VERSION < (6, 10, 0):
+            self.setWindowFlags(Qt.WindowType.FramelessWindowHint | stayOnTop)
+        else:
+            # fix issue #206
+            self.setWindowFlags(Qt.WindowType.Window | Qt.WindowType.NoTitleBarBackgroundHint | stayOnTop)
+
         self.windowEffect.enableBlurBehindWindow(self.winId())
         self.windowEffect.addWindowAnimation(self.winId())
 
