@@ -5,7 +5,7 @@ from ctypes.wintypes import LPRECT, MSG
 import win32con
 import win32gui
 import win32api
-from PySide6.QtCore import Qt, QSize, QRect
+from PySide6.QtCore import Qt, QSize, QRect, QPoint
 from PySide6.QtGui import QCloseEvent, QCursor
 from PySide6.QtWidgets import QApplication, QDialog, QWidget, QMainWindow
 
@@ -24,6 +24,7 @@ class WindowsFramelessWindowBase:
     def __init__(self, parent=None):
         super().__init__(parent)
         self._isSystemButtonVisible = False
+        self._isSystemMenuEnabled = True
 
     def _initFrameless(self):
         self.windowEffect = WindowsWindowEffect(self)
@@ -37,6 +38,8 @@ class WindowsFramelessWindowBase:
 
         self.resize(500, 500)
         self.titleBar.raise_()
+        if self._isSystemMenuEnabled:
+            self._initSystemMenu()
 
     def updateFrameless(self):
         """ update frameless window """
@@ -65,23 +68,24 @@ class WindowsFramelessWindowBase:
     def setResizeEnabled(self, isEnabled: bool):
         """ set whether resizing is enabled """
         self._isResizeEnabled = isEnabled
+        if isEnabled:
+            self.titleBar.maxBtn.setEnabled(True)
+        else:
+            self.titleBar.maxBtn.setEnabled(False)
 
     def setStayOnTop(self, isTop: bool):
         """ set the stay on top status """
-        if isTop:
-            self.setWindowFlags(self.windowFlags() | Qt.WindowStaysOnTopHint)
-        else:
-            self.setWindowFlags(self.windowFlags() & ~Qt.WindowStaysOnTopHint)
-
-        self.updateFrameless()
-        self.show()
+        hWnd = int(self.winId())
+        insert_after = win32con.HWND_TOPMOST if isTop else win32con.HWND_NOTOPMOST
+        win32gui.SetWindowPos(hWnd, insert_after, 0, 0, 0, 0, win32con.SWP_NOMOVE |
+                              win32con.SWP_NOSIZE | win32con.SWP_NOACTIVATE)
 
     def toggleStayOnTop(self):
         """ toggle the stay on top status """
-        if self.windowFlags() & Qt.WindowStaysOnTopHint:
-            self.setStayOnTop(False)
-        else:
-            self.setStayOnTop(True)
+        hWnd = int(self.winId())
+        info = win32gui.GetWindowLong(hWnd, win32con.GWL_EXSTYLE)
+        isTop = bool(info & win32con.WS_EX_TOPMOST)
+        self.setStayOnTop(not isTop)
 
     def isSystemButtonVisible(self):
         """ Returns whether the system title bar button is visible """
@@ -101,41 +105,91 @@ class WindowsFramelessWindowBase:
         """
         return QRect(0, 0, size.width(), size.height())
 
+    def _isInTitleBar(self, pos: QPoint) -> bool:
+        """Return if the Cursor is in the titleBar and its canDrag area"""
+        pos = self.titleBar.mapFromGlobal(pos)
+        return self.titleBar.rect().contains(pos) and self.titleBar.canDrag(pos)
+
+    def _initSystemMenu(self):
+        """Init system menu for Windows"""
+        hWnd = int(self.winId())
+        style = win32gui.GetWindowLong(hWnd, win32con.GWL_STYLE)
+        win32gui.SetWindowLong(hWnd, win32con.GWL_STYLE, style | win32con.WS_SYSMENU)
+
+    def _showSystemMenu(self, point: QPoint, hWnd: int):
+        """Show Windows system menu at the given point"""
+        hMenu = win32gui.GetSystemMenu(hWnd, False)
+
+        if self._isResizeEnabled:
+            if win_utils.isMaximized(hWnd):
+                win32gui.EnableMenuItem(hMenu, win32con.SC_MAXIMIZE, win32con.MF_BYCOMMAND | win32con.MF_GRAYED)
+                win32gui.EnableMenuItem(hMenu, win32con.SC_RESTORE,  win32con.MF_BYCOMMAND | win32con.MF_ENABLED)
+                win32gui.EnableMenuItem(hMenu, win32con.SC_MOVE, win32con.MF_BYCOMMAND | win32con.MF_GRAYED)
+                win32gui.EnableMenuItem(hMenu, win32con.SC_SIZE, win32con.MF_BYCOMMAND | win32con.MF_GRAYED)
+            else:
+                win32gui.EnableMenuItem(hMenu, win32con.SC_MAXIMIZE, win32con.MF_BYCOMMAND | win32con.MF_ENABLED)
+                win32gui.EnableMenuItem(hMenu, win32con.SC_RESTORE,  win32con.MF_BYCOMMAND | win32con.MF_GRAYED)
+                win32gui.EnableMenuItem(hMenu, win32con.SC_MOVE, win32con.MF_BYCOMMAND | win32con.MF_ENABLED)
+                win32gui.EnableMenuItem(hMenu, win32con.SC_SIZE, win32con.MF_BYCOMMAND | win32con.MF_ENABLED)
+        else:
+            win32gui.EnableMenuItem(hMenu, win32con.SC_MAXIMIZE, win32con.MF_BYCOMMAND | win32con.MF_GRAYED)
+            win32gui.EnableMenuItem(hMenu, win32con.SC_RESTORE,  win32con.MF_BYCOMMAND | win32con.MF_GRAYED)
+            win32gui.EnableMenuItem(hMenu, win32con.SC_MOVE, win32con.MF_BYCOMMAND | win32con.MF_GRAYED)
+            win32gui.EnableMenuItem(hMenu, win32con.SC_SIZE, win32con.MF_BYCOMMAND | win32con.MF_GRAYED)
+
+        ratio = self.devicePixelRatio()
+        pos_x = int(point.x() * ratio)
+        pos_y = int(point.y() * ratio)
+
+        cmd = win32gui.TrackPopupMenu(hMenu, win32con.TPM_RETURNCMD | (win32con.TPM_RIGHTALIGN if QApplication.isRightToLeft() 
+                                      else win32con.TPM_LEFTALIGN), pos_x, pos_y, 0, hWnd, None)
+
+        if cmd:
+            win32gui.PostMessage(hWnd, win32con.WM_SYSCOMMAND, cmd, 0)
+
     def nativeEvent(self, eventType, message):
         """ Handle the Windows message """
         msg = MSG.from_address(message.__int__())
         if not msg.hWnd:
             return False, 0
 
-        if msg.message == win32con.WM_NCHITTEST and self._isResizeEnabled:
-            xPos, yPos = win32gui.ScreenToClient(msg.hWnd, win32api.GetCursorPos())
-            clientRect = win32gui.GetClientRect(msg.hWnd)
+        if msg.message == win32con.WM_NCHITTEST:
+            if self._isResizeEnabled:
+                xPos, yPos = win32gui.ScreenToClient(msg.hWnd, win32api.GetCursorPos())
+                clientRect = win32gui.GetClientRect(msg.hWnd)
 
-            w = clientRect[2] - clientRect[0]
-            h = clientRect[3] - clientRect[1]
+                w = clientRect[2] - clientRect[0]
+                h = clientRect[3] - clientRect[1]
 
-            # fixes https://github.com/zhiyiYo/PyQt-Frameless-Window/issues/98
-            bw = 0 if win_utils.isMaximized(msg.hWnd) or win_utils.isFullScreen(msg.hWnd) else self.BORDER_WIDTH
-            lx = xPos < bw  # left
-            rx = xPos > w - bw  # right
-            ty = yPos < bw  # top
-            by = yPos > h - bw  # bottom
-            if lx and ty:
-                return True, win32con.HTTOPLEFT
-            elif rx and by:
-                return True, win32con.HTBOTTOMRIGHT
-            elif rx and ty:
-                return True, win32con.HTTOPRIGHT
-            elif lx and by:
-                return True, win32con.HTBOTTOMLEFT
-            elif ty:
-                return True, win32con.HTTOP
-            elif by:
-                return True, win32con.HTBOTTOM
-            elif lx:
-                return True, win32con.HTLEFT
-            elif rx:
-                return True, win32con.HTRIGHT
+                # fixes https://github.com/zhiyiYo/PyQt-Frameless-Window/issues/98
+                bw = 0 if win_utils.isMaximized(msg.hWnd) or win_utils.isFullScreen(msg.hWnd) else self.BORDER_WIDTH
+                lx = xPos < bw  # left
+                rx = xPos > w - bw  # right
+                ty = yPos < bw  # top
+                by = yPos > h - bw  # bottom
+                if lx and ty:
+                    return True, win32con.HTTOPLEFT
+                elif rx and by:
+                    return True, win32con.HTBOTTOMRIGHT
+                elif rx and ty:
+                    return True, win32con.HTTOPRIGHT
+                elif lx and by:
+                    return True, win32con.HTBOTTOMLEFT
+                elif ty:
+                    return True, win32con.HTTOP
+                elif by:
+                    return True, win32con.HTBOTTOM
+                elif lx:
+                    return True, win32con.HTLEFT
+                elif rx:
+                    return True, win32con.HTRIGHT
+                # Notify Windows that this region belongs to the title bar,
+                # enabling system menu (right-click) and double-click to maximize/restore.
+                elif self._isInTitleBar(QCursor.pos()):
+                    return True, win32con.HTCAPTION
+            else:
+                if self._isSystemMenuEnabled and self._isInTitleBar(QCursor.pos()):
+                    return True, win32con.HTCAPTION
         elif msg.message == win32con.WM_NCCALCSIZE:
             if msg.wParam:
                 rect = cast(msg.lParam, LPNCCALCSIZE_PARAMS).contents.rgrc[0]
@@ -154,6 +208,9 @@ class WindowsFramelessWindowBase:
                 tx = win_utils.getResizeBorderThickness(msg.hWnd, True)
                 rect.left += tx
                 rect.right -= tx
+                # Prevents flicker on right-clicking the title bar when the window is maximized.
+                if self._isSystemMenuEnabled:
+                    return True, 0
 
             # handle the situation that an auto-hide taskbar is enabled
             if (isMax or isFull) and Taskbar.isAutoHide():
@@ -169,6 +226,18 @@ class WindowsFramelessWindowBase:
 
             result = 0 if not msg.wParam else win32con.WVR_REDRAW
             return True, result
+        elif msg.message == win32con.WM_NCLBUTTONDBLCLK and msg.wParam == win32con.HTCAPTION:
+            # enable/disable double click on titlebar
+            if not self._isResizeEnabled or not self.titleBar._isDoubleClickEnabled:
+                return True, 0
+        elif self._isSystemMenuEnabled and msg.message == win32con.WM_SYSCHAR:
+            if msg.wParam == win32con.VK_SPACE:
+                self._showSystemMenu(self.pos(), msg.hWnd)
+                return True, 0
+        elif self._isSystemMenuEnabled and msg.message == win32con.WM_NCRBUTTONDOWN :
+            if msg.wParam == win32con.HTCAPTION:
+                self._showSystemMenu(QCursor.pos(), msg.hWnd)
+                return True, 0
         elif msg.message == win32con.WM_SETFOCUS and isSystemBorderAccentEnabled():
             self.windowEffect.setBorderAccentColor(self.winId(), getSystemAccentColor())
             return True, 0
