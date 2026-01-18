@@ -11,7 +11,7 @@ from PySide6.QtWidgets import QApplication, QDialog, QWidget, QMainWindow
 
 from ..titlebar import TitleBar
 from ..utils import win32_utils as win_utils
-from ..utils.win32_utils import Taskbar, isSystemBorderAccentEnabled, getSystemAccentColor
+from ..utils.win32_utils import Taskbar, isSystemBorderAccentEnabled, getSystemAccentColor, QT_VERSION
 from .c_structures import LPNCCALCSIZE_PARAMS
 from .window_effect import WindowsWindowEffect
 
@@ -210,7 +210,11 @@ class AcrylicWindow(WindowsFramelessWindow):
 
     def updateFrameless(self):
         stayOnTop = Qt.WindowStaysOnTopHint if self.windowFlags() & Qt.WindowStaysOnTopHint else 0
-        self.setWindowFlags(Qt.FramelessWindowHint | stayOnTop)
+        if QT_VERSION < (6, 10, 0):
+            self.setWindowFlags(Qt.FramelessWindowHint | stayOnTop)
+        else:
+            # fix issue #206
+            self.setWindowFlags(Qt.Window | Qt.NoTitleBarBackgroundHint | stayOnTop)
 
         self.windowEffect.enableBlurBehindWindow(self.winId())
         self.windowEffect.addWindowAnimation(self.winId())
