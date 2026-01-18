@@ -44,6 +44,9 @@ class MacFramelessWindow(QWidget):
 
     def setStayOnTop(self, isTop: bool):
         """ set the stay on top status """
+        # Save the current window geometry before changing flags to prevent window jumping on macOS with PySide 6.9+
+        oldGeometry = self.geometry()
+
         if isTop:
             self.setWindowFlags(self.windowFlags() | Qt.WindowType.WindowStaysOnTopHint)
         else:
@@ -51,6 +54,9 @@ class MacFramelessWindow(QWidget):
 
         self.updateFrameless()
         self.show()
+
+        # Restore the window geometry to prevent position shift
+        self.setGeometry(oldGeometry)
 
     def toggleStayOnTop(self):
         """ toggle the stay on top status """
