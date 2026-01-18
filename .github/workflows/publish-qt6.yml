@@ -1,4 +1,4 @@
-name: Upload PySide6 Package
+name: Upload PySide6 & PyQt6 Package
 
 on: workflow_dispatch
 
