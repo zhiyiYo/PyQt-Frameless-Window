@@ -315,3 +315,27 @@ class WindowsWindowEffect:
         """
         blurBehind = DWM_BLURBEHIND(1, True, 0, False)
         self.DwmEnableBlurBehindWindow(int(hWnd), byref(blurBehind))
+
+    def removeWindowAnimation(self, hWnd):
+        """ Disables maximize and minimize animation of the window by removing the relevant window styles. """
+        hWnd = int(hWnd)
+        style = win32gui.GetWindowLong(hWnd, win32con.GWL_STYLE)
+        style &= ~win32con.WS_MINIMIZEBOX
+        style &= ~win32con.WS_MAXIMIZEBOX
+        style &= ~win32con.WS_CAPTION
+        style &= ~win32con.WS_THICKFRAME
+        win32gui.SetWindowLong(hWnd, win32con.GWL_STYLE, style)
+        win32gui.SetWindowPos(hWnd, None, 0, 0, 0, 0,
+                            win32con.SWP_NOMOVE | win32con.SWP_NOSIZE | win32con.SWP_NOZORDER |
+                            win32con.SWP_FRAMECHANGED)
+
+    def disableBlurBehindWindow(self, hWnd):
+        """ disable the blur effect behind the whole client
+
+        Parameters
+        ----------
+        hWnd: int or `sip.voidptr`
+            Window handle
+        """
+        blurBehind = DWM_BLURBEHIND(1, False, 0, False)
+        self.DwmEnableBlurBehindWindow(int(hWnd), byref(blurBehind))
