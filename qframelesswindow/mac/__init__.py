@@ -181,6 +181,10 @@ class MacFramelessWindowBase:
         """
         return QRect(0, 0, 75, size.height())
 
+    def refreshBackgroundBlurEffect(self):
+        """ Refresh background blur effect """
+        pass
+
 
 class MacFramelessWindow(QWidget, MacFramelessWindowBase):
     """ Frameless window for Linux system """

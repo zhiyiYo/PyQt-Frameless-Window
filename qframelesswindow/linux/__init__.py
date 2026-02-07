@@ -33,6 +33,10 @@ class LinuxFramelessWindowBase:
     def resizeEvent(self, e):
         self.titleBar.resize(self.width(), self.titleBar.height())
 
+    def refreshBackgroundBlurEffect(self):
+        """ Refresh background blur effect """
+        pass
+
     def setStayOnTop(self, isTop: bool):
         """ set the stay on top status """
         if isTop:
