@@ -185,3 +185,30 @@ class MacWindowEffect:
         hWnd : int or `sip.voidptr`
             Window handle
         """
+
+    def enableBlurBehindWindow(self, hWnd):
+        """ enable the blur effect behind the whole client
+
+        Parameters
+        ----------
+        hWnd: int or `sip.voidptr`
+            Window handle
+        """
+
+    def removeWindowAnimation(self, hWnd):
+        """ Disables maximize and minimize animation of the window by removing the relevant window styles.
+
+        Parameters
+        ----------
+        hWnd: int or `sip.voidptr`
+            Window handle
+        """
+
+    def disableBlurBehindWindow(self, hWnd):
+        """ disable the blur effect behind the whole client
+
+        Parameters
+        ----------
+        hWnd: int or `sip.voidptr`
+            Window handle
+        """
