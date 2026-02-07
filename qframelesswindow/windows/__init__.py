@@ -6,7 +6,7 @@ from ctypes.wintypes import LPRECT, MSG
 import win32api
 import win32con
 import win32gui
-from PyQt5.QtCore import Qt, QSize, QRect
+from PyQt5.QtCore import Qt, QSize, QRect, QEvent
 from PyQt5.QtGui import QCloseEvent, QCursor
 from PyQt5.QtWidgets import QApplication, QWidget
 
@@ -222,6 +222,12 @@ class AcrylicWindow(WindowsFramelessWindow):
             if win_utils.isGreaterEqualWin11():
                 self.windowEffect.addShadowEffect(self.winId())
 
+    def refreshBackgroundBlurEffect(self):
+        self.windowEffect.disableBlurBehindWindow(self.winId())
+        self.windowEffect.removeWindowAnimation(self.winId())
+        self.windowEffect.enableBlurBehindWindow(self.winId())
+        self.windowEffect.addWindowAnimation(self.winId())
+
     def nativeEvent(self, eventType, message):
         """ Handle the Windows message """
         msg = MSG.from_address(message.__int__())
@@ -234,6 +240,13 @@ class AcrylicWindow(WindowsFramelessWindow):
                 return False, 0
 
         return super().nativeEvent(eventType, message)
+
+    def event(self, e: QEvent):
+        if e.type() == QEvent.Type.WindowStateChange:
+            if win_utils.isMaximized(self.winId()):
+                self.refreshBackgroundBlurEffect()
+
+        return super().event(e)
 
     def closeEvent(self, e):
         if not self.__closedByKey or QApplication.quitOnLastWindowClosed():
