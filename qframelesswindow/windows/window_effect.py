@@ -13,7 +13,7 @@ from PySide2.QtGui import QColor
 from .c_structures import (ACCENT_POLICY, ACCENT_STATE, DWMNCRENDERINGPOLICY,
                            DWMWINDOWATTRIBUTE, MARGINS,
                            WINDOWCOMPOSITIONATTRIB,
-                           WINDOWCOMPOSITIONATTRIBDATA)
+                           WINDOWCOMPOSITIONATTRIBDATA, DWM_BLURBEHIND)
 from ..utils.win32_utils import isGreaterEqualWin10, isGreaterEqualWin11
 
 
@@ -28,9 +28,12 @@ class WindowsWindowEffect:
         self.dwmapi = WinDLL("dwmapi")
         self.SetWindowCompositionAttribute = self.user32.SetWindowCompositionAttribute
         self.DwmExtendFrameIntoClientArea = self.dwmapi.DwmExtendFrameIntoClientArea
+        self.DwmEnableBlurBehindWindow = self.dwmapi.DwmEnableBlurBehindWindow
         self.DwmSetWindowAttribute = self.dwmapi.DwmSetWindowAttribute
+
         self.SetWindowCompositionAttribute.restype = c_bool
         self.DwmExtendFrameIntoClientArea.restype = LONG
+        self.DwmEnableBlurBehindWindow.restype = LONG
         self.DwmSetWindowAttribute.restype = LONG
         self.SetWindowCompositionAttribute.argtypes = [
             c_int,
@@ -38,6 +41,7 @@ class WindowsWindowEffect:
         ]
         self.DwmSetWindowAttribute.argtypes = [c_int, DWORD, LPCVOID, DWORD]
         self.DwmExtendFrameIntoClientArea.argtypes = [c_int, POINTER(MARGINS)]
+        self.DwmEnableBlurBehindWindow.argtypes = [c_int, POINTER(DWM_BLURBEHIND)]
 
         # Initialize structure
         self.accentPolicy = ACCENT_POLICY()
@@ -299,3 +303,38 @@ class WindowsWindowEffect:
             | win32con.CS_DBLCLKS
             | win32con.WS_THICKFRAME,
         )
+
+    def enableBlurBehindWindow(self, hWnd):
+        """ enable the blur effect behind the whole client
+
+        Parameters
+        ----------
+        hWnd: int or `sip.voidptr`
+            Window handle
+        """
+        blurBehind = DWM_BLURBEHIND(1, True, 0, False)
+        self.DwmEnableBlurBehindWindow(int(hWnd), byref(blurBehind))
+
+    def removeWindowAnimation(self, hWnd):
+        """ Disables maximize and minimize animation of the window by removing the relevant window styles. """
+        hWnd = int(hWnd)
+        style = win32gui.GetWindowLong(hWnd, win32con.GWL_STYLE)
+        style &= ~win32con.WS_MINIMIZEBOX
+        style &= ~win32con.WS_MAXIMIZEBOX
+        style &= ~win32con.WS_CAPTION
+        style &= ~win32con.WS_THICKFRAME
+        win32gui.SetWindowLong(hWnd, win32con.GWL_STYLE, style)
+        win32gui.SetWindowPos(hWnd, None, 0, 0, 0, 0,
+                            win32con.SWP_NOMOVE | win32con.SWP_NOSIZE | win32con.SWP_NOZORDER |
+                            win32con.SWP_FRAMECHANGED)
+
+    def disableBlurBehindWindow(self, hWnd):
+        """ disable the blur effect behind the whole client
+
+        Parameters
+        ----------
+        hWnd: int or `sip.voidptr`
+            Window handle
+        """
+        blurBehind = DWM_BLURBEHIND(1, False, 0, False)
+        self.DwmEnableBlurBehindWindow(int(hWnd), byref(blurBehind))
