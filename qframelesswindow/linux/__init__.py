@@ -33,6 +33,10 @@ class LinuxFramelessWindow(QWidget):
     def updateFrameless(self):
         self.setWindowFlags(self.windowFlags() | Qt.WindowType.FramelessWindowHint)
 
+    def refreshBackgroundBlurEffect(self):
+        """ Refresh background blur effect """
+        pass
+
     def setStayOnTop(self, isTop: bool):
         """ set the stay on top status """
         if isTop:

@@ -52,6 +52,13 @@ class WindowsFramelessWindow(QWidget):
         if not isinstance(self, AcrylicWindow):
             self.windowEffect.addShadowEffect(self.winId())
 
+    def refreshBackgroundBlurEffect(self):
+        """ Refresh background blur effect """
+        self.windowEffect.disableBlurBehindWindow(self.winId())
+        self.windowEffect.removeWindowAnimation(self.winId())
+        self.windowEffect.enableBlurBehindWindow(self.winId())
+        self.windowEffect.addWindowAnimation(self.winId())
+
     def setTitleBar(self, titleBar):
         """ set custom title bar
 
@@ -221,12 +228,6 @@ class AcrylicWindow(WindowsFramelessWindow):
             self.windowEffect.setAcrylicEffect(self.winId())
             if win_utils.isGreaterEqualWin11():
                 self.windowEffect.addShadowEffect(self.winId())
-
-    def refreshBackgroundBlurEffect(self):
-        self.windowEffect.disableBlurBehindWindow(self.winId())
-        self.windowEffect.removeWindowAnimation(self.winId())
-        self.windowEffect.enableBlurBehindWindow(self.winId())
-        self.windowEffect.addWindowAnimation(self.winId())
 
     def nativeEvent(self, eventType, message):
         """ Handle the Windows message """
