@@ -167,6 +167,10 @@ class MacFramelessWindow(QWidget):
         """
         return QRect(0, 0, 75, size.height())
 
+    def refreshBackgroundBlurEffect(self):
+        """ Refresh background blur effect """
+        pass
+
 
 class AcrylicWindow(MacFramelessWindow):
     """ A frameless window with acrylic effect """
