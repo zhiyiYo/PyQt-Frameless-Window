@@ -73,7 +73,7 @@ class TitleBarBase(QWidget):
             if button.isVisible():
                 width += button.width()
 
-        return 0 < pos.x() < self.width() - width
+        return self.window().BORDER_WIDTH < pos.x() < self.width() - width and pos.y() > self.window().BORDER_WIDTH
 
     def _hasButtonPressed(self):
         """ whether any button is pressed """
