@@ -166,13 +166,13 @@ class WindowsFramelessWindowBase:
             if (isMax or isFull) and Taskbar.isAutoHide():
                 position = Taskbar.getPosition(msg.hWnd)
                 if position == Taskbar.LEFT:
-                    rect.top += Taskbar.AUTO_HIDE_THICKNESS
-                elif position == Taskbar.BOTTOM:
-                    rect.bottom -= Taskbar.AUTO_HIDE_THICKNESS
-                elif position == Taskbar.LEFT:
                     rect.left += Taskbar.AUTO_HIDE_THICKNESS
+                elif position == Taskbar.TOP:
+                    rect.top += Taskbar.AUTO_HIDE_THICKNESS
                 elif position == Taskbar.RIGHT:
                     rect.right -= Taskbar.AUTO_HIDE_THICKNESS
+                elif position == Taskbar.BOTTOM:
+                    rect.bottom -= Taskbar.AUTO_HIDE_THICKNESS
 
             result = 0 if not msg.wParam else win32con.WVR_REDRAW
             return True, result
@@ -278,4 +278,3 @@ class WindowsFramelessDialog(WindowsFramelessWindowBase, QDialog):
         self.titleBar.maxBtn.hide()
         self.titleBar.setDoubleClickEnabled(False)
         self.windowEffect.disableMaximizeButton(self.winId())
-
