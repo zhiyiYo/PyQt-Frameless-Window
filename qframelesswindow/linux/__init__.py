@@ -22,7 +22,7 @@ class LinuxFramelessWindowBase:
         self._isResizeEnabled = True
 
         self.updateFrameless()
-        QCoreApplication.instance().installEventFilter(self)
+        self.installEventFilter(QCoreApplication.instance())
 
         self.titleBar.raise_()
         self.resize(500, 500)
