@@ -40,7 +40,7 @@ def toggleMaxState(window):
     MoveResize.toggleMaxState(window)
 
 
-def starSystemResize(window, globalPos, edges):
+def startSystemResize(window, globalPos, edges):
     """ resize window
 
     Parameters
@@ -54,4 +54,4 @@ def starSystemResize(window, globalPos, edges):
     edges: `Qt.Edges`
         window edges
     """
-    MoveResize.starSystemResize(window, globalPos, edges)
+    MoveResize.startSystemResize(window, globalPos, edges)

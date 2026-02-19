@@ -35,7 +35,8 @@ class LinuxFramelessWindowBase:
 
     def refreshBackgroundBlurEffect(self):
         """ Refresh background blur effect """
-        pass
+        self.windowEffect.disableBlurBehindWindow(self.winId())
+        self.windowEffect.enableBlurBehindWindow(self.winId())
 
     def setStayOnTop(self, isTop: bool):
         """ set the stay on top status """
@@ -96,7 +97,7 @@ class LinuxFramelessWindowBase:
             return False
 
         edges = Qt.Edge(0)
-        pos = event.globalPos() - self.pos()
+        pos = event.globalPosition().toPoint() - self.pos()
         if pos.x() < self.BORDER_WIDTH:
             edges |= Qt.LeftEdge
         if pos.x() >= self.width()-self.BORDER_WIDTH:
@@ -120,7 +121,7 @@ class LinuxFramelessWindowBase:
                 self.setCursor(Qt.ArrowCursor)
 
         elif obj in (self, self.titleBar) and et == QEvent.MouseButtonPress and edges:
-            LinuxMoveResize.starSystemResize(self, event.globalPos(), edges)
+            LinuxMoveResize.startSystemResize(self, event.globalPosition().toPoint(), edges)
 
         return False
 
@@ -142,7 +143,7 @@ class LinuxFramelessMainWindow(LinuxFramelessWindowBase, QMainWindow):
 
 
 class LinuxFramelessDialog(LinuxFramelessWindowBase, QDialog):
-    """ Frameless dialog for Windows system """
+    """ Frameless dialog for Linux system """
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)

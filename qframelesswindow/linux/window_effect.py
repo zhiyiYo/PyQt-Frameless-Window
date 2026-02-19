@@ -1,4 +1,7 @@
 # coding:utf-8
+import subprocess
+
+from PySide6.QtCore import Qt
 from PySide6.QtGui import QColor
 
 
@@ -25,7 +28,8 @@ class LinuxWindowEffect:
         animationId: int
             turn on blur animation or not
         """
-        pass
+        self.setTransparentEffect(hWnd)
+        self.enableBlurBehindWindow(hWnd)
 
     def setBorderAccentColor(self, hWnd, color: QColor):
         """ Set the border color of the window
@@ -64,7 +68,7 @@ class LinuxWindowEffect:
         isAlt: bool
             whether to use mica alt effect
         """
-        pass
+        self.setAcrylicEffect(hWnd)
 
     def setAeroEffect(self, hWnd):
         """ add Aero effect to the window
@@ -74,7 +78,7 @@ class LinuxWindowEffect:
         hWnd: int or `sip.voidptr`
             Window handle
         """
-        pass
+        self.enableBlurBehindWindow(hWnd)
 
     def setTransparentEffect(self, hWnd):
         """ set transparent effect for window
@@ -84,7 +88,7 @@ class LinuxWindowEffect:
         hWnd : int or `sip.voidptr`
             Window handle
         """
-        pass
+        self.window.setAttribute(Qt.WA_TranslucentBackground)
 
     def removeBackgroundEffect(self, hWnd):
         """ Remove background effect
@@ -94,7 +98,8 @@ class LinuxWindowEffect:
         hWnd : int or `sip.voidptr`
             Window handle
         """
-        pass
+        self.window.setAttribute(Qt.WA_TranslucentBackground, False)
+        self.disableBlurBehindWindow(hWnd)
 
     def addShadowEffect(self, hWnd):
         """ add shadow to window
@@ -157,6 +162,7 @@ class LinuxWindowEffect:
         hWnd : int or `sip.voidptr`
             Window handle
         """
+        pass
 
     def enableBlurBehindWindow(self, hWnd):
         """ enable the blur effect behind the whole client
@@ -166,6 +172,16 @@ class LinuxWindowEffect:
         hWnd: int or `sip.voidptr`
             Window handle
         """
+        try:
+            wid = int(self.window.winId())
+            subprocess.Popen(
+                ['xprop', '-id', str(wid),
+                 '-f', '_KDE_NET_WM_BLUR_BEHIND_REGION', '32c',
+                 '-set', '_KDE_NET_WM_BLUR_BEHIND_REGION', '0'],
+                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+            )
+        except Exception:
+            pass
 
     def removeWindowAnimation(self, hWnd):
         """ Disables maximize and minimize animation of the window by removing the relevant window styles.
@@ -175,6 +191,7 @@ class LinuxWindowEffect:
         hWnd: int or `sip.voidptr`
             Window handle
         """
+        pass
 
     def disableBlurBehindWindow(self, hWnd):
         """ disable the blur effect behind the whole client
@@ -184,4 +201,12 @@ class LinuxWindowEffect:
         hWnd: int or `sip.voidptr`
             Window handle
         """
-        pass
+        try:
+            wid = int(self.window.winId())
+            subprocess.Popen(
+                ['xprop', '-id', str(wid),
+                 '-remove', '_KDE_NET_WM_BLUR_BEHIND_REGION'],
+                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+            )
+        except Exception:
+            pass

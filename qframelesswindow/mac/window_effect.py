@@ -113,7 +113,9 @@ class MacWindowEffect:
         hWnd : int or `sip.voidptr`
             Window handle
         """
-        pass
+        nsWindow = getNSWindow(hWnd)
+        nsWindow.setBackgroundColor_(Cocoa.NSColor.clearColor())
+        nsWindow.setOpaque_(False)
 
     def removeBackgroundEffect(self, hWnd):
         """ Remove background effect
@@ -123,7 +125,15 @@ class MacWindowEffect:
         hWnd : int or `sip.voidptr`
             Window handle
         """
-        pass
+        nsWindow = getNSWindow(hWnd)
+        content = nsWindow.contentView()
+        for subview in content.subviews():
+            if isinstance(subview, Cocoa.NSVisualEffectView):
+                subview.removeFromSuperview()
+                break
+
+        nsWindow.setBackgroundColor_(Cocoa.NSColor.windowBackgroundColor())
+        nsWindow.setOpaque_(True)
 
     def addShadowEffect(self, hWnd):
         """ add shadow to window
@@ -186,6 +196,7 @@ class MacWindowEffect:
         hWnd : int or `sip.voidptr`
             Window handle
         """
+        pass
 
     def enableBlurBehindWindow(self, hWnd):
         """ enable the blur effect behind the whole client
@@ -195,6 +206,22 @@ class MacWindowEffect:
         hWnd: int or `sip.voidptr`
             Window handle
         """
+        frame = Cocoa.NSMakeRect(
+            0, 0, self.window.width(), self.window.height())
+        visualEffectView = Cocoa.NSVisualEffectView.new()
+        visualEffectView.setAutoresizingMask_(
+            Cocoa.NSViewWidthSizable | Cocoa.NSViewHeightSizable)
+        visualEffectView.setFrame_(frame)
+        visualEffectView.setState_(Cocoa.NSVisualEffectStateActive)
+        visualEffectView.setMaterial_(Cocoa.NSVisualEffectMaterialUnderWindowBackground)
+        visualEffectView.setBlendingMode_(
+            Cocoa.NSVisualEffectBlendingModeBehindWindow)
+
+        nsWindow = getNSWindow(hWnd)
+        content = nsWindow.contentView()
+        container = QMacCocoaViewContainer(0, self.window)
+        content.addSubview_positioned_relativeTo_(
+            visualEffectView, Cocoa.NSWindowBelow, container)
 
     def removeWindowAnimation(self, hWnd):
         """ Disables maximize and minimize animation of the window by removing the relevant window styles.
@@ -204,6 +231,7 @@ class MacWindowEffect:
         hWnd: int or `sip.voidptr`
             Window handle
         """
+        pass
 
     def disableBlurBehindWindow(self, hWnd):
         """ disable the blur effect behind the whole client
@@ -213,4 +241,9 @@ class MacWindowEffect:
         hWnd: int or `sip.voidptr`
             Window handle
         """
-        pass
+        nsWindow = getNSWindow(hWnd)
+        content = nsWindow.contentView()
+        for subview in content.subviews():
+            if isinstance(subview, Cocoa.NSVisualEffectView):
+                subview.removeFromSuperview()
+                break

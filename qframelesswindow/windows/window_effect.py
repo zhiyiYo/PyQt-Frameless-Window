@@ -172,6 +172,19 @@ class WindowsWindowEffect:
         self.accentPolicy.AccentState = ACCENT_STATE.ACCENT_ENABLE_BLURBEHIND.value
         self.SetWindowCompositionAttribute(hWnd, pointer(self.winCompAttrData))
 
+    def setTransparentEffect(self, hWnd):
+        """ set transparent effect for window
+
+        Parameters
+        ----------
+        hWnd : int or `sip.voidptr`
+            Window handle
+        """
+        hWnd = int(hWnd)
+        self.accentPolicy.AccentState = ACCENT_STATE.ACCENT_ENABLE_TRANSPARENTGRADIENT.value
+        self.winCompAttrData.Attribute = WINDOWCOMPOSITIONATTRIB.WCA_ACCENT_POLICY.value
+        self.SetWindowCompositionAttribute(hWnd, pointer(self.winCompAttrData))
+
     def removeBackgroundEffect(self, hWnd):
         """ Remove background effect
 

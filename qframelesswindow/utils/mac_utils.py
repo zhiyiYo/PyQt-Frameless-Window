@@ -44,7 +44,7 @@ class MacMoveResize:
         # CFRelease(cgEvent)
 
     @classmethod
-    def starSystemResize(cls, window, globalPos, edges):
+    def startSystemResize(cls, window, globalPos, edges):
         """ resize window
 
         Parameters
@@ -58,7 +58,8 @@ class MacMoveResize:
         edges: `Qt.Edges`
             window edges
         """
-        pass
+        if QT_VERSION >= (5, 15, 0):
+            window.windowHandle().startSystemResize(edges)
 
     @classmethod
     def toggleMaxState(cls, window):

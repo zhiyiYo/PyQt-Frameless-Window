@@ -10,7 +10,7 @@ from .window_effect import MacWindowEffect
 
 
 class MacFramelessWindowBase:
-    """ Frameless window base class for mac """
+    """ Frameless window base class for macOS """
 
     def __init__(self, *args, **kwargs):
         self._isSystemButtonVisible = False
@@ -183,11 +183,12 @@ class MacFramelessWindowBase:
 
     def refreshBackgroundBlurEffect(self):
         """ Refresh background blur effect """
-        pass
+        self.windowEffect.disableBlurBehindWindow(self.winId())
+        self.windowEffect.enableBlurBehindWindow(self.winId())
 
 
 class MacFramelessWindow(QWidget, MacFramelessWindowBase):
-    """ Frameless window for Linux system """
+    """ Frameless window for macOS """
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
@@ -216,7 +217,7 @@ class AcrylicWindow(MacFramelessWindow):
 
 
 class MacFramelessMainWindow(QMainWindow, MacFramelessWindowBase):
-    """ Frameless window for Linux system """
+    """ Frameless main window for macOS """
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
@@ -236,7 +237,7 @@ class MacFramelessMainWindow(QMainWindow, MacFramelessWindowBase):
 
 
 class MacFramelessDialog(QDialog, MacFramelessWindowBase):
-    """ Frameless window for Linux system """
+    """ Frameless dialog for macOS """
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)

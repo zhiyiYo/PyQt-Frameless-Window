@@ -10,7 +10,7 @@ import win32api
 import win32con
 import win32gui
 import win32print
-from PySide6.QtCore import QOperatingSystemVersion, QVersionNumber, QObject, QEvent, qVersion
+from PySide6.QtCore import QOperatingSystemVersion, QVersionNumber, QObject, QEvent, qVersion, Qt
 from PySide6.QtGui import QGuiApplication, QColor
 from PySide6.QtWidgets import QWidget
 
@@ -347,7 +347,7 @@ class WindowsMoveResize:
         )
 
     @classmethod
-    def starSystemResize(cls, window, globalPos, edges):
+    def startSystemResize(cls, window, globalPos, edges):
         """ resize window
 
         Parameters
@@ -361,7 +361,29 @@ class WindowsMoveResize:
         edges: `Qt.Edges`
             window edges
         """
-        pass
+        if not edges:
+            return
+
+        edge_to_ht = {
+            Qt.LeftEdge: win32con.HTLEFT,
+            Qt.RightEdge: win32con.HTRIGHT,
+            Qt.TopEdge: win32con.HTTOP,
+            Qt.BottomEdge: win32con.HTBOTTOM,
+            Qt.LeftEdge | Qt.TopEdge: win32con.HTTOPLEFT,
+            Qt.RightEdge | Qt.TopEdge: win32con.HTTOPRIGHT,
+            Qt.LeftEdge | Qt.BottomEdge: win32con.HTBOTTOMLEFT,
+            Qt.RightEdge | Qt.BottomEdge: win32con.HTBOTTOMRIGHT,
+        }
+
+        ht = edge_to_ht.get(edges)
+        if ht:
+            win32gui.ReleaseCapture()
+            win32api.SendMessage(
+                int(window.winId()),
+                win32con.WM_NCLBUTTONDOWN,
+                ht,
+                0
+            )
 
     @classmethod
     def toggleMaxState(cls, window):
