@@ -13,7 +13,7 @@ from .c_structures import (ACCENT_POLICY, ACCENT_STATE, DWMNCRENDERINGPOLICY,
                            DWMWINDOWATTRIBUTE, MARGINS,
                            WINDOWCOMPOSITIONATTRIB,
                            WINDOWCOMPOSITIONATTRIBDATA, DWM_BLURBEHIND)
-from ..utils.win32_utils import isGreaterEqualWin10, isGreaterEqualWin11, isCompositionEnabled
+from ..utils.win32_utils import isGreaterEqualWin10, isGreaterEqualWin11, isCompositionEnabled, isWin7
 
 
 class WindowsWindowEffect:
@@ -72,6 +72,8 @@ class WindowsWindowEffect:
             return
 
         hWnd = int(hWnd)
+        margins = MARGINS(-1, -1, -1, -1)
+        self.DwmExtendFrameIntoClientArea(hWnd, byref(margins))
         gradientColor = ''.join(gradientColor[i:i+2] for i in range(6, -1, -2))
         gradientColor = DWORD(int(gradientColor, base=16))
         animationId = DWORD(animationId)
@@ -168,9 +170,13 @@ class WindowsWindowEffect:
             Window handle
         """
         hWnd = int(hWnd)
-        self.winCompAttrData.Attribute = WINDOWCOMPOSITIONATTRIB.WCA_ACCENT_POLICY.value
-        self.accentPolicy.AccentState = ACCENT_STATE.ACCENT_ENABLE_BLURBEHIND.value
-        self.SetWindowCompositionAttribute(hWnd, pointer(self.winCompAttrData))
+        if isWin7():
+            margins = MARGINS(-1, -1, -1, -1)
+            self.DwmExtendFrameIntoClientArea(hWnd, byref(margins))
+        else:
+            self.winCompAttrData.Attribute = WINDOWCOMPOSITIONATTRIB.WCA_ACCENT_POLICY.value
+            self.accentPolicy.AccentState = ACCENT_STATE.ACCENT_ENABLE_BLURBEHIND.value
+            self.SetWindowCompositionAttribute(hWnd, pointer(self.winCompAttrData))
 
     def removeBackgroundEffect(self, hWnd):
         """ Remove background effect
@@ -181,6 +187,8 @@ class WindowsWindowEffect:
             Window handle
         """
         hWnd = int(hWnd)
+        margins = MARGINS(1, 0, 0, 0)
+        self.DwmExtendFrameIntoClientArea(hWnd, byref(margins))
         self.accentPolicy.AccentState = ACCENT_STATE.ACCENT_DISABLED.value
         self.SetWindowCompositionAttribute(hWnd, pointer(self.winCompAttrData))
 
@@ -211,7 +219,7 @@ class WindowsWindowEffect:
             return
 
         hWnd = int(hWnd)
-        margins = MARGINS(-1, -1, -1, -1)
+        margins = MARGINS(1, 0, 0, 0)
         self.DwmExtendFrameIntoClientArea(hWnd, byref(margins))
 
     def addMenuShadowEffect(self, hWnd):
@@ -244,12 +252,16 @@ class WindowsWindowEffect:
             Window handle
         """
         hWnd = int(hWnd)
-        self.DwmSetWindowAttribute(
-            hWnd,
-            DWMWINDOWATTRIBUTE.DWMWA_NCRENDERING_POLICY.value,
-            byref(c_int(DWMNCRENDERINGPOLICY.DWMNCRP_DISABLED.value)),
-            4,
-        )
+        if isWin7():
+            margins = MARGINS(0, 0, 0, 0)
+            self.DwmExtendFrameIntoClientArea(hWnd, byref(margins))
+        else:
+            self.DwmSetWindowAttribute(
+                hWnd,
+                DWMWINDOWATTRIBUTE.DWMWA_NCRENDERING_POLICY.value,
+                byref(c_int(DWMNCRENDERINGPOLICY.DWMNCRP_DISABLED.value)),
+                4,
+            )
 
     @staticmethod
     def removeMenuShadowEffect(hWnd):
