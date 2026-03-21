@@ -191,10 +191,8 @@ class WindowsFramelessWindow(QWidget):
             return True, result
         elif msg.message == win32con.WM_SETFOCUS and isSystemBorderAccentEnabled():
             self.windowEffect.setBorderAccentColor(self.winId(), getSystemAccentColor())
-            return True, 0
-        elif msg.message == win32con.WM_KILLFOCUS:
+        elif msg.message == win32con.WM_KILLFOCUS and isSystemBorderAccentEnabled():
             self.windowEffect.removeBorderAccentColor(self.winId())
-            return True, 0
 
         return super().nativeEvent(eventType, message)
 
