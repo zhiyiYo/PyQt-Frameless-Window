@@ -90,6 +90,10 @@ class MacFramelessWindow(QWidget):
         elif event.type() == QEvent.Resize:
             self._updateSystemButtonRect()
 
+    def showEvent(self, e):
+        self.updateFrameless()
+        super().showEvent(e)
+
     def _hideSystemTitleBar(self, showButton=False):
         # extend view to title bar region
         self.__nsWindow.setStyleMask_(
