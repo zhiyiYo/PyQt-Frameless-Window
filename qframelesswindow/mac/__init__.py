@@ -100,6 +100,10 @@ class MacFramelessWindowBase:
         self._extendTitleBarToClientArea()
         self.setSystemTitleBarButtonVisible(self.isSystemButtonVisible())
 
+    def showEvent(self, e):
+        self.updateFrameless()
+        super().showEvent(e)
+
     def _hideSystemTitleBar(self):
         # extend view to title bar region
         self._extendTitleBarToClientArea()
