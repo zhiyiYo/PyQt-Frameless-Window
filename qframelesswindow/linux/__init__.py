@@ -22,6 +22,7 @@ class LinuxFramelessWindow(QWidget):
 
         self.updateFrameless()
         QCoreApplication.instance().installEventFilter(self)
+        self.windowEffect.addShadowEffect(self.winId())
 
         self.titleBar.raise_()
         self.resize(500, 500)
