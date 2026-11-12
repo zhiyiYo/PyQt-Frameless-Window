@@ -1,5 +1,8 @@
 # coding:utf-8
 from PyQt5.QtGui import QColor
+from PyQt5.QtWidgets import QWidget
+
+from .shadow import addShadow, removeShadow
 
 
 class LinuxWindowEffect:
@@ -97,14 +100,14 @@ class LinuxWindowEffect:
         pass
 
     def addShadowEffect(self, hWnd):
-        """ add shadow to window
+        """ add shadow to window, only on KWin
 
         Parameter
         ----------
         hWnd: int or `sip.voidptr`
             Window handle
         """
-        pass
+        addShadow(QWidget.find(hWnd))
 
     def addMenuShadowEffect(self, hWnd):
         """ add shadow to menu
@@ -135,7 +138,7 @@ class LinuxWindowEffect:
         hWnd: int or `sip.voidptr`
             Window handle
         """
-        pass
+        removeShadow(QWidget.find(hWnd))
 
     @staticmethod
     def addWindowAnimation(hWnd):
