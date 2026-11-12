@@ -52,7 +52,7 @@ class LinuxMoveResize:
 
         # open the connection to X server
         conn = xcb.wrap(sip.unwrapinstance(QX11Info.connection()))
-        windowId = int(window.winId())
+        windowId = int(window.windowHandle().winId())
         xproto = xprotoExtension(conn)
 
         # refer to: https://www.x.org/releases/X11R7.5/doc/libxcb/tutorial/
@@ -107,9 +107,10 @@ class LinuxMoveResize:
             ButtonIndex._1,
             0
         ], "I"*5)
+        # fix issue #214
         event = ClientMessageEvent.synthetic(
             format=32,
-            window=int(window.winId()),
+            window=int(window.windowHandle().winId()),
             type=cls.moveResizeAtom,
             data=union
         )
